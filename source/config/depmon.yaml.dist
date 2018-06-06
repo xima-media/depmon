@@ -1,0 +1,5 @@
+projects:
+    -
+        name: 'project-name'
+        git: 'git-url'
+        path: 'path-to-composer-files'

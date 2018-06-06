@@ -1,0 +1,96 @@
+{% extends 'base.html.twig' %}
+
+{% block body_id 'index' %}
+
+{% block header %}{% endblock %}
+{% block footer %}{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="page-header">
+            <div class="row">
+                <div class="col-xs-2">
+                    <img src="{{ asset('Logo-DepMon.svg') }}" width="100" />
+                </div>
+                <div class="col-xs-10">
+                    <h1>DepMon <small>Dependency Monitoring</small></h1>
+                </div>
+            </div>
+        </div>
+        <div id="depmon-list">
+            <input type="text" class="search" />
+            <ul class="list list-group">
+                <li class="list-group-item">
+                    <div class="row">
+                        <div class="col-xs-5 text-muted">
+                            Dependency
+                        </div>
+                        <div class="col-xs-2 text-muted text-center">
+                            Required
+                        </div>
+                        <div class="col-xs-2 text-muted text-center">
+                            Stable
+                        </div>
+                        <div class="col-xs-2 text-muted text-center">
+                            Latest
+                        </div>
+                        <div class="col-xs-1 text-muted text-center">
+                            State
+                        </div>
+                    </div>
+                </li>
+                {% for project in projects %}
+                    <li class="list-group-item-info list-group-item">
+                        <div class="row">
+                            <div class="col-xs-11">
+                                <strong>{{ project.self.name }}</strong>
+                            </div>
+                            <div class="col-xs-1 text-center">
+                                <span class="badge">{{ project.dependencies|length }}</span>
+                            </div>
+                        </div>
+                    </li>
+                    {% for dependency in project.dependencies %}
+                        <li class="list-group-item">
+                            <div class="row">
+                                <div class="col-xs-5">
+                                    {{ dependency.name }}
+                                </div>
+                                <div class="col-xs-2 text-center">
+                                    {% if dependency.required is defined %}
+                                        {{ dependency.required }}
+                                    {% endif %}
+                                </div>
+                                <div class="col-xs-2 text-center">
+                                    {{ dependency.version }}
+                                </div>
+                                <div class="col-xs-2 text-center">
+                                    {% if dependency.latest is defined %}
+                                        {{ dependency.latest }}
+                                    {% endif %}
+                                </div>
+                                <div class="col-xs-1 text-center">
+                                    {% if dependency.latest is defined %}
+                                        {% if dependency.latest != dependency.version %}
+                                            <span class="label label-danger">out of date</span>
+                                        {% else %}
+                                            <span class="label label-success">up to date</span>
+                                        {% endif %}
+                                    {% else %}
+                                        <span class="label label-success">up to date</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </li>
+                    {% endfor %}
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('build/js/search.js') }}"></script>
+{% endblock %}

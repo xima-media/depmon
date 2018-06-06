@@ -1,0 +1,5 @@
+{
+  "github-oauth": {
+    "github.com": "{{your_personal_github_token}}"
+  }
+}
