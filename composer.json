@@ -1,5 +1,5 @@
 {
-  "name": "depmon-bundle",
+  "name": "xima/depmon-bundle",
   "description": "The Depmon Bundle provides a full dependency monitoring application for composer based projects.",
   "type": "symfony-bundle",
   "authors": [
