@@ -1,6 +1,0 @@
-version: '2'
-
-services:
-  apache:
-    ports:
-      - "{{apache_ip|127.0.0.1}}:{{apache_port|80}}:80"

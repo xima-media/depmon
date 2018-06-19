@@ -1,0 +1,223 @@
+{% extends 'base.html.twig' %}
+
+{% block body_id 'index' %}
+
+{% block header %}{% endblock %}
+{% block footer %}{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-3">
+                <div class="sidebar">
+                    <div class="text-center">
+                        <img src="{{ asset('Logo-DepMon.svg') }}" width="100"/>
+                    </div>
+                    <div>
+                        <h1>DepMon
+                            <small>Dependency Monitoring</small>
+                        </h1>
+                        <div class="text-muted">Last updated: {{ metadata|date }}</div>
+                    </div>
+                    <h2>Filter
+                        <small>ToDo</small>
+                    </h2>
+
+                    <form class="form-horizontal" id="depmon-filter">
+                        <a href="#" data-toggle="collapse" data-target="#filter-project-collapse">
+                            <h3>Projects
+                                <span class="badge">{{ project|length }}</span>
+                            </h3>
+                        </a>
+
+                        <div id="filter-project-collapse" class="collapse col-xs-12">
+                            {% for project in projects %}
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" name="project" value="{{ project.self.name }}">
+                                        <strong>{{ project.self.name }}</strong>
+                                    </label>
+                                </div>
+                            {% endfor %}
+                        </div>
+                        <h4>Type</h4>
+                        <div class="checkbox">
+                            <label><input type="checkbox" name="project-type" value="TYPO3"> TYPO3</label>
+                        </div>
+                        <div class="checkbox">
+                            <label><input type="checkbox" name="project-type" value="Symfony"> Symfony</label>
+                        </div>
+                        <hr/>
+                        <h3>Dependencies</h3>
+                        <div class="checkbox">
+                            <label><input type="checkbox" name="required" value="1"> Only show required packages</label>
+                        </div>
+                        <h4>State</h4>
+                        <div class="checkbox">
+                            <label><input type="checkbox" name="state" value="3"> <span class="label label-danger">out of date</span></label>
+                        </div>
+                        <div class="checkbox">
+                            <label><input type="checkbox" name="state" value="2"> <span class="label label-warning">out of date</span></label>
+                        </div>
+                        <div class="checkbox">
+                            <label><input type="checkbox" name="state" value="1"> <span class="label label-success">up to date</span></label>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="col-xs-9">
+                <div id="depmon-list">
+                    <form id="depmon-search">
+                        <input type="text" class="search text-search" name="name"
+                               placeholder="Search dependencies ..."/>
+                    </form>
+                    <ul class="list list-group">
+                        <li class="list-group-item">
+                            <div class="row">
+                                <div class="col-xs-5 text-muted">
+                                    Dependency
+                                </div>
+                                <div class="col-xs-2 text-muted text-center">
+                                    Required
+                                </div>
+                                <div class="col-xs-2 text-muted text-center">
+                                    Stable
+                                </div>
+                                <div class="col-xs-2 text-muted text-center">
+                                    Latest
+                                </div>
+                                <div class="col-xs-1 text-muted text-center">
+                                    State
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                    {% for key, project in projects %}
+                        <ul class="list list-group">
+                            <li class="list-group-item-info list-group-item list-header"
+                                data-project="{{ project.self.name }}"
+                                data-project-type="{{ project.self.projectType }}">
+                                <div class="row">
+                                    <div class="col-xs-6">
+                                        <strong>{{ project.self.name }}</strong>
+                                        <small>{{ project.composer.name }}</small>
+                                    </div>
+                                    <div class="col-xs-1 text-center">
+                                        {% if project.meta.gitTag is defined %}
+                                            {{ project.meta.gitTag }}
+                                        {% endif %}
+                                    </div>
+                                    <div class="col-xs-3">
+                                        <span class="label label-default">dependencies</span>
+                                        {% if project.meta.projectState == 3 %}
+                                            <span class="label label-danger">out of date</span>
+                                        {% elseif project.meta.projectState == 2 %}
+                                            <span class="label label-warning">out of date</span>
+                                        {% else %}
+                                            <span class="label label-success">up to date</span>
+                                        {% endif %}
+                                    </div>
+                                    <div class="col-xs-1 text-center">
+                                        {{ project.self.projectType }}
+                                    </div>
+                                    <div class="col-xs-1 text-center">
+                                        <button data-toggle="collapse" data-target="#{{ key }}">+</button>
+                                    </div>
+                                    <div id="{{ key }}" class="collapse col-xs-12">
+                                        <hr/>
+                                        <div class="row">
+                                            <div class="col-xs-3">
+                                                <strong>{{ project.dependencies|length }}</strong> total dependencies
+                                            </div>
+                                            <div class="col-xs-3">
+                                                <strong>{{ project.meta.requiredPackagesCount }}</strong> required
+                                                dependencies
+                                            </div>
+                                            <div class="col-xs-2">
+                                                {{ project.meta.statesCount.1 }} <span class="label label-success">up to date</span>
+                                            </div>
+                                            <div class="col-xs-2">
+                                                {{ project.meta.statesCount.2 }} <span class="label label-warning">out of date</span>
+                                            </div>
+                                            <div class="col-xs-2">
+                                                {{ project.meta.statesCount.3 }} <span class="label label-danger">out of date</span>
+                                            </div>
+                                            <div class="col-xs-12">
+                                                <strong>Description:</strong>
+                                                {% if project.composer.description is defined %}
+                                                    {{ project.composer.description }}
+                                                {% endif %}
+                                            </div>
+                                            <div class="col-xs-3">
+                                                <strong>Keywords:</strong>
+                                                {% if project.composer.keywords is defined %}
+                                                    {% for keyword in project.composer.keywords %}
+                                                        {{ keyword }}<br/>
+                                                    {% endfor %}
+                                                {% endif %}
+                                            </div>
+                                            <div class="col-xs-3">
+                                                <strong>Authors:</strong>
+                                                {% if project.composer.authors is defined %}
+                                                    {% for author in project.composer.authors %}
+                                                        {% if author.name is defined %}
+                                                            {% if author.email is defined %}
+                                                                <a href="mailto:{{ author.email }}">{{ author.name }}</a>
+                                                            {% else %}
+                                                                {{ author.name }}
+                                                            {% endif %}
+                                                        {% endif %}
+                                                        {% if author.role is defined %}
+                                                            <small>{{ author.role }}</small>
+                                                        {% endif %}
+                                                        <br/>
+                                                    {% endfor %}
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                            {% for dependency in project.dependencies %}
+                                <li class="list-group-item" data-project="{{ project.self.name }}"
+                                    data-state="{{ dependency.state }}" data-name="{{ dependency.name }}"
+                                    data-version="{{ dependency.version }}"
+                                    data-project-type="{{ project.self.projectType }}"
+                                    data-required="{{ dependency.required is defined ? 1 : 0 }}">
+                                    <div class="row">
+                                        <div class="col-xs-5">
+                                            {{ dependency.name }}
+                                        </div>
+                                        <div class="col-xs-2 text-center">
+                                            {% if dependency.required is defined %}
+                                                {{ dependency.required }}
+                                            {% endif %}
+                                        </div>
+                                        <div class="col-xs-2 text-center">
+                                            {{ dependency.version }}
+                                        </div>
+                                        <div class="col-xs-2 text-center">
+                                            {% if dependency.latest is defined %}
+                                                {{ dependency.latest }}
+                                            {% endif %}
+                                        </div>
+                                        <div class="col-xs-1 text-center">
+                                            {% if dependency.state == 3 %}
+                                                <span class="label label-danger">out of date</span>
+                                            {% elseif dependency.state == 2 %}
+                                                <span class="label label-warning">out of date</span>
+                                            {% else %}
+                                                <span class="label label-success">up to date</span>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

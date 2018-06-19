@@ -1,0 +1,3 @@
+xima_depmon_index:
+    path: /depmon
+    controller: @XimaDepmonBundle\Controller\DefaultController::index
