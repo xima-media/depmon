@@ -1,0 +1,9 @@
+services:
+    xima_depmon.default:
+        autowire: true
+        public: true
+        class: Xima\DepmonBundle\Controller\DefaultController
+        tags:
+            - name: controller.service_arguments
+    Xima\DepmonBundle\Service\Cache:
+        autowire: true

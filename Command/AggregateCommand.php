@@ -49,8 +49,6 @@ class AggregateCommand extends Command
             // the full command description shown when running the command with
             // the "--help" option
             ->setHelp('This command is fetching all composer informations of every project.')
-
-            ->addArgument('show')
         ;
     }
 
@@ -63,7 +61,8 @@ class AggregateCommand extends Command
             '',
         ]);
 
-        $projects = Yaml::parseFile('config/depmon.projects.yaml');
+//        $projects = Yaml::parseFile('config/depmon.projects.yaml');
+        $projects = $this->getContainer()->getParameter('xima_depmon.projects');
 
         $progressBar = new ProgressBar($output, count($projects['projects']));
         $progressBar->setFormat('verbose');

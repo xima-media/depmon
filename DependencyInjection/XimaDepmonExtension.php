@@ -3,7 +3,7 @@
 namespace Xima\DepmonBundle\DependencyInjection;
 
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
-use Symfony\Component\HttpKernel\Config\FileLocator;
+use Symfony\Component\Config\FileLocator;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 

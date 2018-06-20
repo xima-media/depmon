@@ -2,6 +2,7 @@
   "name": "xima/depmon-bundle",
   "description": "The Depmon Bundle provides a full dependency monitoring application for composer based projects.",
   "type": "symfony-bundle",
+  "homepage": "https://github.com/xima-media/depmon",
   "authors": [
     {
       "name": "Konrad MIchalik",
@@ -15,7 +16,7 @@
   },
   "autoload": {
     "psr-4": {
-      "Xima\\DepmonBundle\\": "src/"
+      "Xima\\DepmonBundle\\": ""
     }
   }
 }

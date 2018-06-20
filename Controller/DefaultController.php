@@ -27,11 +27,12 @@ class DefaultController extends AbstractController
 
     public function index(): Response
     {
-        $projectsConfig = Yaml::parseFile(__DIR__ . '/../../config/depmon.projects.yaml');
+//        $projectsConfig = Yaml::parseFile(__DIR__ . '/../../config/depmon.projects.yaml');
+        $projectsConfig = $this->container->getParameter('xima_depmon.projects');
         $projects = [];
 
 
-        foreach ($projectsConfig['projects'] as $project) {
+        foreach ($projectsConfig as $project) {
             $projects[] = $this->cache->get($project['name']);
         }
 

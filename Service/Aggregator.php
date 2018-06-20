@@ -53,7 +53,7 @@ class Aggregator
 
         // If project already exists, just pull updates. Otherwise clone the repository.
         if (is_dir('var/data/' . $project['name'])) {
-            $process = new Process('cd var/data/' . $project['name'] . ' && git pull --rebase --force');
+            $process = new Process('cd var/data/' . $project['name'] . ' && git reset --hard origin/master');
         } else {
             $process = new Process('git clone -n ' . $project['git'] . ' var/data/' . $project['name'] . ' --depth 1 -b master --single-branch');
         }
