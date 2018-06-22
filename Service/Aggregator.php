@@ -39,7 +39,7 @@ class Aggregator
         $this->cache = $cache;
     }
 
-    /*
+    /**
      * Get dependency data for a specific project by cloning the project composer files in the cache dir, installing
      * all dependencies (necessary for using composer show) and fetching the dependency information by "composer show"
      *

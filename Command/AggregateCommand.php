@@ -41,7 +41,7 @@ class AggregateCommand extends Command
     {
         $this
             // the name of the command (the part after "bin/console")
-            ->setName('app:aggregate')
+            ->setName('depmon:aggregate')
 
             // the short description shown while running "php bin/console list"
             ->setDescription('Aggregate command.')

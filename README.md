@@ -1,5 +1,7 @@
 # DepMon (Dependency Monitoring)
 
+[![Build Status](https://travis-ci.org/xima-media/depmon.svg?branch=master)](https://travis-ci.org/xima-media/depmon)
+
 ## What does it do?
 
 DepMon helps you getting a better overview on your projects and their [composer](http://composer.org/) dependencies. It is inspired by monitoring applications like [david-dm](https://david-dm.org/), to get notified if your project dependencies are not longer up to date. Instead of the public web variants, DepMon is a [symfony](http://symfony.com/) application, which you can host on your own.
@@ -33,9 +35,14 @@ projects:
 The data aggregation starts with following command. It is recommended to use a cronjob for regulary updates. 
 
 ```
-php bin/console app:aggregate
+php bin/console depmon:aggregate
 ```
 
 ## ToDo 
 
-_ToDo_
+- Unit Testing
+- RSS Dependency Feed
+- Project Image Badge
+- E-Mail Notification
+- Use Security Advisories Checker
+- Extend functionality for npm packages
