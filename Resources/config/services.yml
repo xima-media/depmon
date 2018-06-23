@@ -1,9 +1,13 @@
 services:
     xima_depmon.default:
         autowire: true
+        autoconfigure: true
         public: true
         class: Xima\DepmonBundle\Controller\DefaultController
         tags:
             - name: controller.service_arguments
     Xima\DepmonBundle\Service\Cache:
         autowire: true
+    Xima\DepmonBundle\Command\AggregateCommand:
+          tags:
+              - { name: 'console.command', command: 'depmon:aggregate' }

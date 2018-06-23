@@ -1,0 +1,85 @@
+<li class="list-group-item-info list-group-item list-header"
+    data-project="{{ project.self.name }}"
+    data-project-type="{{ project.self.projectType is defined ? project.self.projectType }}">
+
+    <div class="row">
+        <div class="col-xs-6">
+            <strong>{{ project.self.name }}</strong>
+            <small>{{ project.composer.name }}</small>
+        </div>
+        <div class="col-xs-1 text-center">
+            {% if project.meta.gitTag is defined %}
+                {{ project.meta.gitTag }}
+            {% endif %}
+        </div>
+        <div class="col-xs-3">
+            <span class="label label-default">dependencies</span>
+            {% if project.meta.projectState == 3 %}
+                <span class="label label-danger">out of date</span>
+            {% elseif project.meta.projectState == 2 %}
+                <span class="label label-warning">out of date</span>
+            {% else %}
+                <span class="label label-success">up to date</span>
+            {% endif %}
+        </div>
+        <div class="col-xs-1 text-center">
+            {{ project.self.projectType is defined ? project.self.projectType }}
+        </div>
+        <div class="col-xs-1 text-center">
+            <button data-toggle="collapse" data-target="#{{ key }}">+</button>
+        </div>
+        <div id="{{ key }}" class="collapse col-xs-12">
+            <hr/>
+            <div class="row">
+                <div class="col-xs-3">
+                    <strong>{{ project.dependencies|length }}</strong> total dependencies
+                </div>
+                <div class="col-xs-3">
+                    <strong>{{ project.meta.requiredPackagesCount }}</strong> required
+                    dependencies
+                </div>
+                <div class="col-xs-2">
+                    {{ project.meta.statesCount.1 }} <span class="label label-success">up to date</span>
+                </div>
+                <div class="col-xs-2">
+                    {{ project.meta.statesCount.2 }} <span class="label label-warning">out of date</span>
+                </div>
+                <div class="col-xs-2">
+                    {{ project.meta.statesCount.3 }} <span class="label label-danger">out of date</span>
+                </div>
+                <div class="col-xs-12">
+                    <strong>Description:</strong>
+                    {% if project.composer.description is defined %}
+                        {{ project.composer.description }}
+                    {% endif %}
+                </div>
+                <div class="col-xs-3">
+                    <strong>Keywords:</strong>
+                    {% if project.composer.keywords is defined %}
+                        {% for keyword in project.composer.keywords %}
+                            {{ keyword }}<br/>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+                <div class="col-xs-3">
+                    <strong>Authors:</strong>
+                    {% if project.composer.authors is defined %}
+                        {% for author in project.composer.authors %}
+                            {% if author.name is defined %}
+                                {% if author.email is defined %}
+                                    <a href="mailto:{{ author.email }}">{{ author.name }}</a>
+                                {% else %}
+                                    {{ author.name }}
+                                {% endif %}
+                            {% endif %}
+                            {% if author.role is defined %}
+                                <small>{{ author.role }}</small>
+                            {% endif %}
+                            <br/>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</li>

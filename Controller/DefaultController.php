@@ -39,7 +39,7 @@ class DefaultController extends AbstractController
         $metadata = $this->cache->get('metadata');
 
 
-        return $this->render('default/index.html.twig', [
+        return $this->render('@XimaDepmon/index.html.twig', [
             'projects' => $projects,
             'metadata' => $metadata
         ]);

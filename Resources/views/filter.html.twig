@@ -1,0 +1,44 @@
+<div class="sidebar">
+    <div class="text-muted">Last updated: {{ metadata|date }}</div>
+
+    <form class="form-horizontal" id="depmon-filter">
+        <a href="#" data-toggle="collapse" data-target="#filter-project-collapse">
+            <h3>Projects
+                <span class="badge">{{ projects|length }}</span>
+            </h3>
+        </a>
+
+        <div id="filter-project-collapse" class="collapse col-xs-12">
+            {% for project in projects %}
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" name="project" value="{{ project.self.name }}">
+                        <strong>{{ project.self.name }}</strong>
+                    </label>
+                </div>
+            {% endfor %}
+        </div>
+        <h4>Type</h4>
+        <div class="checkbox">
+            <label><input type="checkbox" name="project-type" value="TYPO3"> TYPO3</label>
+        </div>
+        <div class="checkbox">
+            <label><input type="checkbox" name="project-type" value="Symfony"> Symfony</label>
+        </div>
+        <hr/>
+        <h3>Dependencies</h3>
+        <div class="checkbox">
+            <label><input type="checkbox" name="required" value="1"> Only show required packages</label>
+        </div>
+        <h4>State</h4>
+        <div class="checkbox">
+            <label><input type="checkbox" name="state" value="3"> <span class="label label-danger">out of date</span></label>
+        </div>
+        <div class="checkbox">
+            <label><input type="checkbox" name="state" value="2"> <span class="label label-warning">out of date</span></label>
+        </div>
+        <div class="checkbox">
+            <label><input type="checkbox" name="state" value="1"> <span class="label label-success">up to date</span></label>
+        </div>
+    </form>
+</div>
