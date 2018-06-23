@@ -1,3 +1,7 @@
 xima_depmon_index:
     path: "/"
     defaults: { _controller: "xima_depmon.default:index", _format: html }
+
+xima_depmon_state:
+    path: "/state/{project}"
+    defaults: { _controller: "xima_depmon.default:state", _format: html }

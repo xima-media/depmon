@@ -1,5 +1,5 @@
 <div class="sidebar">
-    <div class="text-muted">Last updated: {{ metadata|date }}</div>
+    <div class="small text-muted">Last updated: {{ metadata|date }}</div>
 
     <form class="form-horizontal" id="depmon-filter">
         <a href="#" data-toggle="collapse" data-target="#filter-project-collapse">
@@ -8,7 +8,7 @@
             </h3>
         </a>
 
-        <div id="filter-project-collapse" class="collapse col-xs-12">
+        <div id="filter-project-collapse" class="collapse col-12">
             {% for project in projects %}
                 <div class="checkbox">
                     <label>

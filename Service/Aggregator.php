@@ -26,6 +26,7 @@ class Aggregator
 
     /**
      * @var array
+     * ToDo: Move them to the config
      */
     private $projectTypes = [
         'typo3/cms' => 'TYPO3',
@@ -33,6 +34,20 @@ class Aggregator
         'drupal/drupal' => 'Drupal'
     ];
 
+    /**
+     *
+     * @var int
+     */
+    const STATE_UP_TO_DATE = 1;
+    const STATE_PINNED_OUT_OF_DATE = 2;
+    const STATE_OUT_OF_DATE = 3;
+    const STATE_INSECURE = 4;
+
+    /**
+     * Aggregator constructor.
+     * @param LoggerInterface $logger
+     * @param AdapterInterface $cache
+     */
     public function __construct(LoggerInterface $logger, AdapterInterface $cache)
     {
         $this->logger = $logger;
@@ -42,6 +57,8 @@ class Aggregator
     /**
      * Get dependency data for a specific project by cloning the project composer files in the cache dir, installing
      * all dependencies (necessary for using composer show) and fetching the dependency information by "composer show"
+     * ToDo: Check if git/composer is installed
+     * ToDo: Optionally remove vendors after composer show was running
      *
      * @param array $project
      * @return array
@@ -175,10 +192,10 @@ class Aggregator
         $version2[0] = $version2[0][0] == 'v' ? substr($version2[0], 1) : $version2[0];
 
         if ($version1[0] != $version2[0] || (isset($version1[1]) && isset($version2[1]) && $version1[1] != $version2[1])) {
-            return 3;
+            return self::STATE_OUT_OF_DATE;
         } else if (isset($version1[2]) && isset($version2[2]) && $version1[2] != $version2[2]) {
-            return 2;
+            return self::STATE_PINNED_OUT_OF_DATE;
         }
-        return 1;
+        return self::STATE_UP_TO_DATE;
     }
 }
