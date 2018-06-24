@@ -1,44 +1,77 @@
-<div class="sidebar">
-    <div class="small text-muted">Last updated: {{ metadata|date }}</div>
-
-    <form class="form-horizontal" id="depmon-filter">
-        <a href="#" data-toggle="collapse" data-target="#filter-project-collapse">
-            <h3>Projects
-                <span class="badge">{{ projects|length }}</span>
-            </h3>
-        </a>
-
-        <div id="filter-project-collapse" class="collapse col-12">
-            {% for project in projects %}
-                <div class="checkbox">
-                    <label>
-                        <input type="checkbox" name="project" value="{{ project.self.name }}">
-                        <strong>{{ project.self.name }}</strong>
-                    </label>
-                </div>
-            {% endfor %}
+<form class="filter" id="depmon-filter">
+    <h3>Project</h3>
+    <a href="#" class="filter-entry" data-toggle="collapse" data-target="#filter-project-collapse">
+        <strong>Projects ({{ projects|length }})</strong>
+    </a>
+    <div id="filter-project-collapse" class="collapse">
+        {% for project in projects %}
+            <div class="checkbox">
+                <input type="checkbox" name="project" value="{{ project.self.name }}"
+                       id="filter-project-{{ project.self.name }}">
+                <label for="filter-project-{{ project.self.name }}">{{ project.self.name }}</label>
+            </div>
+        {% endfor %}
+    </div>
+    <a href="#" class="filter-entry" data-toggle="collapse" data-target="#filter-type-collapse">
+        <strong>Types (3)</strong> <small>ToDo</small>
+    </a>
+    <div id="filter-type-collapse" class="collapse">
+        <div class="checkbox" data-tooltip="TYPO3">
+            <input type="checkbox" name="project-type" value="TYPO3" id="filter-type-01" disabled>
+            <label for="filter-type-01"> <i class="icon-typo3"></i></label>
         </div>
-        <h4>Type</h4>
-        <div class="checkbox">
-            <label><input type="checkbox" name="project-type" value="TYPO3"> TYPO3</label>
+        <div class="checkbox" data-tooltip="Symfony">
+            <input type="checkbox" name="project-type" value="Symfony" id="filter-type-02" disabled>
+            <label for="filter-type-02"> <i class="icon-symfony"></i></label>
         </div>
-        <div class="checkbox">
-            <label><input type="checkbox" name="project-type" value="Symfony"> Symfony</label>
+        <div class="checkbox" data-tooltip="Drupal">
+            <input type="checkbox" name="project-type" value="Drupal" id="filter-type-03" disabled>
+            <label for="filter-type-03"> <i class="icon-drupal"></i></label>
         </div>
-        <hr/>
-        <h3>Dependencies</h3>
-        <div class="checkbox">
-            <label><input type="checkbox" name="required" value="1"> Only show required packages</label>
+    </div>
+    <div class="checkbox padding-small">
+        <div data-tooltip="Providing a quick start overview on all available projects">
+            <input type="checkbox" name="overview" value="1" id="filter-overview">
+            <label for="filter-overview" class="dark">
+                <small>Show overview</small>
+            </label>
         </div>
-        <h4>State</h4>
-        <div class="checkbox">
-            <label><input type="checkbox" name="state" value="3"> <span class="label label-danger">out of date</span></label>
+    </div>
+    <h3>Dependency</h3>
+    <input type="text" class="search text-search" name="name" placeholder="Search dependencies ..."/>
+    <div class="checkbox padding-small">
+        <div data-tooltip="Show only packages which are explicitly required in the composer.json">
+            <input type="checkbox" name="required" value="1" id="filter-required">
+            <label for="filter-required" class="dark">
+                <small>Only required packages</small>
+            </label>
         </div>
-        <div class="checkbox">
-            <label><input type="checkbox" name="state" value="2"> <span class="label label-warning">out of date</span></label>
+    </div>
+    <a href="#" class="filter-entry" data-toggle="collapse" data-target="#filter-state-collapse">
+        <strong>States</strong>
+    </a>
+    <div id="filter-state-collapse" class="collapse">
+        <div class="checkbox" data-tooltip="The available package has a higher minor or major version">
+            <input type="checkbox" name="state" value="3" id="filter-state-3">
+            <label for="filter-state-3"> out of date
+                <div class="state state-3"></div>
+            </label>
         </div>
-        <div class="checkbox">
-            <label><input type="checkbox" name="state" value="1"> <span class="label label-success">up to date</span></label>
+        <div class="checkbox" data-tooltip="The available package has a higher bugfix level version">
+            <input type="checkbox" name="state" value="2" id="filter-state-2">
+            <label for="filter-state-2"> up to date
+                <div class="state state-2"></div>
+            </label>
         </div>
-    </form>
-</div>
+        <div class="checkbox" data-tooltip="The package version is up to date">
+            <input type="checkbox" name="state" value="1" id="filter-state-1">
+            <label for="filter-state-1"> up to date
+                <div class="state state-1"></div>
+            </label>
+        </div>
+    </div>
+    <div class="padding-small text-center">
+        <button class="filter-reset"><i class="icon-subdirectory_arrow_right"></i> Reset filter</button>
+    </div>
+</form>
+<small class="position-bottom padding-small text-muted">Last updated: <br/>{{ metadata|date }}</small>

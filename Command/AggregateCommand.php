@@ -3,10 +3,10 @@
 namespace Xima\DepmonBundle\Command;
 
 
+use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Xima\DepmonBundle\Service\Aggregator;
 use Xima\DepmonBundle\Service\Cache;
 use Psr\Cache\InvalidArgumentException;
-use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -16,7 +16,7 @@ use Symfony\Component\Yaml\Yaml;
  * Class AggregateCommand
  * @package Xima\DepmonBundle\Command
  */
-class AggregateCommand extends Command
+class AggregateCommand extends ContainerAwareCommand
 {
 
     /**
@@ -64,10 +64,10 @@ class AggregateCommand extends Command
 //        $projects = Yaml::parseFile('config/depmon.projects.yaml');
         $projects = $this->getContainer()->getParameter('xima_depmon.projects');
 
-        $progressBar = new ProgressBar($output, count($projects['projects']));
+        $progressBar = new ProgressBar($output, count($projects));
         $progressBar->setFormat('verbose');
 
-        foreach ($projects['projects'] as $project) {
+        foreach ($projects as $project) {
             try {
                 $this->cache->set($project['name'], $this->aggregator->fetchProjectData($project));
 

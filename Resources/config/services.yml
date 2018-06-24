@@ -8,6 +8,9 @@ services:
             - name: controller.service_arguments
     Xima\DepmonBundle\Service\Cache:
         autowire: true
+    xima_depmon.aggregator:
+        class: Xima\DepmonBundle\Service\Aggregator
+        autowire: true
     Xima\DepmonBundle\Command\AggregateCommand:
           tags:
               - { name: 'console.command', command: 'depmon:aggregate' }

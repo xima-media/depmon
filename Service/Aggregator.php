@@ -27,6 +27,7 @@ class Aggregator
     /**
      * @var array
      * ToDo: Move them to the config
+     * ToDo: Not really good coverage at all ...
      */
     private $projectTypes = [
         'typo3/cms' => 'TYPO3',
@@ -61,6 +62,7 @@ class Aggregator
      * ToDo: Optionally remove vendors after composer show was running
      *
      * @param array $project
+     * @throws \Exception
      * @return array
      */
     public function fetchProjectData($project): array {
@@ -82,20 +84,43 @@ class Aggregator
             throw new ProcessFailedException($process);
         }
 
+        // Check if composer.json exists in project
+        $process = new Process(
+            'cd var/data/' . $project['name'] . '/ && ' .
+            'git cat-file -e origin/master:' . $project['path'] . 'composer.json && echo true'
+        );
+        $process->run();
+
+        if (trim($process->getOutput()) != 'true') {
+            throw new \Exception('No composer.json found in the project ' . $projectName);
+        }
+
+        // Check if composer.lock exists in project
+        $process = new Process(
+            'cd var/data/' . $project['name'] . '/ && ' .
+            'git cat-file -e origin/master:' . $project['path'] . 'composer.lock && echo true'
+        );
+        $process->run();
+        $composerLock = false;
+
+        if (trim($process->getOutput()) == 'true') {
+            $composerLock = true;
+        }
+
         // Preparing composer project setup
         // ToDo: Is it possible to combine multiple processes in a better way?
         $process = new Process(
-            // Change to caching directory
             'cd var/data/' . $project['name'] . '/ && ' .
             // Checkout composer.json file
             'git checkout HEAD ' . $project['path'] . 'composer.json && ' .
             // Checkout composer.lock file
-            'git checkout HEAD ' . $project['path'] . 'composer.lock && ' .
+            (($composerLock) ? 'git checkout HEAD ' . $project['path'] . 'composer.lock && ' : '') .
             // CHange directory
-            'cd ' . $project['path'] . ' && ' .
+            (($project['path'] != '') ? 'cd ' . $project['path'] . ' && ' : '') .
             // Install composer dependencies
             'composer install --no-dev --no-autoloader --no-scripts --ignore-platform-reqs'
         );
+
         $process->setTimeout(3600);
         $process->run();
 
@@ -116,6 +141,10 @@ class Aggregator
             throw new ProcessFailedException($process);
         }
 
+        if (empty(json_decode($process->getOutput()))) {
+            throw new \Exception('Empty result of composer show');
+        }
+
         $result = [];
 
         // Saving composer information about project to result
@@ -124,11 +153,11 @@ class Aggregator
 
         $requiredPackagesCount = 0;
         $statesCount = [
-            1 => 0,
-            2 => 0,
-            3 => 0
+            self::STATE_UP_TO_DATE => 0,
+            self::STATE_PINNED_OUT_OF_DATE => 0,
+            self::STATE_OUT_OF_DATE => 0
         ];
-        $projectState = 1;
+        $projectState = self::STATE_UP_TO_DATE;
 
         foreach (json_decode($process->getOutput())->installed as $dependency) {
             // Workaround for adding requirement information to dependencies
@@ -157,10 +186,10 @@ class Aggregator
             $result['dependencies'][] = $dependency;
         }
 
-        if ($statesCount[3] > 1) {
-            $projectState = 3;
-        } elseif ($statesCount[3] <= 1 && $statesCount[2] >= 1) {
-            $projectState = 2;
+        if ($statesCount[3] > 2) {
+            $projectState = self::STATE_OUT_OF_DATE;
+        } elseif ($statesCount[3] <= 2 && $statesCount[2] >= 1) {
+            $projectState = self::STATE_PINNED_OUT_OF_DATE;
         }
 
         $metadata = [

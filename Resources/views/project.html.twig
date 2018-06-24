@@ -1,13 +1,18 @@
-<li class="list-group-item-info list-group-item list-header"
+<li class="list-group-item-info list-group-item list-header bg-gray"
     data-project="{{ project.self.name }}"
-    data-project-type="{{ project.self.projectType is defined ? project.self.projectType }}">
+    data-project-type="{{ project.self.projectType is defined ? project.self.projectType }}"
+    data-overview="1"
+>
 
     <div class="row">
         <div class="col-7">
-            <a href="#" data-toggle="collapse" data-target="#{{ key }}">
+            <a data-toggle="collapse" data-target="#{{ key }}">
                 <strong>{{ project.self.name }}</strong>
                 <small>{{ project.composer.name }}</small>
             </a>
+            <button class="filter-project" data-project="{{ project.self.name }}" data-tooltip="Quick filter for this project" flow="down">
+                <i class="icon-filter"></i>
+            </button>
         </div>
         <div class="col-1 text-center">
             {% if project.meta.gitTag is defined %}
@@ -17,12 +22,13 @@
         <div class="col-1 text-center">
             {{ project.self.projectType is defined ? project.self.projectType }}
         </div>
-        <div class="col-3">
-            <img src="{{ asset("bundles/ximadepmon/img/states/#{project.meta.projectState}.svg") }}">
+        <div class="col-3 text-right">
+            <a href="{{ path('xima_depmon_state', {'project': project.self.name}) }}">
+                <img src="{{ asset("bundles/ximadepmon/img/states/#{project.meta.projectState}.svg") }}">
+            </a>
         </div>
         <div id="{{ key }}" class="collapse col-12 bg-gray">
-            <hr/>
-            <div class="row">
+            <div class="row padding-small">
                 <div class="col-3">
                     <strong>{{ project.dependencies|length }}</strong> total dependencies
                 </div>
@@ -31,31 +37,26 @@
                     dependencies
                 </div>
                 <div class="col-2">
-                    {{ project.meta.statesCount.1 }} <span class="label label-up-to">up to date</span>
+                    <div class="state state-1"></div> {{ project.meta.statesCount.1 }} up to date
                 </div>
                 <div class="col-2">
-                    {{ project.meta.statesCount.2 }} <span class="label label-warning">out of date</span>
+                    <div class="state state-2"></div> {{ project.meta.statesCount.2 }} up to date
                 </div>
                 <div class="col-2">
-                    {{ project.meta.statesCount.3 }} <span class="label label-danger">out of date</span>
+                    <div class="state state-3"></div> {{ project.meta.statesCount.3 }} out of date
                 </div>
-                <div class="col-12">
-                    <strong>Description:</strong>
+                <div class="col-12 padding-small">
+                    <strong><em>composer.json</em></strong>
+                </div>
+                <div class="col-9 padding-small">
                     {% if project.composer.description is defined %}
+                        <i class="icon-text"></i>
                         {{ project.composer.description }}
                     {% endif %}
                 </div>
-                <div class="col-3">
-                    <strong>Keywords:</strong>
-                    {% if project.composer.keywords is defined %}
-                        {% for keyword in project.composer.keywords %}
-                            {{ keyword }}<br/>
-                        {% endfor %}
-                    {% endif %}
-                </div>
-                <div class="col-3">
-                    <strong>Authors:</strong>
+                <div class="col-3 padding-small">
                     {% if project.composer.authors is defined %}
+                        <i class="icon-user"></i>
                         {% for author in project.composer.authors %}
                             {% if author.name is defined %}
                                 {% if author.email is defined %}

@@ -1,39 +1,35 @@
 <!DOCTYPE html>
 <html lang="{{ app.request.locale }}">
 <head>
-    <meta charset="UTF-8" />
+    <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <title>{% block title %}Depmon{% endblock %}</title>
     {% block stylesheets %}
         <link rel="stylesheet" href="{{ asset('build/css/app.css') }}">
     {% endblock %}
 
-    <link rel="icon" type="image/x-icon" href="{{ asset("bundles/ximadepmon/img/favicon.ico") }}" />
+    <link rel="icon" type="image/png" href="{{ asset("bundles/ximadepmon/img/favicon.png") }}" sizes="64x64">
 </head>
 <body>
 {% block body %}
     <div class="container">
         <div class="row">
-            <div class="col-2">
-                <div class="text-center">
-                    <img src="{{ asset("bundles/ximadepmon/img/logo.svg") }}" width="100"/>
-                </div>
-                <div>
-                    <h1>DepMon
-                        <small>Dependency Monitoring</small>
-                    </h1>
+            <div class="col-2 full-height">
+                {{ include('@XimaDepmon/logo.html.twig') }}
+                <div class="position-bottom padding-small">
+                    <div class="text-center">
+                        <h1>DepMon</h1>
+                        <div class="text-muted">Dependency Monitoring</div>
+                        <a href="https://github.com/xima-media/depmon"><i class="icon-github"></i></a> v0.1.0
+                    </div>
                 </div>
             </div>
-            <div class="col-2">
-                {{ include('filter.html.twig') }}
+            <div class="col-2 full-height bg-gray">
+                {{ include('@XimaDepmon/filter.html.twig') }}
             </div>
             <div class="col-8">
                 <div id="depmon-list">
-                    <form id="depmon-search">
-                        <input type="text" class="search text-search" name="name"
-                               placeholder="Search dependencies ..."/>
-                    </form>
-                    <ul class="list list-group">
+                    <ul class="list list-group header">
                         <li class="list-group-item">
                             <div class="row">
                                 <div class="col-5 text-muted">
@@ -56,9 +52,9 @@
                     </ul>
                     {% for key, project in projects %}
                         <ul class="list list-group">
-                            {{ include('project.html.twig') }}
+                            {{ include('@XimaDepmon/project.html.twig') }}
                             {% for dependency in project.dependencies %}
-                                {{ include('dependency.html.twig') }}
+                                {{ include('@XimaDepmon/dependency.html.twig') }}
                             {% endfor %}
                         </ul>
                     {% endfor %}

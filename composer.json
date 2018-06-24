@@ -18,5 +18,8 @@
     "psr-4": {
       "Xima\\DepmonBundle\\": ""
     }
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^6.5"
   }
 }
