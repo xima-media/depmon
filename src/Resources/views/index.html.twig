@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <title>{% block title %}Depmon{% endblock %}</title>
     {% block stylesheets %}
-        <link rel="stylesheet" href="{{ asset('build/css/app.css') }}">
+        <link rel="stylesheet" href="{{ asset("bundles/ximadepmon/build/css/app.css") }}">
     {% endblock %}
 
     <link rel="icon" type="image/png" href="{{ asset("bundles/ximadepmon/img/favicon.png") }}" sizes="64x64">
@@ -65,9 +65,9 @@
 {% endblock %}
 
 {% block javascripts %}
-    <script src="{{ asset('build/manifest.js') }}"></script>
-    <script src="{{ asset('build/js/common.js') }}"></script>
-    <script src="{{ asset('build/js/app.js') }}"></script>
+    <script src="{{ asset("bundles/ximadepmon/build/mainfest.js") }}"></script>
+    <script src="{{ asset("bundles/ximadepmon/build/js/common.js") }}"></script>
+    <script src="{{ asset("bundles/ximadepmon/build/js/app.js") }}"></script>
 {% endblock %}
 </body>
 </html>

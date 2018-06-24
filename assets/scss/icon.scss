@@ -1,0 +1,95 @@
+@font-face {
+  font-family: 'icomoon';
+  src:  url('../fonts/icomoon.eot?3r2b0x');
+  src:  url('../fonts/icomoon.eot?3r2b0x#iefix') format('embedded-opentype'),
+  url('../fonts/icomoon.ttf?3r2b0x') format('truetype'),
+  url('../fonts/icomoon.woff?3r2b0x') format('woff'),
+  url('../fonts/icomoon.svg?3r2b0x#icomoon') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+[class^="icon-"], [class*=" icon-"] {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'icomoon' !important;
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-badge:before {
+  content: "\e90f";
+}
+.icon-filter:before {
+  content: "\e900";
+}
+.icon-search:before {
+  content: "\e901";
+}
+.icon-subdirectory_arrow_right:before {
+  content: "\e902";
+}
+.icon-keyboard_arrow_up:before {
+  content: "\e903";
+}
+.icon-keyboard_arrow_right:before {
+  content: "\e904";
+}
+.icon-keyboard_arrow_left:before {
+  content: "\e905";
+}
+.icon-keyboard_arrow_down:before {
+  content: "\e906";
+}
+.icon-arrow_upward:before {
+  content: "\e907";
+}
+.icon-arrow_forward:before {
+  content: "\e908";
+}
+.icon-arrow_downward:before {
+  content: "\e909";
+}
+.icon-arrow_back:before {
+  content: "\e90a";
+}
+.icon-typo3:before {
+  content: "\e90b";
+}
+.icon-symfony:before {
+  content: "\e90c";
+}
+.icon-gitlab:before {
+  content: "\e90d";
+}
+.icon-drupal:before {
+  content: "\e90e";
+}
+.icon-text:before {
+  content: "\e926";
+}
+.icon-user:before {
+  content: "\e971";
+}
+.icon-link:before {
+  content: "\e9cb";
+}
+.icon-star-empty:before {
+  content: "\e9d7";
+}
+.icon-star-full:before {
+  content: "\e9d9";
+}
+.icon-rss:before {
+  content: "\ea9b";
+}
+.icon-github:before {
+  content: "\eab0";
+}

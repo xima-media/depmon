@@ -1,0 +1,26 @@
+// pick the Lato fonts individually to avoid importing the entire font family
+@import '~lato-font/scss/public-api';
+@include lato-include-font('normal');
+@include lato-include-font('bold');
+
+/* Basic settings
+   ------------------------------------------------------------------------- */
+
+$rows: 12;
+$font-size: 16px;
+
+/* Colors
+   ------------------------------------------------------------------------- */
+
+$white: #fff;
+$black: #000;
+$dark: #333;
+$gray: #ccc;
+$gray-dark: #bbb;
+$gray-light: #ddd;
+$gray-lighter: #eee;
+
+$red: #EB6B56;
+$yellow: #F7DA64;
+$green: #61BD6D;
+$blue: #3D8EB9;

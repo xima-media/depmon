@@ -1,0 +1,51 @@
+@import "variables";
+
+ul {
+  list-style: none;
+  &.list-group {
+    margin: 0;
+    padding: 0;
+  }
+}
+
+li {
+  margin: 5px 0;
+  padding: 0 10px;
+  &.list-header {
+    position: sticky;
+    display: block;
+    top: 0;
+    right: 0;
+    left: 0;
+    padding: 10px 5px;
+    margin: 0;
+    z-index: 1;
+
+    button {
+      margin-top: -10px;
+      margin-bottom: -10px;
+    }
+  }
+}
+
+.state {
+  display: inline-block;
+  content: '';
+  width: 15px;
+  height: 15px;
+
+  &.state-1 {
+    background-color: $green;
+  }
+
+  &.state-2 {
+    background-color: $yellow;
+  }
+
+  &.state-3,
+  &.state-4 {
+    background-color: $red;
+  }
+}
+
+

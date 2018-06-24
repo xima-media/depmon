@@ -1,3 +1,6 @@
 /.idea/
 /vendor/
+/node_modules/
+/src/Resources/public/build/
 composer.lock
+yarn.lock

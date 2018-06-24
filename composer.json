@@ -16,7 +16,7 @@
   },
   "autoload": {
     "psr-4": {
-      "Xima\\DepmonBundle\\": ""
+      "Xima\\DepmonBundle\\": "src/"
     }
   },
   "require-dev": {

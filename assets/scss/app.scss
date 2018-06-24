@@ -1,0 +1,124 @@
+@import "variables";
+
+/* Basic styles
+   ------------------------------------------------------------------------- */
+
+body, html {
+  font-family: "Lato", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: $font-size;
+  color: $dark;
+  margin: 0;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+a {
+  color: $blue;
+  text-decoration: none;
+
+  &:visited,
+  &:focus,
+  &:hover {
+    color: $blue;
+    text-decoration: none;
+    cursor: pointer;
+  }
+}
+
+.container {
+  width: 100%;
+}
+
+.row {
+
+  &::after {
+    content: ".";
+    clear: both;
+    display: block;
+    visibility: hidden;
+    height: 0px;
+  }
+}
+
+@for $i from 1 through $rows {
+  .col-#{$i} {
+    width: $i/12*100%;
+  }
+}
+
+div[class*="col-"] {
+  position: relative;
+  min-height: 1px;
+  float: left;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.text-right {
+  text-align: right;
+}
+
+.text-muted {
+  color: $gray-dark;
+}
+
+.collapse {
+  display: none !important;
+
+  &.in {
+    display: block !important;
+  }
+}
+
+.collapsing {
+  position: relative;
+  height: 0;
+  overflow: hidden;
+  -webkit-transition-timing-function: ease;
+  -o-transition-timing-function: ease;
+  transition-timing-function: ease;
+  -webkit-transition-duration: .35s;
+  -o-transition-duration: .35s;
+  transition-duration: .35s;
+  -webkit-transition-property: height,visibility;
+  -o-transition-property: height,visibility;
+  transition-property: height,visibility;
+}
+
+.full-height {
+  min-height: 100vh !important;
+  overflow-y: scroll;
+  position: sticky !important;
+  top: 0;
+}
+
+.bg-gray {
+  background-color: $gray-lighter;
+}
+
+.position-bottom {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+}
+
+.padding-small {
+  padding: 10px;
+}
+
+button {
+  background: transparent;
+  border: 0;
+
+  &:hover {
+    cursor: pointer;
+  }
+}

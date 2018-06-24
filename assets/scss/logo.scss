@@ -1,0 +1,70 @@
+.logo {
+  width: 100px;
+  position: absolute;
+  left: 50%;
+  margin-left: -50px;
+  margin-top: -50px;
+}
+
+.path {
+  stroke-dasharray: 1000;
+  stroke-dashoffset: 1000;
+  animation: dash 3.5s linear forwards;
+}
+.square {
+  position: relative;
+  opacity: 0;
+}
+.animation-1 {
+  animation: fadeIn 2s 3.1s linear forwards;
+}
+.animation-2 {
+  animation: fadeIn 2s 3.5s linear forwards;
+}
+.animation-3 {
+  animation: fadeIn 2s 3.2s linear forwards;
+}
+.animation-4 {
+  animation: fadeIn 2s 3.3s linear forwards;
+}
+.animation-5 {
+  animation: fadeIn 2s 3.4s linear forwards;
+}
+.animation-6 {
+  animation: fadeIn 2s 3.5s ease forwards;
+}
+.animation-7 {
+  animation: fadeIn 2s 3.6s ease forwards;
+}
+.animation-8 {
+  animation: fadeIn 2s 3.7s ease forwards;
+}
+.animation-9 {
+  animation: fadeIn 2s 3.8s ease forwards;
+}
+.animation-10 {
+  animation: fadeIn 2s 3.9s ease forwards;
+}
+
+@keyframes dash {
+  60% {
+    fill: #FFF;
+  }
+  80% {
+    fill: rgb(235,107,86);
+  }
+  100% {
+    stroke-dashoffset: 0;
+    fill: rgb(235,107,86);
+  }
+}
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    /*     transform-origin: 30% 70%; */
+  }
+  100% {
+    opacity: 1;
+    /*     transform-origin: 0 0; */
+  }
+}
