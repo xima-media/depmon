@@ -124,6 +124,10 @@ class Aggregator
         $process->setTimeout(3600);
         $process->run();
 
+        if (!$process->isSuccessful()) {
+            throw new ProcessFailedException($process);
+        }
+
         $process = new Process(
             'cd var/data/' . $project['name'] . ' && ' .
             'git describe --tags $(git rev-list --tags --max-count=1)'
