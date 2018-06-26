@@ -9,7 +9,11 @@
 
     <div class="row">
         <div class="col-5">
-            {{ dependency.name }}
+            <div class="dependency">{{ dependency.name }}
+                <button class="filter-dependency" data-dependency="{{ dependency.name }}" data-tooltip="Quick search for this dependency" flow="down">
+                    <i class="icon-search"></i>
+                </button>
+            </div>
         </div>
         <div class="col-2 text-center">
             {% if dependency.required is defined %}

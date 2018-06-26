@@ -67,9 +67,15 @@ class AggregateCommand extends ContainerAwareCommand
         $progressBar = new ProgressBar($output, count($projects));
         $progressBar->setFormat('verbose');
 
+        $dependencyCount = 0;
+
         foreach ($projects as $project) {
             try {
-                $this->cache->set($project['name'], $this->aggregator->fetchProjectData($project));
+
+                $data = $this->aggregator->fetchProjectData($project);
+                $dependencyCount += count($data['dependency']);
+
+                $this->cache->set($project['name'], $data);
 
                 $progressBar->advance();
                 $output->writeln(' <fg=red;options=bold>' . $project['name'] . '</>');
@@ -79,7 +85,13 @@ class AggregateCommand extends ContainerAwareCommand
             }
         }
 
-        $this->cache->set('metadata', time());
+
+        $metadata = [
+            'time' => time(),
+            'dependencyCount' => $dependencyCount
+        ];
+
+        $this->cache->set('metadata', $metadata);
 
         $progressBar->finish();
     }

@@ -3,6 +3,7 @@
 namespace Xima\DepmonBundle\Controller;
 
 
+use Symfony\Component\Routing\Exception\InvalidParameterException;
 use Xima\DepmonBundle\Service\Cache;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -20,12 +21,17 @@ class DefaultController extends AbstractController
      */
     private $cache;
 
+    /**
+     * DefaultController constructor.
+     * @param Cache $cache
+     */
     public function __construct(Cache $cache)
     {
         $this->cache = $cache;
     }
 
     /**
+     * Index action.
      * @return Response
      */
     public function index(): Response
@@ -33,7 +39,6 @@ class DefaultController extends AbstractController
 //        $projectsConfig = Yaml::parseFile(__DIR__ . '/../../config/depmon.projects.yaml');
         $projectsConfig = $this->getParameter('xima_depmon.projects');
         $projects = [];
-
 
         foreach ($projectsConfig as $project) {
             $projects[] = $this->cache->get($project['name']);
@@ -49,6 +54,7 @@ class DefaultController extends AbstractController
     }
 
     /**
+     * State action for checking the summary dependency state of a project and returning a SVG.
      * @param string $project
      * @return Response
      */

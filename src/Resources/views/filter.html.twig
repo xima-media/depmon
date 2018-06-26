@@ -13,19 +13,19 @@
         {% endfor %}
     </div>
     <a href="#" class="filter-entry" data-toggle="collapse" data-target="#filter-type-collapse">
-        <strong>Types (3)</strong> <small>ToDo</small>
+        <strong>Types (3)</strong> <small>beta</small>
     </a>
     <div id="filter-type-collapse" class="collapse">
         <div class="checkbox" data-tooltip="TYPO3">
-            <input type="checkbox" name="project-type" value="TYPO3" id="filter-type-01" disabled>
+            <input type="checkbox" name="project-type" value="TYPO3" id="filter-type-01">
             <label for="filter-type-01"> <i class="icon-typo3"></i></label>
         </div>
         <div class="checkbox" data-tooltip="Symfony">
-            <input type="checkbox" name="project-type" value="Symfony" id="filter-type-02" disabled>
+            <input type="checkbox" name="project-type" value="Symfony" id="filter-type-02">
             <label for="filter-type-02"> <i class="icon-symfony"></i></label>
         </div>
         <div class="checkbox" data-tooltip="Drupal">
-            <input type="checkbox" name="project-type" value="Drupal" id="filter-type-03" disabled>
+            <input type="checkbox" name="project-type" value="Drupal" id="filter-type-03">
             <label for="filter-type-03"> <i class="icon-drupal"></i></label>
         </div>
     </div>
@@ -54,24 +54,33 @@
         <div class="checkbox" data-tooltip="The available package has a higher minor or major version">
             <input type="checkbox" name="state" value="3" id="filter-state-3">
             <label for="filter-state-3"> out of date
-                <div class="state state-3"></div>
+                <span class="state state-3"></span>
             </label>
         </div>
         <div class="checkbox" data-tooltip="The available package has a higher bugfix level version">
             <input type="checkbox" name="state" value="2" id="filter-state-2">
             <label for="filter-state-2"> up to date
-                <div class="state state-2"></div>
+                <span class="state state-2"></span>
             </label>
         </div>
         <div class="checkbox" data-tooltip="The package version is up to date">
             <input type="checkbox" name="state" value="1" id="filter-state-1">
             <label for="filter-state-1"> up to date
-                <div class="state state-1"></div>
+                <span class="state state-1"></span>
             </label>
         </div>
     </div>
     <div class="padding-small text-center">
-        <button class="filter-reset"><i class="icon-subdirectory_arrow_right"></i> Reset filter</button>
+        <small>
+            <a class="filter-reset no-style">
+                <i class="icon-subdirectory_arrow_right"></i> Reset filter
+            </a>
+        </small>
     </div>
 </form>
-<small class="position-bottom padding-small text-muted">Last updated: <br/>{{ metadata|date }}</small>
+<small class="position-bottom padding-small text-muted">
+    Statistic: <br/>
+    {{ projects|length }} projects, {{ metadata.dependencyCount }} dependencies
+    <br/><br/>
+    Last updated: <br/>{{ metadata.time|date }}
+</small>

@@ -28,6 +28,18 @@ li {
   }
 }
 
+.dependency {
+  .filter-dependency {
+    display: none;
+  }
+
+  &:hover {
+    .filter-dependency {
+      display: inline-block;
+    }
+  }
+}
+
 .state {
   display: inline-block;
   content: '';

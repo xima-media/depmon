@@ -25,6 +25,14 @@ a {
     text-decoration: none;
     cursor: pointer;
   }
+
+  .no-style {
+    color: $dark;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
 }
 
 .container {

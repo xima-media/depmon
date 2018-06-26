@@ -33,6 +33,17 @@ $(function() {
         $('#filter-project-collapse').collapse('show');
     });
 
+    // Quick filter for dependency
+    $('.filter-dependency').click(function() {
+        var dependency = $(this).attr('data-dependency');
+        var object = {
+            'name': [
+                dependency
+            ]
+        };
+        filter.applyFilter(object);
+    });
+
     $('.filter-reset').click(function () {
         filter.reset();
         filter.applyFilter(null);

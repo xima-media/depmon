@@ -20,7 +20,9 @@
             {% endif %}
         </div>
         <div class="col-1 text-center">
-            {{ project.self.projectType is defined ? project.self.projectType }}
+            {% if project.self.projectType is defined %}
+                <i class="icon-{{ project.self.projectType|lower }}"></i>
+            {% endif %}
         </div>
         <div class="col-3 text-right">
             <a href="{{ path('xima_depmon_state', {'project': project.self.name}) }}">

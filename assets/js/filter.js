@@ -173,6 +173,8 @@ Filter = (function (window, document, $, undefined) {
             _self.synchronizeFilterForm(_filter);
         }
 
+        console.log(_filter);
+
         var _list = $(_options.list);
         var _entries = _list.find(_options.filterableElements);
 

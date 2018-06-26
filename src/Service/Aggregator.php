@@ -36,7 +36,7 @@ class Aggregator
     ];
 
     /**
-     *
+     * State constants
      * @var int
      */
     const STATE_UP_TO_DATE = 1;
@@ -71,6 +71,7 @@ class Aggregator
         $this->logger->info("Fetching project dependencies for: $projectName");
 
         // If project already exists, just pull updates. Otherwise clone the repository.
+        // ToDo: "git reset" pulls every file of the git
         if (is_dir('var/data/' . $project['name'])) {
             $process = new Process('cd var/data/' . $project['name'] . ' && git reset --hard origin/master');
         } else {
@@ -115,7 +116,7 @@ class Aggregator
             'git checkout HEAD ' . $project['path'] . 'composer.json && ' .
             // Checkout composer.lock file
             (($composerLock) ? 'git checkout HEAD ' . $project['path'] . 'composer.lock && ' : '') .
-            // CHange directory
+            // Change directory
             (($project['path'] != '') ? 'cd ' . $project['path'] . ' && ' : '') .
             // Install composer dependencies
             'composer install --no-dev --no-autoloader --no-scripts --ignore-platform-reqs'
