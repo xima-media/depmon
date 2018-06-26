@@ -10,7 +10,8 @@
                 <strong>{{ project.self.name }}</strong>
                 <small>{{ project.composer.name }}</small>
             </a>
-            <button class="filter-project" data-project="{{ project.self.name }}" data-tooltip="Quick filter for this project" flow="down">
+            <button class="filter-project" data-project="{{ project.self.name }}"
+                    data-tooltip="{{ 'xima.depmon.list.quickfilter.project.tooltip'|trans({}, 'XimaDepmonBundle') }}" flow="down">
                 <i class="icon-filter"></i>
             </button>
         </div>
@@ -21,7 +22,9 @@
         </div>
         <div class="col-1 text-center">
             {% if project.self.projectType is defined %}
-                <i class="icon-{{ project.self.projectType|lower }}"></i>
+                <a class="no-style filter-type" data-type="{{ project.self.projectType }}">
+                    <i class="icon-{{ project.self.projectType|lower }}"></i>
+                </a>
             {% endif %}
         </div>
         <div class="col-3 text-right">
@@ -32,31 +35,36 @@
         <div id="{{ key }}" class="collapse col-12 bg-gray">
             <div class="row padding-small">
                 <div class="col-3">
-                    <strong>{{ project.dependencies|length }}</strong> total dependencies
+                    <strong>{{ project.dependencies|length }}</strong> {{ 'xima.depmon.list.dependencies.total'|trans({}, 'XimaDepmonBundle') }}
                 </div>
                 <div class="col-3">
-                    <strong>{{ project.meta.requiredPackagesCount }}</strong> required
-                    dependencies
+                    <strong>{{ project.meta.requiredPackagesCount }}</strong> {{ 'xima.depmon.list.dependencies.required'|trans({}, 'XimaDepmonBundle') }}
                 </div>
                 <div class="col-2">
-                    <div class="state state-1"></div> {{ project.meta.statesCount.1 }} up to date
+                    <a class="filter-state-project no-style" data-project="{{ project.self.name }}" data-state="1"
+                       data-tooltip="{{ 'xima.depmon.list.state.tooltip'|trans({}, 'XimaDepmonBundle') }}" flow="down">
+                        <div class="state state-1"></div> {{ project.meta.statesCount.1 }} {{ 'xima.depmon.list.state.1'|trans({}, 'XimaDepmonBundle') }}
+                    </a>
                 </div>
                 <div class="col-2">
-                    <div class="state state-2"></div> {{ project.meta.statesCount.2 }} up to date
+                    <a class="filter-state-project no-style" data-project="{{ project.self.name }}" data-state="2"
+                       data-tooltip="{{ 'xima.depmon.list.state.tooltip'|trans({}, 'XimaDepmonBundle') }}" flow="down">
+                        <div class="state state-2"></div> {{ project.meta.statesCount.2 }} {{ 'xima.depmon.list.state.2'|trans({}, 'XimaDepmonBundle') }}
+                    </a>
                 </div>
                 <div class="col-2">
-                    <div class="state state-3"></div> {{ project.meta.statesCount.3 }} out of date
+                    <a class="filter-state-project no-style" data-project="{{ project.self.name }}" data-state="3"
+                       data-tooltip="{{ 'xima.depmon.list.state.tooltip'|trans({}, 'XimaDepmonBundle') }}" flow="down">
+                        <div class="state state-3"></div> {{ project.meta.statesCount.3 }} {{ 'xima.depmon.list.state.3'|trans({}, 'XimaDepmonBundle') }}
+                    </a>
                 </div>
-                <div class="col-12 padding-small">
-                    <strong><em>composer.json</em></strong>
-                </div>
-                <div class="col-9 padding-small">
+                <div class="col-8 padding-small">
                     {% if project.composer.description is defined %}
                         <i class="icon-text"></i>
                         {{ project.composer.description }}
                     {% endif %}
                 </div>
-                <div class="col-3 padding-small">
+                <div class="col-4 padding-small">
                     {% if project.composer.authors is defined %}
                         <i class="icon-user"></i>
                         {% for author in project.composer.authors %}

@@ -1,7 +1,7 @@
 <form class="filter" id="depmon-filter">
-    <h3>Project</h3>
+    <h3>{{ 'xima.depmon.filter.project'|trans({}, 'XimaDepmonBundle') }}</h3>
     <a href="#" class="filter-entry" data-toggle="collapse" data-target="#filter-project-collapse">
-        <strong>Projects ({{ projects|length }})</strong>
+        <strong>{{ 'xima.depmon.filter.projects'|trans({}, 'XimaDepmonBundle') }} ({{ projects|length }})</strong>
     </a>
     <div id="filter-project-collapse" class="collapse">
         {% for project in projects %}
@@ -13,7 +13,7 @@
         {% endfor %}
     </div>
     <a href="#" class="filter-entry" data-toggle="collapse" data-target="#filter-type-collapse">
-        <strong>Types (3)</strong> <small>beta</small>
+        <strong>{{ 'xima.depmon.filter.types'|trans({}, 'XimaDepmonBundle') }} (3)</strong> <small>beta</small>
     </a>
     <div id="filter-type-collapse" class="collapse">
         <div class="checkbox" data-tooltip="TYPO3">
@@ -30,42 +30,42 @@
         </div>
     </div>
     <div class="checkbox padding-small">
-        <div data-tooltip="Providing a quick start overview on all available projects">
+        <div data-tooltip="{{ 'xima.depmon.filter.overview.tooltip'|trans({}, 'XimaDepmonBundle') }}">
             <input type="checkbox" name="overview" value="1" id="filter-overview">
             <label for="filter-overview" class="dark">
-                <small>Show overview</small>
+                <small>{{ 'xima.depmon.filter.overview'|trans({}, 'XimaDepmonBundle') }}</small>
             </label>
         </div>
     </div>
-    <h3>Dependency</h3>
-    <input type="text" class="search text-search" name="name" placeholder="Search dependencies ..."/>
+    <h3>{{ 'xima.depmon.filter.dependency'|trans({}, 'XimaDepmonBundle') }}</h3>
+    <input type="text" class="search text-search" name="name" placeholder="{{ 'xima.depmon.filter.search'|trans({}, 'XimaDepmonBundle') }}"/>
     <div class="checkbox padding-small">
-        <div data-tooltip="Show only packages which are explicitly required in the composer.json">
+        <div data-tooltip="{{ 'xima.depmon.filter.required.tooltip'|trans({}, 'XimaDepmonBundle') }}">
             <input type="checkbox" name="required" value="1" id="filter-required">
             <label for="filter-required" class="dark">
-                <small>Only required packages</small>
+                <small>{{ 'xima.depmon.filter.required'|trans({}, 'XimaDepmonBundle') }}</small>
             </label>
         </div>
     </div>
     <a href="#" class="filter-entry" data-toggle="collapse" data-target="#filter-state-collapse">
-        <strong>States</strong>
+        <strong>{{ 'xima.depmon.filter.states'|trans({}, 'XimaDepmonBundle') }}</strong>
     </a>
     <div id="filter-state-collapse" class="collapse">
-        <div class="checkbox" data-tooltip="The available package has a higher minor or major version">
+        <div class="checkbox" data-tooltip="{{ 'xima.depmon.filter.state.3.tooltip'|trans({}, 'XimaDepmonBundle') }}">
             <input type="checkbox" name="state" value="3" id="filter-state-3">
-            <label for="filter-state-3"> out of date
+            <label for="filter-state-3"> {{ 'xima.depmon.filter.state.3'|trans({}, 'XimaDepmonBundle') }}
                 <span class="state state-3"></span>
             </label>
         </div>
-        <div class="checkbox" data-tooltip="The available package has a higher bugfix level version">
+        <div class="checkbox" data-tooltip="{{ 'xima.depmon.filter.state.2.tooltip'|trans({}, 'XimaDepmonBundle') }}">
             <input type="checkbox" name="state" value="2" id="filter-state-2">
-            <label for="filter-state-2"> up to date
+            <label for="filter-state-2"> {{ 'xima.depmon.filter.state.2'|trans({}, 'XimaDepmonBundle') }}
                 <span class="state state-2"></span>
             </label>
         </div>
-        <div class="checkbox" data-tooltip="The package version is up to date">
+        <div class="checkbox" data-tooltip="{{ 'xima.depmon.filter.state.1.tooltip'|trans({}, 'XimaDepmonBundle') }}">
             <input type="checkbox" name="state" value="1" id="filter-state-1">
-            <label for="filter-state-1"> up to date
+            <label for="filter-state-1"> {{ 'xima.depmon.filter.state.1'|trans({}, 'XimaDepmonBundle') }}
                 <span class="state state-1"></span>
             </label>
         </div>
@@ -73,14 +73,20 @@
     <div class="padding-small text-center">
         <small>
             <a class="filter-reset no-style">
-                <i class="icon-subdirectory_arrow_right"></i> Reset filter
+                <i class="icon-subdirectory_arrow_right"></i> {{ 'xima.depmon.filter.reset'|trans({}, 'XimaDepmonBundle') }}
             </a>
         </small>
     </div>
 </form>
-<small class="position-bottom padding-small text-muted">
-    Statistic: <br/>
-    {{ projects|length }} projects, {{ metadata.dependencyCount }} dependencies
-    <br/><br/>
-    Last updated: <br/>{{ metadata.time|date }}
+<small class="position-bottom padding-small text-muted width-100">
+    <div class="padding-small text-center">
+        <a class="filter-reset no-style">
+            <i class="icon-subdirectory_arrow_right"></i> {{ 'xima.depmon.basic.update'|trans({}, 'XimaDepmonBundle') }}
+        </a>
+    </div>
+    {{ 'xima.depmon.basic.statistic'|trans({}, 'XimaDepmonBundle') }}: <br/>
+    {{ 'xima.depmon.basic.entities'|trans({'%projects%': projects|length, '%dependencies%': metadata.dependencyCount}, 'XimaDepmonBundle') }}
+    <br/>
+    <br/>
+    {{ 'xima.depmon.basic.updated'|trans({}, 'XimaDepmonBundle') }}: <br/>{{ metadata.time|date }}
 </small>

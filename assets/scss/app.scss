@@ -26,12 +26,8 @@ a {
     cursor: pointer;
   }
 
-  .no-style {
+  &.no-style {
     color: $dark;
-
-    &:hover {
-      text-decoration: underline;
-    }
   }
 }
 
@@ -122,6 +118,10 @@ div[class*="col-"] {
 
 .padding-small {
   padding: 10px;
+}
+
+.width-100 {
+  width: 100%;
 }
 
 button {

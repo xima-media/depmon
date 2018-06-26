@@ -2,9 +2,149 @@
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
     <file source-language="en" datatype="plaintext" original="">
         <body>
-            <trans-unit id="sonata_administration">
-                <source>sonata_administration</source>
-                <target>Administration</target>
+            <trans-unit id="xima.depmon.basic.title">
+                <source>xima.depmon.basic.title</source>
+                <target>DepMon</target>
+            </trans-unit>
+            <trans-unit id="xima.depmon.basic.subtitle">
+                <source>xima.depmon.basic.subtitle</source>
+                <target>Dependency Monitoring</target>
+            </trans-unit>
+            <trans-unit id="xima.depmon.basic.statistic">
+                <source>xima.depmon.basic.statistic</source>
+                <target>Statistic</target>
+            </trans-unit>
+            <trans-unit id="xima.depmon.basic.updated">
+                <source>xima.depmon.basic.updated</source>
+                <target>Last updated</target>
+            </trans-unit>
+            <trans-unit id="xima.depmon.basic.update">
+                <source>xima.depmon.basic.update</source>
+                <target>Start update</target>
+            </trans-unit>
+            <trans-unit id="xima.depmon.basic.projects">
+                <source>xima.depmon.basic.entities</source>
+                <target>%projects% projects, %dependencies% dependencies</target>
+            </trans-unit>
+            <trans-unit id="xima.depmon.filter.project">
+                <source>xima.depmon.filter.project</source>
+                <target>Project</target>
+            </trans-unit>
+            <trans-unit id="xima.depmon.filter.projects">
+                <source>xima.depmon.filter.projects</source>
+                <target>Projects</target>
+            </trans-unit>
+            <trans-unit id="xima.depmon.filter.types">
+                <source>xima.depmon.filter.types</source>
+                <target>Types</target>
+            </trans-unit>
+            <trans-unit id="xima.depmon.filter.overview">
+                <source>xima.depmon.filter.overview</source>
+                <target>Show overview</target>
+            </trans-unit>
+            <trans-unit id="xima.depmon.filter.overview.tooltip">
+                <source>xima.depmon.filter.overview.tooltip</source>
+                <target>Providing a quick start overview on all available projects</target>
+            </trans-unit>
+            <trans-unit id="xima.depmon.filter.dependency">
+                <source>xima.depmon.filter.dependency</source>
+                <target>Dependency</target>
+            </trans-unit>
+            <trans-unit id="xima.depmon.filter.search">
+                <source>xima.depmon.filter.search</source>
+                <target>Search dependencies ...</target>
+            </trans-unit>
+            <trans-unit id="xima.depmon.filter.required">
+                <source>xima.depmon.filter.required</source>
+                <target>Only required packages</target>
+            </trans-unit>
+            <trans-unit id="xima.depmon.filter.required.tooltip">
+                <source>xima.depmon.filter.required.tooltip</source>
+                <target>Show only packages which are explicitly required in the composer.json</target>
+            </trans-unit>
+            <trans-unit id="xima.depmon.filter.states">
+                <source>xima.depmon.filter.states</source>
+                <target>States</target>
+            </trans-unit>
+            <trans-unit id="xima.depmon.filter.state.1">
+                <source>xima.depmon.filter.state.1</source>
+                <target>up to date</target>
+            </trans-unit>
+            <trans-unit id="xima.depmon.filter.state.1.tooltip">
+                <source>xima.depmon.filter.state.1.tooltip</source>
+                <target>The package version is up to date</target>
+            </trans-unit>
+            <trans-unit id="xima.depmon.filter.state.2">
+                <source>xima.depmon.filter.state.2</source>
+                <target>up to date</target>
+            </trans-unit>
+            <trans-unit id="xima.depmon.filter.state.2.tooltip">
+                <source>xima.depmon.filter.state.2.tooltip</source>
+                <target>The available package has a higher bugfix level version</target>
+            </trans-unit>
+            <trans-unit id="xima.depmon.filter.state.3">
+                <source>xima.depmon.filter.state.3</source>
+                <target>out of date</target>
+            </trans-unit>
+            <trans-unit id="xima.depmon.filter.state.3.tooltip">
+                <source>xima.depmon.filter.state.3.tooltip</source>
+                <target>The available package has a higher minor or major version</target>
+            </trans-unit>
+            <trans-unit id="xima.depmon.filter.reset">
+                <source>xima.depmon.filter.reset</source>
+                <target>Reset filter</target>
+            </trans-unit>
+            <trans-unit id="xima.depmon.list.header.dependency">
+                <source>xima.depmon.list.header.dependency</source>
+                <target>Dependency</target>
+            </trans-unit>
+            <trans-unit id="xima.depmon.list.header.required">
+                <source>xima.depmon.list.header.required</source>
+                <target>Required</target>
+            </trans-unit>
+            <trans-unit id="xima.depmon.list.header.stable">
+                <source>xima.depmon.list.header.stable</source>
+                <target>Stable</target>
+            </trans-unit>
+            <trans-unit id="xima.depmon.list.header.latest">
+                <source>xima.depmon.list.header.latest</source>
+                <target>Latest</target>
+            </trans-unit>
+            <trans-unit id="xima.depmon.list.header.state">
+                <source>xima.depmon.list.header.state</source>
+                <target>State</target>
+            </trans-unit>
+            <trans-unit id="xima.depmon.list.quickfilter.project.tooltip">
+                <source>xima.depmon.list.quickfilter.project.tooltip</source>
+                <target>Quick filter for this project</target>
+            </trans-unit>
+            <trans-unit id="xima.depmon.list.dependencies.total">
+                <source>xima.depmon.list.dependencies.total</source>
+                <target>total dependencies</target>
+            </trans-unit>
+            <trans-unit id="xima.depmon.list.dependencies.required">
+                <source>xima.depmon.list.dependencies.required</source>
+                <target>required dependencies</target>
+            </trans-unit>
+            <trans-unit id="xima.depmon.list.state.1">
+                <source>xima.depmon.list.state.1</source>
+                <target>up to date</target>
+            </trans-unit>
+            <trans-unit id="xima.depmon.list.state.tooltip">
+                <source>xima.depmon.list.state.tooltip</source>
+                <target>Quick filter for this project and the state</target>
+            </trans-unit>
+            <trans-unit id="xima.depmon.list.state.2">
+                <source>xima.depmon.list.state.2</source>
+                <target>up to date</target>
+            </trans-unit>
+            <trans-unit id="xima.depmon.list.state.3">
+                <source>xima.depmon.list.state.3</source>
+                <target>out of date</target>
+            </trans-unit>
+            <trans-unit id="xima.depmon.list.quickfilter.dependency.tooltip">
+                <source>xima.depmon.list.quickfilter.dependency.tooltip</source>
+                <target>Quick search for this dependency</target>
             </trans-unit>
         </body>
     </file>

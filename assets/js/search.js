@@ -21,6 +21,13 @@ $(function() {
         debug: true
     });
 
+    $('.filter-reset').click(function () {
+        filter.reset();
+        filter.applyFilter(null);
+        $('.collapse').collapse('hide');
+    });
+
+    // ToDo: Combine these event listener to a more generic one
     // Quick filter for project
     $('.filter-project').click(function() {
         var project = $(this).attr('data-project');
@@ -44,9 +51,32 @@ $(function() {
         filter.applyFilter(object);
     });
 
-    $('.filter-reset').click(function () {
-        filter.reset();
-        filter.applyFilter(null);
-        $('.collapse').collapse('hide');
+    // Quick filter for type
+    $('.filter-type').click(function() {
+        var type = $(this).attr('data-type');
+        var object = {
+            'project-type': [
+                type
+            ]
+        };
+        filter.applyFilter(object);
+        $('#filter-type-collapse').collapse('show');
+    });
+
+    // Quick filter for state and the project
+    $('.filter-state-project').click(function() {
+        var project = $(this).attr('data-project');
+        var state = $(this).attr('data-state');
+        var object = {
+            'project': [
+                project
+            ],
+            'state': [
+                state
+            ]
+        };
+        filter.applyFilter(object);
+        $('#filter-project-collapse').collapse('show');
+        $('#filter-state-collapse').collapse('show');
     });
 });

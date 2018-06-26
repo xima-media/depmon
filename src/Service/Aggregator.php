@@ -147,7 +147,7 @@ class Aggregator
         }
 
         if (empty(json_decode($process->getOutput()))) {
-            throw new \Exception('Empty result of composer show');
+            throw new \Exception('Empty result of "composer show" for project ' . $projectName);
         }
 
         $result = [];

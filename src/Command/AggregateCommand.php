@@ -73,7 +73,7 @@ class AggregateCommand extends ContainerAwareCommand
             try {
 
                 $data = $this->aggregator->fetchProjectData($project);
-                $dependencyCount += count($data['dependency']);
+                $dependencyCount += count($data['dependencies']);
 
                 $this->cache->set($project['name'], $data);
 

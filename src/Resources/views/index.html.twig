@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
-    <title>{% block title %}Depmon{% endblock %}</title>
+    <title>{% block title %}{{ 'xima.depmon.basic.title'|trans({}, 'XimaDepmonBundle') }} – {{ 'xima.depmon.basic.subtitle'|trans({}, 'XimaDepmonBundle') }}{% endblock %}</title>
     {% block stylesheets %}
         <link rel="stylesheet" href="{{ asset("bundles/ximadepmon/build/css/app.css") }}">
     {% endblock %}
@@ -16,10 +16,10 @@
         <div class="row">
             <div class="col-2 full-height">
                 {{ include('@XimaDepmon/logo.html.twig') }}
-                <div class="position-bottom padding-small">
+                <div class="position-bottom padding-small width-100">
                     <div class="text-center">
-                        <h1>DepMon</h1>
-                        <div class="text-muted">Dependency Monitoring</div>
+                        <h1>{{ 'xima.depmon.basic.title'|trans({}, 'XimaDepmonBundle') }}</h1>
+                        <div class="text-muted">{{ 'xima.depmon.basic.subtitle'|trans({}, 'XimaDepmonBundle') }}</div>
                         <a href="https://github.com/xima-media/depmon" class="no-style"><i class="icon-github"></i></a> <small><a href="#" class="no-style">v0.1.0</a></small>
                     </div>
                 </div>
@@ -33,19 +33,19 @@
                         <li class="list-group-item">
                             <div class="row">
                                 <div class="col-5 text-muted">
-                                    Dependency
+                                    {{ 'xima.depmon.list.header.dependency'|trans({}, 'XimaDepmonBundle') }}
                                 </div>
                                 <div class="col-2 text-muted text-center">
-                                    Required
+                                    {{ 'xima.depmon.list.header.required'|trans({}, 'XimaDepmonBundle') }}
                                 </div>
                                 <div class="col-2 text-muted text-center">
-                                    Stable
+                                    {{ 'xima.depmon.list.header.stable'|trans({}, 'XimaDepmonBundle') }}
                                 </div>
                                 <div class="col-2 text-muted text-center">
-                                    Latest
+                                    {{ 'xima.depmon.list.header.latest'|trans({}, 'XimaDepmonBundle') }}
                                 </div>
                                 <div class="col-1 text-muted text-center">
-                                    State
+                                    {{ 'xima.depmon.list.header.state'|trans({}, 'XimaDepmonBundle') }}
                                 </div>
                             </div>
                         </li>

@@ -10,7 +10,7 @@
     <div class="row">
         <div class="col-5">
             <div class="dependency">{{ dependency.name }}
-                <button class="filter-dependency" data-dependency="{{ dependency.name }}" data-tooltip="Quick search for this dependency" flow="down">
+                <button class="filter-dependency" data-dependency="{{ dependency.name }}" data-tooltip="{{ 'xima.depmon.xima.depmon.list.quickfilter.dependency.tooltip'|trans({}, 'XimaDepmonBundle') }}" flow="down">
                     <i class="icon-search"></i>
                 </button>
             </div>
@@ -29,7 +29,7 @@
             {% endif %}
         </div>
         <div class="col-1 text-center">
-            <div class="state state-{{ dependency.state }}"></div>
+            <div class="state state-{{ dependency.state }}" data-tooltip="{{ (dependency.state == 1) ? 'xima.depmon.list.state.1'|trans({}, 'XimaDepmonBundle') : ((dependency.state == 2) ? 'xima.depmon.list.state.2'|trans({}, 'XimaDepmonBundle') : 'xima.depmon.list.state.3'|trans({}, 'XimaDepmonBundle')) }}"></div>
         </div>
     </div>
 </li>
