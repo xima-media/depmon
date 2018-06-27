@@ -79,4 +79,20 @@ $(function() {
         $('#filter-project-collapse').collapse('show');
         $('#filter-state-collapse').collapse('show');
     });
+
+    // Quick filter for type
+    $('.filter-required-project').click(function() {
+        var project = $(this).attr('data-project');
+        var required = $(this).attr('data-required');
+        var object = {
+            'project': [
+                project
+            ],
+            'required': [
+                required
+            ]
+        };
+        filter.applyFilter(object);
+        $('#filter-project-collapse').collapse('show');
+    });
 });

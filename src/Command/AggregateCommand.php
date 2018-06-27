@@ -4,6 +4,7 @@ namespace Xima\DepmonBundle\Command;
 
 
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Style\SymfonyStyle;
 use Xima\DepmonBundle\Service\Aggregator;
 use Xima\DepmonBundle\Service\Cache;
 use Psr\Cache\InvalidArgumentException;
@@ -55,11 +56,17 @@ class AggregateCommand extends ContainerAwareCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
 
-        $output->writeln([
-            'Aggregator Command',
-            '============',
-            '',
-        ]);
+        $io = new SymfonyStyle($input, $output);
+
+        $io->text("<fg=red>██████╗ ███████╗██████╗ ███╗   ███╗ ██████╗ ███╗   ██╗</>");
+        $io->text("<fg=red>██╔══██╗██╔════╝██╔══██╗████╗ ████║██╔═══██╗████╗  ██║</>");
+        $io->text("<fg=red>██║  ██║█████╗  ██████╔╝██╔████╔██║██║   ██║██╔██╗ ██║</>");
+        $io->text("<fg=red>██║  ██║██╔══╝  ██╔═══╝ ██║╚██╔╝██║██║   ██║██║╚██╗██║</>");
+        $io->text("<fg=red>██████╔╝███████╗██║     ██║ ╚═╝ ██║╚██████╔╝██║ ╚████║</>");
+        $io->text("<fg=red>╚═════╝ ╚══════╝╚═╝     ╚═╝     ╚═╝ ╚═════╝ ╚═╝  ╚═══╝</>");
+
+        $io->title("Aggregate project data");
+
 
 //        $projects = Yaml::parseFile('config/depmon.projects.yaml');
         $projects = $this->getContainer()->getParameter('xima_depmon.projects');
@@ -67,18 +74,37 @@ class AggregateCommand extends ContainerAwareCommand
         $progressBar = new ProgressBar($output, count($projects));
         $progressBar->setFormat('verbose');
 
+        $projectCount = count($projects);
+        $io->text("Fetching data for $projectCount projects ...");
+
+
         $dependencyCount = 0;
 
         foreach ($projects as $project) {
             try {
 
                 $data = $this->aggregator->fetchProjectData($project);
-                $dependencyCount += count($data['dependencies']);
+                $count = count($data['dependencies']);
+                $dependencyCount += $count;
 
                 $this->cache->set($project['name'], $data);
 
+                $projectState = '';
+                switch ($data['meta']['projectState']) {
+                    case 1:
+                        $projectState = "<fg=green>up to date</>";
+                        break;
+                    case 2:
+                        $projectState = "<fg=yellow>up to date</>";
+                        break;
+                    case 3:
+                    default:
+                        $projectState = "<fg=red>out of date</>";
+                        break;
+                }
+
                 $progressBar->advance();
-                $output->writeln(' <fg=red;options=bold>' . $project['name'] . '</>');
+                $output->writeln(" <fg=blue;options=bold>[" . $project['name'] . "]</> ($count dependencies) – " . $projectState);
 
             } catch (InvalidArgumentException $e) {
 
@@ -92,7 +118,5 @@ class AggregateCommand extends ContainerAwareCommand
         ];
 
         $this->cache->set('metadata', $metadata);
-
-        $progressBar->finish();
     }
 }

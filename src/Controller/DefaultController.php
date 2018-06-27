@@ -3,6 +3,7 @@
 namespace Xima\DepmonBundle\Controller;
 
 
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\Routing\Exception\InvalidParameterException;
 use Xima\DepmonBundle\Service\Cache;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -66,9 +67,17 @@ class DefaultController extends AbstractController
         }
         $state = $data['meta']['projectState'];
         $file =  readfile(__DIR__ . "/../Resources/public/img/states/$state.svg");
-        $headers = array(
-            'Content-Type'     => 'image/svg',
-            'Content-Disposition' => 'inline; filename="'.$project.'.svg"');
-        return new Response($file, 200, $headers);
+
+        $filename = $project.".svg";
+        $response = new Response();
+        $response->headers->set('Cache-Control', 'private');
+        $response->headers->set('Content-type', 'image/svg');
+        $response->headers->set('Content-Disposition',
+            'attachment; filename="' . basename($filename) . '";');
+        $response->sendHeaders();
+
+        $response->setContent($file);
+
+        return $response;
     }
 }
