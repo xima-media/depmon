@@ -18,14 +18,14 @@ _ToDo_
 
 ## Installation
 
-_ToDo_
+Follow the installation steps in the [wiki](https://github.com/xima-media/depmon/wiki/Installing-DepMon).
 
 ## Configuration
 
-To add a new project to DepMon, you need to extend the ``depmon.projects.yml`` file like the example is showing below.
+To add a new project to DepMon, you need to extend the _parameters_ section in the ``service.yaml`` file like the example is showing below.
 
 ```
-projects:
+xima_depmon.projects:
     -
         name: 'project-name'
         git: 'git-url'
@@ -38,11 +38,10 @@ The data aggregation starts with following command. It is recommended to use a c
 php bin/console depmon:aggregate
 ```
 
-## ToDo 
+## ToDo (Wishlist)
 
 - Unit Testing
 - RSS Dependency Feed
-- Project Image Badge
 - E-Mail Notification
 - Use Security Advisories Checker
 - Extend functionality for npm packages
