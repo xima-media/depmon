@@ -1,6 +1,11 @@
-# DepMon (Dependency Monitoring)
+DepMon (Dependency Monitoring)
+=========
 
 [![Build Status](https://travis-ci.org/xima-media/depmon.svg?branch=master)](https://travis-ci.org/xima-media/depmon)
+[![Scrutinizer Quality Score](https://scrutinizer-ci.com/g/xima-media/depmon/badges/quality-score.png)](https://scrutinizer-ci.com/g/xima-media/depmon/)
+[![Packagist](https://img.shields.io/packagist/v/xima/depmon-bundle.svg)](https://packagist.org/packages/xima/depmon-bundle)
+
+<img src="https://raw.githubusercontent.com/xima-media/depmon/master/doc/images/logo.png" alt="DepMon Logo" align="center" />
 
 ## What does it do?
 
@@ -37,11 +42,3 @@ The data aggregation starts with following command. It is recommended to use a c
 ```
 php bin/console depmon:aggregate
 ```
-
-## ToDo (Wishlist)
-
-- Unit Testing
-- RSS Dependency Feed
-- E-Mail Notification
-- Use Security Advisories Checker
-- Extend functionality for npm packages

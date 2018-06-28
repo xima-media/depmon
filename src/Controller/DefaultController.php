@@ -40,11 +40,12 @@ class DefaultController extends AbstractController
 //        $projectsConfig = Yaml::parseFile(__DIR__ . '/../../config/depmon.projects.yaml');
         $projectsConfig = $this->getParameter('xima_depmon.projects');
         $projects = [];
+        if (is_array($projectsConfig)) {
 
-        foreach ($projectsConfig as $project) {
-            $projects[] = $this->cache->get($project['name']);
+            foreach ($projectsConfig as $project) {
+                $projects[] = $this->cache->get($project['name']);
+            }
         }
-
         $metadata = $this->cache->get('metadata');
 
 
@@ -59,16 +60,17 @@ class DefaultController extends AbstractController
      * @param string $project
      * @return Response
      */
-    public function state($project): Response {
+    public function state($project): Response
+    {
 
         $data = $this->cache->get($project);
         if ($data == '') {
             throw new InvalidParameterException("No data for project \"$project\" found.");
         }
         $state = $data['meta']['projectState'];
-        $file =  readfile(__DIR__ . "/../Resources/public/img/states/$state.svg");
+        $file = readfile(__DIR__ . "/../Resources/public/img/states/$state.svg");
 
-        $filename = $project.".svg";
+        $filename = $project . ".svg";
         $response = new Response();
         $response->headers->set('Cache-Control', 'private');
         $response->headers->set('Content-type', 'image/svg');

@@ -20,7 +20,9 @@
                     <div class="text-center">
                         <h1>{{ 'xima.depmon.basic.title'|trans({}, 'XimaDepmonBundle') }}</h1>
                         <div class="text-muted">{{ 'xima.depmon.basic.subtitle'|trans({}, 'XimaDepmonBundle') }}</div>
-                        <a href="https://github.com/xima-media/depmon" class="no-style"><i class="icon-github"></i></a> <small><a href="https://github.com/xima-media/depmon/blob/master/CHANGELOG.md" class="no-style">v0.1.0</a></small>
+                        <a href="https://github.com/xima-media/depmon" class="no-style"><i class="icon-github"></i></a>
+                        <small><a href="https://github.com/xima-media/depmon/blob/master/CHANGELOG.md" class="no-style">v0.1.0</a>
+                        </small>
                     </div>
                 </div>
             </div>
@@ -50,14 +52,34 @@
                             </div>
                         </li>
                     </ul>
-                    {% for key, project in projects %}
-                        <ul class="list list-group">
-                            {{ include('@XimaDepmon/project.html.twig') }}
-                            {% for dependency in project.dependencies %}
-                                {{ include('@XimaDepmon/dependency.html.twig') }}
+                    {% if projects is defined and projects|length > 0 %}
+                        {% if projects[0].self is defined %}
+                            {% for key, project in projects %}
+                                <ul class="list list-group">
+                                    {{ include('@XimaDepmon/project.html.twig') }}
+                                    {% for dependency in project.dependencies %}
+                                        {{ include('@XimaDepmon/dependency.html.twig') }}
+                                    {% endfor %}
+                                </ul>
                             {% endfor %}
-                        </ul>
-                    {% endfor %}
+                        {% else %}
+                            <div class="list-error padding-small">
+                                <div class="list-error-emoji">
+                                    {{ 'xima.depmon.basic.error'|trans({}, 'XimaDepmonBundle') }}
+                                </div>
+                                {{ 'xima.depmon.basic.error.data'|trans({}, 'XimaDepmonBundle') }}<br/>
+                                {{ 'xima.depmon.basic.error.link'|trans({'%link%': '<a href="https://github.com/xima-media/depmon/wiki/Help#2--no-data" target="_blank">Help#2</a>'}, 'XimaDepmonBundle')|raw }}
+                            </div>
+                        {% endif %}
+                    {% else %}
+                        <div class="list-error padding-small">
+                            <div class="list-error-emoji">
+                                {{ 'xima.depmon.basic.error'|trans({}, 'XimaDepmonBundle') }}
+                            </div>
+                            {{ 'xima.depmon.basic.error.projects'|trans({}, 'XimaDepmonBundle') }}<br/>
+                            {{ 'xima.depmon.basic.error.link'|trans({'%link%': '<a href="https://github.com/xima-media/depmon/wiki/Help#1--no-projects" target="_blank">Help#1</a>'}, 'XimaDepmonBundle')|raw }}
+                        </div>
+                    {% endif %}
                 </div>
             </div>
         </div>

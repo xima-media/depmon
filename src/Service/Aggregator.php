@@ -13,16 +13,6 @@ use Symfony\Component\Process\Process;
  */
 class Aggregator
 {
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
-
-
-    /**
-     * @var AdapterInterface
-     */
-    private $cache;
 
     /**
      * @var array
@@ -44,16 +34,6 @@ class Aggregator
     const STATE_OUT_OF_DATE = 3;
     const STATE_INSECURE = 4;
 
-    /**
-     * Aggregator constructor.
-     * @param LoggerInterface $logger
-     * @param AdapterInterface $cache
-     */
-    public function __construct(LoggerInterface $logger, AdapterInterface $cache)
-    {
-        $this->logger = $logger;
-        $this->cache = $cache;
-    }
 
     /**
      * Get dependency data for a specific project by cloning the project composer files in the cache dir, installing
@@ -68,7 +48,6 @@ class Aggregator
     public function fetchProjectData($project): array {
 
         $projectName = $project['name'];
-        $this->logger->info("Fetching project dependencies for: $projectName");
 
         // If project already exists, just pull updates. Otherwise clone the repository.
         // ToDo: "git reset" pulls every file of the git
@@ -207,6 +186,16 @@ class Aggregator
         $result['meta'] = $metadata;
 
         return $result;
+    }
+
+    /**
+     * @param $project
+     */
+    public function clearProjectData($project) {
+        $process = new Process(
+            'rm -rf var/data/' . $project['name']
+        );
+        $process->run();
     }
 
     /**

@@ -42,6 +42,19 @@ li {
   }
 }
 
+.list-error {
+  width: 100%;
+  color: $gray-light;
+  text-align: center;
+
+  &-emoji {
+    font-size: 100px;
+    opacity: 0.3;
+    padding-bottom: 20px;
+    font-weight: bold;
+  }
+}
+
 .state {
   display: inline-block;
   content: '';

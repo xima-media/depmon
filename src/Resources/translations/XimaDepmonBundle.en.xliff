@@ -26,6 +26,22 @@
                 <source>xima.depmon.basic.entities</source>
                 <target>%projects% projects, %dependencies% dependencies</target>
             </trans-unit>
+            <trans-unit id="xima.depmon.basic.error">
+                <source>xima.depmon.basic.error</source>
+                <target>=(</target>
+            </trans-unit>
+            <trans-unit id="xima.depmon.basic.error.link">
+                <source>xima.depmon.basic.error.link</source>
+                <target>See %link% for further information.</target>
+            </trans-unit>
+            <trans-unit id="xima.depmon.basic.error.projects">
+                <source>xima.depmon.basic.error.projects</source>
+                <target>ERROR: There are actually no projects defined in your configuration ...</target>
+            </trans-unit>
+            <trans-unit id="xima.depmon.basic.error.data">
+                <source>xima.depmon.basic.error.data</source>
+                <target>ERROR: No data is stored in the cache from the aggregator command ...</target>
+            </trans-unit>
             <trans-unit id="xima.depmon.filter.project">
                 <source>xima.depmon.filter.project</source>
                 <target>Project</target>

@@ -17,7 +17,8 @@
     "symfony/cache": "^4.0",
     "symfony/twig-bundle": "^4.0",
     "symfony/asset": "^4.0",
-    "symfony/translation": "^4.0"
+    "symfony/translation": "^4.0",
+    "symfony/framework-bundle": "^4.1"
   },
   "autoload": {
     "psr-4": {
