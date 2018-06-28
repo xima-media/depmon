@@ -16,7 +16,7 @@ class AggregatorTest extends WebTestCase
 
     private $projectSampleData = [
         'name' => 'depmon',
-        'git' => 'git@github.com:xima-media/depmon.git',
+        'git' => 'https://github.com/xima-media/depmon.git',
         'path' => ''
     ];
 

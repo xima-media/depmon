@@ -49,6 +49,22 @@ class Aggregator
 
         $projectName = $project['name'];
 
+        // Check if git is installed
+        $process = new Process('command -v git');
+        $process->run();
+
+        if ($process->getOutput() == '') {
+            throw new \Exception('Git is not installed!');
+        }
+
+        // Check if composer is installed
+        $process = new Process('command -v composer');
+        $process->run();
+
+        if ($process->getOutput() == '') {
+            throw new \Exception('Composer is not installed!');
+        }
+
         // If project already exists, just pull updates. Otherwise clone the repository.
         // ToDo: "git reset" pulls every file of the git
         if (is_dir('var/data/' . $project['name'])) {
