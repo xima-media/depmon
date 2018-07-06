@@ -146,6 +146,10 @@
                 <source>xima.depmon.list.dependencies.required.tooltip</source>
                 <target>Quick filter for this project and required dependencies</target>
             </trans-unit>
+            <trans-unit id="xima.depmon.list.description.empty">
+                <source>xima.depmon.list.description.empty</source>
+                <target>No description</target>
+            </trans-unit>
             <trans-unit id="xima.depmon.list.state.1">
                 <source>xima.depmon.list.state.1</source>
                 <target>up to date</target>

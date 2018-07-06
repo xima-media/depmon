@@ -26,6 +26,8 @@ Filter = (function (window, document, $, undefined) {
         hideClass: 'hidden',
         // elements which should be filtered
         filterableElements: 'li',
+        // start filtering on input or on form submit
+        filterOnSubmit: false,
         // callback function before list is filtered
         beforeApplyFilter: function () {
 
@@ -88,14 +90,23 @@ Filter = (function (window, document, $, undefined) {
             if ($(form).length) {
                 var _form = $(form);
                 _form.unbind();
-                _form.find('input').on('input', function (event) {
-                    _options.debug ? console.log('[' + _namespace + '] filter change') : '';
-                    EXT.applyFilter();
-                });
 
-                _form.on('submit', function (event) {
-                    event.preventDefault();
-                });
+                if (_options.filterOnSubmit) {
+                    _form.on('submit', function (event) {
+                        event.preventDefault();
+                        _options.debug ? console.log('[' + _namespace + '] filter submit') : '';
+                        EXT.applyFilter();
+                    });
+                } else {
+                    _form.find('input').on('input', function (event) {
+                        _options.debug ? console.log('[' + _namespace + '] filter change') : '';
+                        EXT.applyFilter();
+                    });
+
+                    _form.on('submit', function (event) {
+                        event.preventDefault();
+                    });
+                }
             }
         });
     };
@@ -164,7 +175,7 @@ Filter = (function (window, document, $, undefined) {
     /**
      * Apply the filter settings to the given list
      */
-    EXT.applyFilter = function (_filter = null) {
+    EXT.applyFilter = function (_filter) {
 
         if (_filter === null) {
             _filter = _self.buildFilter();
@@ -172,8 +183,6 @@ Filter = (function (window, document, $, undefined) {
             EXT.reset();
             _self.synchronizeFilterForm(_filter);
         }
-
-        console.log(_filter);
 
         var _list = $(_options.list);
         var _entries = _list.find(_options.filterableElements);

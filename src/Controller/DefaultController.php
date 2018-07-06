@@ -73,7 +73,7 @@ class DefaultController extends AbstractController
         $filename = $project . ".svg";
         $response = new Response();
         $response->headers->set('Cache-Control', 'private');
-        $response->headers->set('Content-type', 'image/svg');
+        $response->headers->set('Content-type', 'image/svg+xml');
         $response->headers->set('Content-Disposition',
             'attachment; filename="' . basename($filename) . '";');
         $response->sendHeaders();

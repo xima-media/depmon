@@ -1,4 +1,4 @@
-<li class="list-group-item"
+<li class="list-group-item {{ dependency.required is not defined ? 'hidden' }}"
     data-project="{{ project.self.name }}"
     data-state="{{ dependency.state }}"
     data-name="{{ dependency.name }}"

@@ -34,14 +34,8 @@
         </div>
         <div id="{{ key }}" class="collapse col-12 bg-gray">
             <div class="row padding-small">
-                <div class="col-3">
+                <div class="col-6">
                     <strong>{{ project.dependencies|length }}</strong> {{ 'xima.depmon.list.dependencies.total'|trans({}, 'XimaDepmonBundle') }}
-                </div>
-                <div class="col-3">
-                    <a class="filter-required-project no-style" data-project="{{ project.self.name }}" data-required="1"
-                       data-tooltip="{{ 'xima.depmon.list.dependencies.required.tooltip'|trans({}, 'XimaDepmonBundle') }}" flow="down">
-                    <strong>{{ project.meta.requiredPackagesCount }}</strong> {{ 'xima.depmon.list.dependencies.required'|trans({}, 'XimaDepmonBundle') }}
-                    </a>
                 </div>
                 <div class="col-2">
                     <a class="filter-state-project no-style" data-project="{{ project.self.name }}" data-state="1"
@@ -61,17 +55,43 @@
                         <div class="state state-3"></div> {{ project.meta.statesCount.3 }} {{ 'xima.depmon.list.state.3'|trans({}, 'XimaDepmonBundle') }}
                     </a>
                 </div>
+                <div class="col-6">
+                    <a class="filter-required-project no-style" data-project="{{ project.self.name }}" data-required="1"
+                       data-tooltip="{{ 'xima.depmon.list.dependencies.required.tooltip'|trans({}, 'XimaDepmonBundle') }}" flow="down">
+                        <strong>{{ project.meta.requiredPackagesCount }}</strong> {{ 'xima.depmon.list.dependencies.required'|trans({}, 'XimaDepmonBundle') }}
+                    </a>
+                </div>
+                <div class="col-2">
+                    <a class="filter-state-project no-style" data-project="{{ project.self.name }}" data-state="1" data-required="1"
+                       data-tooltip="{{ 'xima.depmon.list.state.tooltip'|trans({}, 'XimaDepmonBundle') }}" flow="down">
+                        <div class="state state-1"></div> {{ project.meta.requiredStatesCount.1 }} {{ 'xima.depmon.list.state.1'|trans({}, 'XimaDepmonBundle') }}
+                    </a>
+                </div>
+                <div class="col-2">
+                    <a class="filter-state-project no-style" data-project="{{ project.self.name }}" data-state="2" data-required="1"
+                       data-tooltip="{{ 'xima.depmon.list.state.tooltip'|trans({}, 'XimaDepmonBundle') }}" flow="down">
+                        <div class="state state-2"></div> {{ project.meta.requiredStatesCount.2 }} {{ 'xima.depmon.list.state.2'|trans({}, 'XimaDepmonBundle') }}
+                    </a>
+                </div>
+                <div class="col-2">
+                    <a class="filter-state-project no-style" data-project="{{ project.self.name }}" data-state="3" data-required="1"
+                       data-tooltip="{{ 'xima.depmon.list.state.tooltip'|trans({}, 'XimaDepmonBundle') }}" flow="down">
+                        <div class="state state-3"></div> {{ project.meta.requiredStatesCount.3 }} {{ 'xima.depmon.list.state.3'|trans({}, 'XimaDepmonBundle') }}
+                    </a>
+                </div>
                 <div class="col-8 padding-small">
-                    {% if project.composer.description is defined %}
-                        <i class="icon-text"></i>
+                    <i class="icon-text"></i>
+                    {% if project.composer.description is defined and project.composer.description != '' %}
                         {{ project.composer.description }}
+                    {% else %}
+                        <em>{{ 'xima.depmon.list.description.empty'|trans({}, 'XimaDepmonBundle') }}</em>
                     {% endif %}
                 </div>
                 <div class="col-4 padding-small">
                     {% if project.composer.authors is defined %}
-                        <i class="icon-user"></i>
                         {% for author in project.composer.authors %}
                             {% if author.name is defined %}
+                                <i class="icon-user"></i>
                                 {% if author.email is defined %}
                                     <a href="mailto:{{ author.email }}">{{ author.name }}</a>
                                 {% else %}

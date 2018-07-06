@@ -49,7 +49,7 @@ class AggregateCommand extends ContainerAwareCommand
 
             // the full command description shown when running the command with
             // the "--help" option
-            ->setHelp('This command is fetching all composer informations of every project.')
+            ->setHelp('This command is fetching all composer information of every project.')
         ;
     }
 
@@ -66,7 +66,6 @@ class AggregateCommand extends ContainerAwareCommand
         $io->text("<fg=red>╚═════╝ ╚══════╝╚═╝     ╚═╝     ╚═╝ ╚═════╝ ╚═╝  ╚═══╝</>");
 
         $io->title("Aggregate project data");
-
 
 //        $projects = Yaml::parseFile('config/depmon.projects.yaml');
         $projects = $this->getContainer()->getParameter('xima_depmon.projects');
@@ -85,11 +84,12 @@ class AggregateCommand extends ContainerAwareCommand
 
                 $data = $this->aggregator->fetchProjectData($project);
                 $count = count($data['dependencies']);
+                $requiredCount = $data['meta']['requiredPackagesCount'];
+                $requiredStatesCount = $data['meta']['requiredStatesCount'];
                 $dependencyCount += $count;
 
                 $this->cache->set($project['name'], $data);
 
-                $projectState = '';
                 switch ($data['meta']['projectState']) {
                     case 1:
                         $projectState = "<fg=green>up to date</>";
@@ -104,7 +104,7 @@ class AggregateCommand extends ContainerAwareCommand
                 }
 
                 $progressBar->advance();
-                $output->writeln(" <fg=blue;options=bold>[" . $project['name'] . "]</> ($count dependencies) – " . $projectState);
+                $output->writeln(" <fg=blue;options=bold>[" . $project['name'] . "]</> $count dependencies, $requiredCount required (<fg=green>$requiredStatesCount[1]</>, <fg=yellow>$requiredStatesCount[2]</>, <fg=red>$requiredStatesCount[3]</>) ==> " . $projectState);
 
             } catch (InvalidArgumentException $e) {
 

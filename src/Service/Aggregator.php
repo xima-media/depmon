@@ -6,6 +6,7 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\Cache\Adapter\AdapterInterface;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
+use Xima\DepmonBundle\Util\VersionHelper;
 
 /**
  * Class Aggregator
@@ -25,15 +26,6 @@ class Aggregator
         'drupal/drupal' => 'Drupal'
     ];
 
-    /**
-     * State constants
-     * @var int
-     */
-    const STATE_UP_TO_DATE = 1;
-    const STATE_PINNED_OUT_OF_DATE = 2;
-    const STATE_OUT_OF_DATE = 3;
-    const STATE_INSECURE = 4;
-
 
     /**
      * Get dependency data for a specific project by cloning the project composer files in the cache dir, installing
@@ -45,7 +37,8 @@ class Aggregator
      * @throws \Exception
      * @return array
      */
-    public function fetchProjectData($project): array {
+    public function fetchProjectData($project): array
+    {
 
         $projectName = $project['name'];
 
@@ -153,11 +146,16 @@ class Aggregator
 
         $requiredPackagesCount = 0;
         $statesCount = [
-            self::STATE_UP_TO_DATE => 0,
-            self::STATE_PINNED_OUT_OF_DATE => 0,
-            self::STATE_OUT_OF_DATE => 0
+            VersionHelper::STATE_UP_TO_DATE => 0,
+            VersionHelper::STATE_PINNED_OUT_OF_DATE => 0,
+            VersionHelper::STATE_OUT_OF_DATE => 0
         ];
-        $projectState = self::STATE_UP_TO_DATE;
+        $requiredStatesCount = [
+            VersionHelper::STATE_UP_TO_DATE => 0,
+            VersionHelper::STATE_PINNED_OUT_OF_DATE => 0,
+            VersionHelper::STATE_OUT_OF_DATE => 0
+        ];
+        $projectState = VersionHelper::STATE_UP_TO_DATE;
 
         foreach (json_decode($process->getOutput())->installed as $dependency) {
             // Workaround for adding requirement information to dependencies
@@ -175,26 +173,31 @@ class Aggregator
 
             // Is dependency outdated?
             if (isset($dependency->latest)) {
-                $state = $this->compareVersions($dependency->version, $dependency->latest);
+                $require = isset($dependency->required) ? $dependency->required : null;
+                $state = VersionHelper::compareVersions($dependency->version, $dependency->latest, $require);
                 $statesCount[$state]++;
+                if ($require) {
+                    $requiredStatesCount[$state]++;
+                }
                 $dependency->state = $state;
             } else {
-                $dependency->state = 1;
+                $dependency->state = VersionHelper::STATE_UP_TO_DATE;
             }
 
 
             $result['dependencies'][] = $dependency;
         }
 
-        if ($statesCount[3] > 2) {
-            $projectState = self::STATE_OUT_OF_DATE;
-        } elseif ($statesCount[3] <= 2 && $statesCount[2] >= 1) {
-            $projectState = self::STATE_PINNED_OUT_OF_DATE;
+        if ($requiredStatesCount[3] > 2) {
+            $projectState = VersionHelper::STATE_OUT_OF_DATE;
+        } elseif ($requiredStatesCount[3] <= 2 && $requiredStatesCount[2] >= 1) {
+            $projectState = VersionHelper::STATE_PINNED_OUT_OF_DATE;
         }
 
         $metadata = [
             'requiredPackagesCount' => $requiredPackagesCount,
             'statesCount' => $statesCount,
+            'requiredStatesCount' => $requiredStatesCount,
             'projectState' => $projectState,
             'gitTag' => $gitTag
         ];
@@ -207,34 +210,11 @@ class Aggregator
     /**
      * @param $project
      */
-    public function clearProjectData($project) {
+    public function clearProjectData($project)
+    {
         $process = new Process(
             'rm -rf var/data/' . $project['name']
         );
         $process->run();
-    }
-
-    /**
-     * Compare versions to check if they are:
-     * 1 - Up to date
-     * 2 - Pinned, out of date
-     * 3 - Out of date
-     *
-     * @param $version1
-     * @param $version2
-     * @return int
-     */
-    private function compareVersions($version1, $version2) {
-        $version1 = explode('.', $version1);
-        $version1[0] = $version1[0][0] == 'v' ? substr($version1[0], 1) : $version1[0];
-        $version2 = explode('.', $version2);
-        $version2[0] = $version2[0][0] == 'v' ? substr($version2[0], 1) : $version2[0];
-
-        if ($version1[0] != $version2[0] || (isset($version1[1]) && isset($version2[1]) && $version1[1] != $version2[1])) {
-            return self::STATE_OUT_OF_DATE;
-        } else if (isset($version1[2]) && isset($version2[2]) && $version1[2] != $version2[2]) {
-            return self::STATE_PINNED_OUT_OF_DATE;
-        }
-        return self::STATE_UP_TO_DATE;
     }
 }

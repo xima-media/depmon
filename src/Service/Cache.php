@@ -17,12 +17,16 @@ class Cache
      */
     private $cache;
 
-    public function __construct()
+    public function __construct($cacheDirectory = null)
     {
+        if (!$cacheDirectory) {
+            $cacheDirectory = __DIR__ . '/../../../../var/cache/app';
+        }
+
         $this->cache = new FilesystemCache(
             'depmon',
             0,
-            __DIR__ . '/../../var/cache/app'
+            $cacheDirectory
         );
     }
 
