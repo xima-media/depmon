@@ -68,17 +68,16 @@ class DefaultController extends AbstractController
             throw new InvalidParameterException("No data for project \"$project\" found.");
         }
         $state = $data['meta']['projectState'];
-        $file = readfile(__DIR__ . "/../Resources/public/img/states/$state.svg");
 
         $filename = $project . ".svg";
         $response = new Response();
         $response->headers->set('Cache-Control', 'private');
         $response->headers->set('Content-type', 'image/svg+xml');
         $response->headers->set('Content-Disposition',
-            'attachment; filename="' . basename($filename) . '";');
+            'filename="' . basename($filename) . '";');
         $response->sendHeaders();
 
-        $response->setContent($file);
+        readfile(__DIR__ . "/../Resources/public/img/states/$state.svg");
 
         return $response;
     }
