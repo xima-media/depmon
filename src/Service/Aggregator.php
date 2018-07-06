@@ -134,9 +134,25 @@ class Aggregator
             throw new ProcessFailedException($process);
         }
 
-        if (empty(json_decode($process->getOutput()))) {
+        $data = json_decode($process->getOutput());
+
+        if (empty($data)) {
             throw new \Exception('Empty result of "composer show" for project ' . $projectName);
         }
+
+        $process = new Process(
+            'curl -H "Accept: application/json" https://security.sensiolabs.org/check_lock -F lock=@var/data/' . $project['name'] . '/' . $project['path'] . 'composer.lock'
+        );
+        $process->run();
+
+        if (!$process->isSuccessful()) {
+            throw new ProcessFailedException($process);
+        }
+        $vulnerabilities = json_decode($process->getOutput());
+
+        //
+        // Evaluate data
+        //
 
         $result = [];
 
@@ -148,16 +164,18 @@ class Aggregator
         $statesCount = [
             VersionHelper::STATE_UP_TO_DATE => 0,
             VersionHelper::STATE_PINNED_OUT_OF_DATE => 0,
-            VersionHelper::STATE_OUT_OF_DATE => 0
+            VersionHelper::STATE_OUT_OF_DATE => 0,
+            VersionHelper::STATE_INSECURE => 0
         ];
         $requiredStatesCount = [
             VersionHelper::STATE_UP_TO_DATE => 0,
             VersionHelper::STATE_PINNED_OUT_OF_DATE => 0,
-            VersionHelper::STATE_OUT_OF_DATE => 0
+            VersionHelper::STATE_OUT_OF_DATE => 0,
+            VersionHelper::STATE_INSECURE => 0
         ];
         $projectState = VersionHelper::STATE_UP_TO_DATE;
 
-        foreach (json_decode($process->getOutput())->installed as $dependency) {
+        foreach ($data->installed as $dependency) {
             // Workaround for adding requirement information to dependencies
             foreach ($result['composer']->require as $name => $require) {
                 if ($dependency->name == $name) {
@@ -184,11 +202,29 @@ class Aggregator
                 $dependency->state = VersionHelper::STATE_UP_TO_DATE;
             }
 
+            // Is dependency a security issue?
+            foreach ($vulnerabilities as $name => $vulnerability) {
+                if ($name == $dependency->name) {
+                    $dependency->state = VersionHelper::STATE_INSECURE;
+                    $array = [];
+                    foreach ($vulnerability->advisories as $advisory) {
+                        array_push($array, $advisory);
+                    }
+                    $dependency->vulnerability = $array;
+                    if (isset($dependency->required)) {
+                        $requiredStatesCount[VersionHelper::STATE_INSECURE]++;
+                    } else {
+                        $statesCount[VersionHelper::STATE_INSECURE]++;
+                    }
+                }
+            }
 
             $result['dependencies'][] = $dependency;
         }
 
-        if ($requiredStatesCount[3] > 2) {
+        if ($requiredStatesCount[4] > 0) {
+            $projectState = VersionHelper::STATE_INSECURE;
+        } elseif ($requiredStatesCount[3] > 2) {
             $projectState = VersionHelper::STATE_OUT_OF_DATE;
         } elseif ($requiredStatesCount[3] <= 2 && $requiredStatesCount[2] >= 1) {
             $projectState = VersionHelper::STATE_PINNED_OUT_OF_DATE;

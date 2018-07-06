@@ -1,4 +1,4 @@
-<li class="list-group-item-info list-group-item list-header bg-gray"
+<li class="list-group-item-info list-group-item list-header bg-gray-dark"
     data-project="{{ project.self.name }}"
     data-project-type="{{ project.self.projectType is defined ? project.self.projectType }}"
     data-overview="1"
@@ -32,7 +32,7 @@
                 <img src="{{ asset("bundles/ximadepmon/img/states/#{project.meta.projectState}.svg") }}">
             </a>
         </div>
-        <div id="{{ key }}" class="collapse col-12 bg-gray">
+        <div id="{{ key }}" class="collapse col-12 bg-gray-dark">
             <div class="row padding-small">
                 <div class="col-6">
                     <strong>{{ project.dependencies|length }}</strong> {{ 'xima.depmon.list.dependencies.total'|trans({}, 'XimaDepmonBundle') }}

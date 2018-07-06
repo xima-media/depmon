@@ -76,6 +76,10 @@ div[class*="col-"] {
   color: $gray-dark;
 }
 
+.warning {
+  color: $red;
+}
+
 .collapse {
   display: none !important;
 
@@ -108,6 +112,10 @@ div[class*="col-"] {
 
 .bg-gray {
   background-color: $gray-lighter;
+}
+
+.bg-gray-dark {
+  background-color: $gray-light;
 }
 
 .position-bottom {

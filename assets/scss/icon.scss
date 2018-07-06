@@ -1,3 +1,5 @@
+@import "variables";
+
 @font-face {
   font-family: 'icomoon';
   src:  url('../fonts/icomoon.eot?3r2b0x');
@@ -24,53 +26,53 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-.icon-badge:before {
-  content: "\e90f";
-}
 .icon-filter:before {
-  content: "\e900";
-}
-.icon-search:before {
   content: "\e901";
 }
-.icon-subdirectory_arrow_right:before {
+.icon-search:before {
   content: "\e902";
 }
-.icon-keyboard_arrow_up:before {
+.icon-subdirectory_arrow_right:before {
   content: "\e903";
 }
-.icon-keyboard_arrow_right:before {
+.icon-keyboard_arrow_up:before {
   content: "\e904";
 }
-.icon-keyboard_arrow_left:before {
+.icon-keyboard_arrow_right:before {
   content: "\e905";
 }
-.icon-keyboard_arrow_down:before {
+.icon-keyboard_arrow_left:before {
   content: "\e906";
 }
-.icon-arrow_upward:before {
+.icon-keyboard_arrow_down:before {
   content: "\e907";
 }
-.icon-arrow_forward:before {
+.icon-arrow_upward:before {
   content: "\e908";
 }
-.icon-arrow_downward:before {
+.icon-arrow_forward:before {
   content: "\e909";
 }
-.icon-arrow_back:before {
+.icon-arrow_downward:before {
   content: "\e90a";
 }
-.icon-typo3:before {
+.icon-arrow_back:before {
   content: "\e90b";
 }
-.icon-symfony:before {
+.icon-typo3:before {
   content: "\e90c";
 }
-.icon-gitlab:before {
+.icon-symfony:before {
   content: "\e90d";
 }
-.icon-drupal:before {
+.icon-gitlab:before {
   content: "\e90e";
+}
+.icon-drupal:before {
+  content: "\e90f";
+}
+.icon-badge:before {
+  content: "\e910";
 }
 .icon-text:before {
   content: "\e926";
@@ -92,4 +94,11 @@
 }
 .icon-github:before {
   content: "\eab0";
+}
+.icon-warning:before {
+  content: "\e900";
+}
+
+.icon-color-red:before {
+  color: $red;
 }

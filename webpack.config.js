@@ -23,8 +23,8 @@ Encore
     ])
     .addStyleEntry('css/app', [
         './assets/scss/variables.scss',
-        './assets/scss/icon.scss',
         './assets/scss/app.scss',
+        './assets/scss/icon.scss',
         './assets/scss/filter.scss',
         './assets/scss/logo.scss',
         './assets/scss/tooltip.scss',

@@ -101,10 +101,13 @@ class AggregateCommand extends ContainerAwareCommand
                     default:
                         $projectState = "<fg=red>out of date</>";
                         break;
+                    case 4:
+                        $projectState = "<fg=black>insecure</>";
+                        break;
                 }
 
                 $progressBar->advance();
-                $output->writeln(" <fg=blue;options=bold>[" . $project['name'] . "]</> $count dependencies, $requiredCount required (<fg=green>$requiredStatesCount[1]</>, <fg=yellow>$requiredStatesCount[2]</>, <fg=red>$requiredStatesCount[3]</>) ==> " . $projectState);
+                $output->writeln(" <fg=blue;options=bold>[" . $project['name'] . "]</> $count dependencies, $requiredCount required (<fg=green>$requiredStatesCount[1]</>, <fg=yellow>$requiredStatesCount[2]</>, <fg=red>$requiredStatesCount[3]</>, <fg=black>$requiredStatesCount[4]</>) ==> " . $projectState);
 
             } catch (InvalidArgumentException $e) {
 

@@ -57,7 +57,7 @@
                             {% for key, project in projects %}
                                 <ul class="list list-group">
                                     {{ include('@XimaDepmon/project.html.twig') }}
-                                    {% for dependency in project.dependencies %}
+                                    {% for num, dependency in project.dependencies %}
                                         {{ include('@XimaDepmon/dependency.html.twig') }}
                                     {% endfor %}
                                 </ul>

@@ -106,6 +106,14 @@
                 <source>xima.depmon.filter.state.3.tooltip</source>
                 <target>The available package has a higher minor or major version</target>
             </trans-unit>
+            <trans-unit id="xima.depmon.filter.state.4">
+                <source>xima.depmon.filter.state.4</source>
+                <target>insecure</target>
+            </trans-unit>
+            <trans-unit id="xima.depmon.filter.state.4.tooltip">
+                <source>xima.depmon.filter.state.4.tooltip</source>
+                <target>The available package has a security vulnerability</target>
+            </trans-unit>
             <trans-unit id="xima.depmon.filter.reset">
                 <source>xima.depmon.filter.reset</source>
                 <target>Reset filter</target>
@@ -165,6 +173,10 @@
             <trans-unit id="xima.depmon.list.state.3">
                 <source>xima.depmon.list.state.3</source>
                 <target>out of date</target>
+            </trans-unit>
+            <trans-unit id="xima.depmon.list.state.4">
+                <source>xima.depmon.list.state.4</source>
+                <target>insecure</target>
             </trans-unit>
             <trans-unit id="xima.depmon.list.quickfilter.dependency.tooltip">
                 <source>xima.depmon.list.quickfilter.dependency.tooltip</source>

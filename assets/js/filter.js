@@ -175,7 +175,7 @@ Filter = (function (window, document, $, undefined) {
     /**
      * Apply the filter settings to the given list
      */
-    EXT.applyFilter = function (_filter) {
+    EXT.applyFilter = function (_filter = null) {
 
         if (_filter === null) {
             _filter = _self.buildFilter();

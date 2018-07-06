@@ -8,8 +8,19 @@
     data-overview="0">
 
     <div class="row">
+        {%  if dependency.vulnerability is defined %}
+            <a class="no-style" data-toggle="collapse" data-target="#{{ key }}-{{ num }}">
+        {% endif %}
         <div class="col-5">
-            <div class="dependency">{{ dependency.name }}
+            <div class="dependency">
+                {%  if dependency.vulnerability is defined %}
+                    <i class="icon-warning"></i>
+                    <span class="text-warning">
+                        {{ dependency.name }}
+                    </span>
+                {% else %}
+                    {{ dependency.name }}
+                {% endif %}
                 <button class="filter-dependency" data-dependency="{{ dependency.name }}" data-tooltip="{{ 'xima.depmon.list.quickfilter.dependency.tooltip'|trans({}, 'XimaDepmonBundle') }}" flow="down">
                     <i class="icon-search"></i>
                 </button>
@@ -29,7 +40,17 @@
             {% endif %}
         </div>
         <div class="col-1 text-center">
-            <div class="state state-{{ dependency.state }}" data-tooltip="{{ (dependency.state == 1) ? 'xima.depmon.list.state.1'|trans({}, 'XimaDepmonBundle') : ((dependency.state == 2) ? 'xima.depmon.list.state.2'|trans({}, 'XimaDepmonBundle') : 'xima.depmon.list.state.3'|trans({}, 'XimaDepmonBundle')) }}"></div>
+            <div class="state state-{{ dependency.state }}" data-tooltip="{{ (dependency.state == 1) ? 'xima.depmon.list.state.1'|trans({}, 'XimaDepmonBundle') : ((dependency.state == 2) ? 'xima.depmon.list.state.2'|trans({}, 'XimaDepmonBundle') : ((dependency.state == 3) ? 'xima.depmon.list.state.3'|trans({}, 'XimaDepmonBundle') : 'xima.depmon.list.state.4'|trans({}, 'XimaDepmonBundle'))) }}"></div>
         </div>
+        {%  if dependency.vulnerability is defined %}
+        </a>
+        <div id="{{ key }}-{{ num}}" class="collapse col-12">
+            <ul>
+            {% for vulnerability in dependency.vulnerability %}
+                <li>{{ vulnerability.title }} <a href="{{ vulnerability.link }}"><i class="icon-arrow_forward"></i></a></li>
+            {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
     </div>
 </li>
