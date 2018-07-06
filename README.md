@@ -17,10 +17,6 @@ The Dependency Monitoring does'nt need access to your production environments. I
 
 So from that, it is necessary that the system, where DepMon is running on, needs access to the different project repositories. 
 
-## How does it work?
-
-_ToDo_
-
 ## Installation
 
 Follow the installation steps in the [wiki](https://github.com/xima-media/depmon/wiki/Installing-DepMon).
