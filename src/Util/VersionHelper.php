@@ -18,7 +18,6 @@ class VersionHelper
     const STATE_PINNED_OUT_OF_DATE = 2;
     const STATE_OUT_OF_DATE = 3;
     const STATE_INSECURE = 4;
-    const STATE_NEW_VERSION = 5;
 
     /**
      * Compare versions to check if they are:
@@ -49,6 +48,7 @@ class VersionHelper
         }
 
         // ToDo: The satisfies function didn't worked as expected. For example the constraint ~4.1 is not satisfying the version 4.9.5.
+
         if ($state != self::STATE_UP_TO_DATE && $required != null) {
             try {
                 $latestVersion = new version($latest);

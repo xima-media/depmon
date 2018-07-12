@@ -37,21 +37,62 @@ class DefaultController extends AbstractController
      */
     public function index(): Response
     {
-//        $projectsConfig = Yaml::parseFile(__DIR__ . '/../../config/depmon.projects.yaml');
-        $projectsConfig = $this->getParameter('xima_depmon.projects');
         $projects = [];
-        if (is_array($projectsConfig)) {
+        $error = null;
 
+        $projectsConfig = $this->getParameter('xima_depmon.projects');
+
+        if (is_array($projectsConfig)) {
             foreach ($projectsConfig as $project) {
                 $projects[] = $this->cache->get($project['name']);
             }
+        } else {
+            $error = 1;
         }
         $metadata = $this->cache->get('metadata');
 
+        if (empty($projects)) {
+            $error = 2;
+        }
 
         return $this->render('@XimaDepmon/index.html.twig', [
             'projects' => $projects,
-            'metadata' => $metadata
+            'metadata' => $metadata,
+            'error' => $error
+        ]);
+    }
+
+    /**
+     * Detail action
+     * @param string $projectName
+     * @return Response
+     */
+    public function detail($project): Response
+    {
+        $projects = [];
+        $error = null;
+
+        $projectsConfig = $this->getParameter('xima_depmon.projects');
+        if (is_array($projectsConfig)) {
+            foreach ($projectsConfig as $projectData) {
+                if ($project == $projectData['name']) {
+                    $projects[] = $this->cache->get($projectData['name']);
+                }
+            }
+        } else {
+            $error = 1;
+        }
+        $metadata = $this->cache->get('metadata');
+
+        if (empty($projects)) {
+            $error = 3;
+        }
+
+        return $this->render('@XimaDepmon/index.html.twig', [
+            'projects' => $projects,
+            'metadata' => $metadata,
+            'detail' => $project,
+            'error' => $error
         ]);
     }
 

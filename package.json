@@ -4,13 +4,14 @@
   "description": "",
   "private": true,
   "dependencies": {
+    "tippy.js": "^1.4.2"
   },
   "devDependencies": {
     "@symfony/webpack-encore": "^0.9.1",
     "bootstrap-sass": "^3.3.7",
     "jquery": "^3.2.1",
     "lato-font": "^3.0.0",
-    "node-sass": "^4.5.3",
+    "node-sass": "^4.9.2",
     "sass-loader": "^6.0.5"
   },
   "scripts": {

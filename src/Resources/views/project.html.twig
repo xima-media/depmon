@@ -11,7 +11,7 @@
                 <small>{{ project.composer.name }}</small>
             </a>
             <button class="filter-project" data-project="{{ project.self.name }}"
-                    data-tooltip="{{ 'xima.depmon.list.quickfilter.project.tooltip'|trans({}, 'XimaDepmonBundle') }}" flow="down">
+                    title="{{ 'xima.depmon.list.quickfilter.project.tooltip'|trans({}, 'XimaDepmonBundle') }}">
                 <i class="icon-filter"></i>
             </button>
         </div>
@@ -34,51 +34,65 @@
         </div>
         <div id="{{ key }}" class="collapse col-12 bg-gray-dark">
             <div class="row padding-small">
-                <div class="col-6">
+                <div class="col-4">
                     <strong>{{ project.dependencies|length }}</strong> {{ 'xima.depmon.list.dependencies.total'|trans({}, 'XimaDepmonBundle') }}
                 </div>
                 <div class="col-2">
                     <a class="filter-state-project no-style" data-project="{{ project.self.name }}" data-state="1"
-                       data-tooltip="{{ 'xima.depmon.list.state.tooltip'|trans({}, 'XimaDepmonBundle') }}" flow="down">
+                       title="{{ 'xima.depmon.list.state.tooltip'|trans({}, 'XimaDepmonBundle') }}">
                         <div class="state state-1"></div> {{ project.meta.statesCount.1 }} {{ 'xima.depmon.list.state.1'|trans({}, 'XimaDepmonBundle') }}
                     </a>
                 </div>
                 <div class="col-2">
                     <a class="filter-state-project no-style" data-project="{{ project.self.name }}" data-state="2"
-                       data-tooltip="{{ 'xima.depmon.list.state.tooltip'|trans({}, 'XimaDepmonBundle') }}" flow="down">
+                       title="{{ 'xima.depmon.list.state.tooltip'|trans({}, 'XimaDepmonBundle') }}">
                         <div class="state state-2"></div> {{ project.meta.statesCount.2 }} {{ 'xima.depmon.list.state.2'|trans({}, 'XimaDepmonBundle') }}
                     </a>
                 </div>
                 <div class="col-2">
                     <a class="filter-state-project no-style" data-project="{{ project.self.name }}" data-state="3"
-                       data-tooltip="{{ 'xima.depmon.list.state.tooltip'|trans({}, 'XimaDepmonBundle') }}" flow="down">
+                       title="{{ 'xima.depmon.list.state.tooltip'|trans({}, 'XimaDepmonBundle') }}">
                         <div class="state state-3"></div> {{ project.meta.statesCount.3 }} {{ 'xima.depmon.list.state.3'|trans({}, 'XimaDepmonBundle') }}
                     </a>
                 </div>
-                <div class="col-6">
+                <div class="col-2">
+                    <a class="filter-state-project no-style" data-project="{{ project.self.name }}" data-state="4"
+                       title="{{ 'xima.depmon.list.state.tooltip'|trans({}, 'XimaDepmonBundle') }}">
+                        <div class="state state-4"></div> {{ project.meta.statesCount.4 }} {{ 'xima.depmon.list.state.4'|trans({}, 'XimaDepmonBundle') }}
+                    </a>
+                </div>
+
+                <div class="col-4">
                     <a class="filter-required-project no-style" data-project="{{ project.self.name }}" data-required="1"
-                       data-tooltip="{{ 'xima.depmon.list.dependencies.required.tooltip'|trans({}, 'XimaDepmonBundle') }}" flow="down">
+                       title="{{ 'xima.depmon.list.dependencies.required.tooltip'|trans({}, 'XimaDepmonBundle') }}">
                         <strong>{{ project.meta.requiredPackagesCount }}</strong> {{ 'xima.depmon.list.dependencies.required'|trans({}, 'XimaDepmonBundle') }}
                     </a>
                 </div>
                 <div class="col-2">
                     <a class="filter-state-project no-style" data-project="{{ project.self.name }}" data-state="1" data-required="1"
-                       data-tooltip="{{ 'xima.depmon.list.state.tooltip'|trans({}, 'XimaDepmonBundle') }}" flow="down">
+                       title="{{ 'xima.depmon.list.state.tooltip'|trans({}, 'XimaDepmonBundle') }}">
                         <div class="state state-1"></div> {{ project.meta.requiredStatesCount.1 }} {{ 'xima.depmon.list.state.1'|trans({}, 'XimaDepmonBundle') }}
                     </a>
                 </div>
                 <div class="col-2">
                     <a class="filter-state-project no-style" data-project="{{ project.self.name }}" data-state="2" data-required="1"
-                       data-tooltip="{{ 'xima.depmon.list.state.tooltip'|trans({}, 'XimaDepmonBundle') }}" flow="down">
+                       title="{{ 'xima.depmon.list.state.tooltip'|trans({}, 'XimaDepmonBundle') }}">
                         <div class="state state-2"></div> {{ project.meta.requiredStatesCount.2 }} {{ 'xima.depmon.list.state.2'|trans({}, 'XimaDepmonBundle') }}
                     </a>
                 </div>
                 <div class="col-2">
                     <a class="filter-state-project no-style" data-project="{{ project.self.name }}" data-state="3" data-required="1"
-                       data-tooltip="{{ 'xima.depmon.list.state.tooltip'|trans({}, 'XimaDepmonBundle') }}" flow="down">
+                       title="{{ 'xima.depmon.list.state.tooltip'|trans({}, 'XimaDepmonBundle') }}">
                         <div class="state state-3"></div> {{ project.meta.requiredStatesCount.3 }} {{ 'xima.depmon.list.state.3'|trans({}, 'XimaDepmonBundle') }}
                     </a>
                 </div>
+                <div class="col-2">
+                    <a class="filter-state-project no-style" data-project="{{ project.self.name }}" data-state="4" data-required="1"
+                       title="{{ 'xima.depmon.list.state.tooltip'|trans({}, 'XimaDepmonBundle') }}">
+                        <div class="state state-4"></div> {{ project.meta.requiredStatesCount.4 }} {{ 'xima.depmon.list.state.4'|trans({}, 'XimaDepmonBundle') }}
+                    </a>
+                </div>
+
                 <div class="col-8 padding-small">
                     <i class="icon-text"></i>
                     {% if project.composer.description is defined and project.composer.description != '' %}

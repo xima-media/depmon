@@ -27,7 +27,7 @@
                 </div>
             </div>
             <div class="col-2 full-height bg-gray">
-                {% include '@XimaDepmon/filter.html.twig' %}
+                {% include '@XimaDepmon/filter.html.twig' with {'detail': 1}  %}
             </div>
             <div class="col-8">
                 <div id="depmon-list">
@@ -52,32 +52,34 @@
                             </div>
                         </li>
                     </ul>
-                    {% if projects is defined and projects|length > 0 %}
-                        {% if projects[0].self is defined %}
-                            {% for key, project in projects %}
-                                <ul class="list list-group">
-                                    {{ include('@XimaDepmon/project.html.twig') }}
-                                    {% for num, dependency in project.dependencies %}
-                                        {{ include('@XimaDepmon/dependency.html.twig') }}
-                                    {% endfor %}
-                                </ul>
-                            {% endfor %}
-                        {% else %}
-                            <div class="list-error padding-small">
-                                <div class="list-error-emoji">
-                                    {{ 'xima.depmon.basic.error'|trans({}, 'XimaDepmonBundle') }}
-                                </div>
-                                {{ 'xima.depmon.basic.error.data'|trans({}, 'XimaDepmonBundle') }}<br/>
-                                {{ 'xima.depmon.basic.error.link'|trans({'%link%': '<a href="https://github.com/xima-media/depmon/wiki/Help#2--no-data" target="_blank">Help#2</a>'}, 'XimaDepmonBundle')|raw }}
-                            </div>
+                    {% if error is defined %}
+                        {% if projects is defined and projects|length > 0 %}
+                            {% if projects[0].self is defined %}
+                                {% for key, project in projects %}
+                                    <ul class="list list-group">
+                                        {{ include('@XimaDepmon/project.html.twig') }}
+                                        {% for num, dependency in project.dependencies %}
+                                            {{ include('@XimaDepmon/dependency.html.twig') }}
+                                        {% endfor %}
+                                    </ul>
+                                {% endfor %}
+                            {% endif %}
                         {% endif %}
                     {% else %}
                         <div class="list-error padding-small">
-                            <div class="list-error-emoji">
-                                {{ 'xima.depmon.basic.error'|trans({}, 'XimaDepmonBundle') }}
-                            </div>
+                        <div class="list-error-emoji">
+                            {{ 'xima.depmon.basic.error'|trans({}, 'XimaDepmonBundle') }}
+                        </div>
+                        {% if error == 1 %}
                             {{ 'xima.depmon.basic.error.projects'|trans({}, 'XimaDepmonBundle') }}<br/>
                             {{ 'xima.depmon.basic.error.link'|trans({'%link%': '<a href="https://github.com/xima-media/depmon/wiki/Help#1--no-projects" target="_blank">Help#1</a>'}, 'XimaDepmonBundle')|raw }}
+                        {% elseif error == 2 %}
+                            {{ 'xima.depmon.basic.error.data'|trans({}, 'XimaDepmonBundle') }}<br/>
+                            {{ 'xima.depmon.basic.error.link'|trans({'%link%': '<a href="https://github.com/xima-media/depmon/wiki/Help#2--no-data" target="_blank">Help#2</a>'}, 'XimaDepmonBundle')|raw }}
+                        {% elseif error == 3 %}
+                            {{ 'xima.depmon.basic.error.detail'|trans({}, 'XimaDepmonBundle') }}<br/>
+                            {{ 'xima.depmon.basic.error.link'|trans({'%link%': '<a href="https://github.com/xima-media/depmon/wiki/Help#3--no-detail" target="_blank">Help#3</a>'}, 'XimaDepmonBundle')|raw }}
+                        {% endif %}
                         </div>
                     {% endif %}
                 </div>

@@ -5,6 +5,8 @@ namespace Xima\DepmonBundle\Command;
 
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use vierbergenlars\SemVer\expression;
+use vierbergenlars\SemVer\version;
 use Xima\DepmonBundle\Service\Aggregator;
 use Xima\DepmonBundle\Service\Cache;
 use Psr\Cache\InvalidArgumentException;
@@ -112,6 +114,8 @@ class AggregateCommand extends ContainerAwareCommand
             } catch (InvalidArgumentException $e) {
 
             }
+
+            $this->aggregator->clearProjectData($project);
         }
 
 

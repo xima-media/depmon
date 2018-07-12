@@ -73,10 +73,14 @@ li {
     background-color: $yellow;
   }
 
-  &.state-3,
-  &.state-4 {
+  &.state-3 {
     background-color: $red;
   }
+
+  &.state-4 {
+    background-color: $gray-darker;
+  }
+
 }
 
 

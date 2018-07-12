@@ -26,6 +26,10 @@
                 <source>xima.depmon.basic.entities</source>
                 <target>%projects% projects, %dependencies% dependencies</target>
             </trans-unit>
+            <trans-unit id="xima.depmon.basic.back">
+                <source>xima.depmon.basic.back</source>
+                <target>Back to main application</target>
+            </trans-unit>
             <trans-unit id="xima.depmon.basic.error">
                 <source>xima.depmon.basic.error</source>
                 <target>=(</target>

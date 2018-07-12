@@ -15,19 +15,22 @@ Encore
     .autoProvidejQuery()
     .enableSassLoader()
     .enableVersioning(false)
-    .createSharedEntry('js/common', ['jquery'])
+    .createSharedEntry('js/common', [
+        'jquery'
+    ])
     .addEntry('js/app', [
         './assets/js/app.js',
         './assets/js/filter.js',
-        './assets/js/search.js'
+        './assets/js/search.js',
+        './assets/js/tooltip.js'
     ])
     .addStyleEntry('css/app', [
+        './node_modules/tippy.js/src/scss/tippy.scss',
         './assets/scss/variables.scss',
         './assets/scss/app.scss',
         './assets/scss/icon.scss',
         './assets/scss/filter.scss',
         './assets/scss/logo.scss',
-        './assets/scss/tooltip.scss',
         './assets/scss/list.scss'
     ])
     // enable source maps during development

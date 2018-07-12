@@ -1,82 +1,85 @@
 <form class="filter" id="depmon-filter">
-    <h3>{{ 'xima.depmon.filter.project'|trans({}, 'XimaDepmonBundle') }}</h3>
-    <a href="#" class="filter-entry" data-toggle="collapse" data-target="#filter-project-collapse">
-        <strong>{{ 'xima.depmon.filter.projects'|trans({}, 'XimaDepmonBundle') }} ({{ projects|length }})</strong>
-    </a>
-    <div id="filter-project-collapse" class="collapse">
-        {% if projects is defined and projects[0].self is defined %}
-            {% for project in projects %}
-                <div class="checkbox">
-                    <input type="checkbox" name="project" value="{{ project.self.name }}"
-                           id="filter-project-{{ project.self.name }}">
-                    <label for="filter-project-{{ project.self.name }}">{{ project.self.name }}</label>
-                </div>
-            {% endfor %}
-        {% endif %}
-    </div>
-    <a href="#" class="filter-entry" data-toggle="collapse" data-target="#filter-type-collapse">
-        <strong>{{ 'xima.depmon.filter.types'|trans({}, 'XimaDepmonBundle') }} (3)</strong>
-        <small>beta</small>
-    </a>
-    <div id="filter-type-collapse" class="collapse">
-        <div class="checkbox" data-tooltip="TYPO3">
-            <input type="checkbox" name="project-type" value="TYPO3" id="filter-type-01">
-            <label for="filter-type-01"> <i class="icon-typo3"></i></label>
+    {% if detail is not defined %}
+        <h3>{{ 'xima.depmon.filter.project'|trans({}, 'XimaDepmonBundle') }}</h3>
+        <a href="#" class="filter-entry" data-toggle="collapse" data-target="#filter-project-collapse">
+            <strong>{{ 'xima.depmon.filter.projects'|trans({}, 'XimaDepmonBundle') }} ({{ projects|length }})</strong>
+        </a>
+        <div id="filter-project-collapse" class="collapse">
+            {% if projects is defined and projects[0].self is defined %}
+                {% for project in projects %}
+                    <div class="checkbox">
+                        <input type="checkbox" name="project" value="{{ project.self.name }}"
+                               id="filter-project-{{ project.self.name }}">
+                        <label for="filter-project-{{ project.self.name }}">{{ project.self.name }}</label>
+                    </div>
+                {% endfor %}
+            {% endif %}
         </div>
-        <div class="checkbox" data-tooltip="Symfony">
-            <input type="checkbox" name="project-type" value="Symfony" id="filter-type-02">
-            <label for="filter-type-02"> <i class="icon-symfony"></i></label>
+        <a href="#" class="filter-entry" data-toggle="collapse" data-target="#filter-type-collapse">
+            <strong>{{ 'xima.depmon.filter.types'|trans({}, 'XimaDepmonBundle') }} (3)</strong>
+            <small>beta</small>
+        </a>
+        <div id="filter-type-collapse" class="collapse">
+            <div class="checkbox">
+                <input type="checkbox" name="project-type" value="TYPO3" id="filter-type-01">
+                <label for="filter-type-01"> <i class="icon-typo3" title="TYPO3"></i></label>
+            </div>
+            <div class="checkbox">
+                <input type="checkbox" name="project-type" value="Symfony" id="filter-type-02">
+                <label for="filter-type-02"> <i class="icon-symfony" title="Symfony"></i></label>
+            </div>
+            <div class="checkbox">
+                <input type="checkbox" name="project-type" value="Drupal" id="filter-type-03">
+                <label for="filter-type-03"> <i class="icon-drupal" title="Drupal"></i></label>
+            </div>
         </div>
-        <div class="checkbox" data-tooltip="Drupal">
-            <input type="checkbox" name="project-type" value="Drupal" id="filter-type-03">
-            <label for="filter-type-03"> <i class="icon-drupal"></i></label>
-        </div>
-    </div>
-    <div class="checkbox padding-small">
-        <div data-tooltip="{{ 'xima.depmon.filter.overview.tooltip'|trans({}, 'XimaDepmonBundle') }}">
+        <div class="checkbox padding-small">
             <input type="checkbox" name="overview" value="1" id="filter-overview">
-            <label for="filter-overview" class="dark">
+            <label for="filter-overview" class="dark"
+                   title="{{ 'xima.depmon.filter.overview.tooltip'|trans({}, 'XimaDepmonBundle') }}">
                 <small>{{ 'xima.depmon.filter.overview'|trans({}, 'XimaDepmonBundle') }}</small>
             </label>
         </div>
-    </div>
+    {% endif %}
     <h3>{{ 'xima.depmon.filter.dependency'|trans({}, 'XimaDepmonBundle') }}</h3>
     <input type="text" class="search text-search" name="name"
            placeholder="{{ 'xima.depmon.filter.search'|trans({}, 'XimaDepmonBundle') }}"/>
     <div class="checkbox padding-small">
-        <div data-tooltip="{{ 'xima.depmon.filter.required.tooltip'|trans({}, 'XimaDepmonBundle') }}">
-            <input type="checkbox" name="required" value="1" id="filter-required" checked>
-            <label for="filter-required" class="dark">
-                <small>{{ 'xima.depmon.filter.required'|trans({}, 'XimaDepmonBundle') }}</small>
-            </label>
-        </div>
+        <input type="checkbox" name="required" value="1" id="filter-required" checked>
+        <label for="filter-required" class="dark"
+               title="{{ 'xima.depmon.filter.required.tooltip'|trans({}, 'XimaDepmonBundle') }}">
+            <small>{{ 'xima.depmon.filter.required'|trans({}, 'XimaDepmonBundle') }}</small>
+        </label>
     </div>
     <a href="#" class="filter-entry" data-toggle="collapse" data-target="#filter-state-collapse">
         <strong>{{ 'xima.depmon.filter.states'|trans({}, 'XimaDepmonBundle') }}</strong>
     </a>
     <div id="filter-state-collapse" class="collapse">
-
-        <div class="checkbox" data-tooltip="{{ 'xima.depmon.filter.state.1.tooltip'|trans({}, 'XimaDepmonBundle') }}">
+        <div class="checkbox">
             <input type="checkbox" name="state" value="1" id="filter-state-1">
-            <label for="filter-state-1"> {{ 'xima.depmon.filter.state.1'|trans({}, 'XimaDepmonBundle') }}
+            <label for="filter-state-1"
+                   title="{{ 'xima.depmon.filter.state.1.tooltip'|trans({}, 'XimaDepmonBundle') }}"> {{ 'xima.depmon.filter.state.1'|trans({}, 'XimaDepmonBundle') }}
                 <span class="state state-1"></span>
             </label>
         </div>
-        <div class="checkbox" data-tooltip="{{ 'xima.depmon.filter.state.2.tooltip'|trans({}, 'XimaDepmonBundle') }}">
+        <div class="checkbox">
             <input type="checkbox" name="state" value="2" id="filter-state-2">
-            <label for="filter-state-2"> {{ 'xima.depmon.filter.state.2'|trans({}, 'XimaDepmonBundle') }}
+            <label for="filter-state-2"
+                   title="{{ 'xima.depmon.filter.state.2.tooltip'|trans({}, 'XimaDepmonBundle') }}"> {{ 'xima.depmon.filter.state.2'|trans({}, 'XimaDepmonBundle') }}
                 <span class="state state-2"></span>
             </label>
         </div>
-        <div class="checkbox" data-tooltip="{{ 'xima.depmon.filter.state.3.tooltip'|trans({}, 'XimaDepmonBundle') }}">
+        <div class="checkbox">
             <input type="checkbox" name="state" value="3" id="filter-state-3">
-            <label for="filter-state-3"> {{ 'xima.depmon.filter.state.3'|trans({}, 'XimaDepmonBundle') }}
+            <label for="filter-state-3"
+                   title="{{ 'xima.depmon.filter.state.3.tooltip'|trans({}, 'XimaDepmonBundle') }}"> {{ 'xima.depmon.filter.state.3'|trans({}, 'XimaDepmonBundle') }}
                 <span class="state state-3"></span>
             </label>
         </div>
-        <div class="checkbox" data-tooltip="{{ 'xima.depmon.filter.state.4.tooltip'|trans({}, 'XimaDepmonBundle') }}">
+        <div class="checkbox">
             <input type="checkbox" name="state" value="3" id="filter-state-4">
-            <label for="filter-state-4"> {{ 'xima.depmon.filter.state.4'|trans({}, 'XimaDepmonBundle') }}
+            <label for="filter-state-4"
+                   title="{{ 'xima.depmon.filter.state.4.tooltip'|trans({}, 'XimaDepmonBundle') }}"> {{ 'xima.depmon.filter.state.4'|trans({}, 'XimaDepmonBundle') }}
                 <span class="state state-4"></span>
             </label>
         </div>
@@ -95,9 +98,13 @@
             <i class="icon-subdirectory_arrow_right"></i> {{ 'xima.depmon.basic.update'|trans({}, 'XimaDepmonBundle') }}
         </a>
     </div>
-    {% if projects is defined and projects[0].self is defined %}
-        {{ 'xima.depmon.basic.statistic'|trans({}, 'XimaDepmonBundle') }}: <br/>
-        {{ 'xima.depmon.basic.entities'|trans({'%projects%': projects|length, '%dependencies%': metadata.dependencyCount}, 'XimaDepmonBundle') }}
+    {% if detail is not defined %}
+        {% if projects is defined and projects[0].self is defined %}
+            {{ 'xima.depmon.basic.statistic'|trans({}, 'XimaDepmonBundle') }}: <br/>
+            {{ 'xima.depmon.basic.entities'|trans({'%projects%': projects|length, '%dependencies%': metadata.dependencyCount}, 'XimaDepmonBundle') }}
+        {% endif %}
+    {% else %}
+        <a href="{{ path('xima_depmon_index') }}"><i class="icon-arrow_back"></i> {{ 'xima.depmon.basic.back'|trans({}, 'XimaDepmonBundle') }}</a>
     {% endif %}
     <br/>
     <br/>
