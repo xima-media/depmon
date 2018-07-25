@@ -1,4 +1,4 @@
-<li class="list-group-item-info list-group-item list-header bg-gray-dark"
+<li class="list-group-item-info list-group-item list-header"
     data-project="{{ project.self.name }}"
     data-project-type="{{ project.self.projectType is defined ? project.self.projectType }}"
     data-overview="1"
@@ -32,7 +32,7 @@
                 <img src="{{ asset("bundles/ximadepmon/img/states/#{project.meta.projectState}.svg") }}">
             </a>
         </div>
-        <div id="{{ key }}" class="collapse col-12 bg-gray-dark">
+        <div id="{{ key }}" class="collapse col-12">
             <div class="row padding-small">
                 <div class="col-4">
                     <strong>{{ project.dependencies|length }}</strong> {{ 'xima.depmon.list.dependencies.total'|trans({}, 'XimaDepmonBundle') }}
@@ -118,6 +118,15 @@
                             <br/>
                         {% endfor %}
                     {% endif %}
+                </div>
+                <div class="col-4 padding-small">
+                    <a href="{{ path('xima_depmon_detail', {'project': project.self.name}) }}" title="{{ 'xima.depmon.list.action.detail.tooltip'|trans({}, 'XimaDepmonBundle') }}"><i class="icon-link"></i> {{ 'xima.depmon.list.action.detail'|trans({}, 'XimaDepmonBundle') }}</a>
+                </div>
+                <div class="col-4 padding-small">
+                    <a href="{{ path('xima_depmon_state', {'project': project.self.name}) }}" title="{{ 'xima.depmon.list.action.badge.tooltip'|trans({}, 'XimaDepmonBundle') }}"><i class="icon-badge"></i> {{ 'xima.depmon.list.action.badge'|trans({}, 'XimaDepmonBundle') }}</a>
+                </div>
+                <div class="col-4 padding-small">
+                    <a href="{{ path('xima_depmon_index') }}" title="{{ 'xima.depmon.list.action.rss.tooltip'|trans({}, 'XimaDepmonBundle') }}"> <i class="icon-rss"></i> {{ 'xima.depmon.list.action.rss'|trans({}, 'XimaDepmonBundle') }}</a>
                 </div>
             </div>
         </div>

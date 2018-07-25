@@ -19,10 +19,11 @@ Encore
         'jquery'
     ])
     .addEntry('js/app', [
-        './assets/js/app.js',
-        './assets/js/filter.js',
-        './assets/js/search.js',
-        './assets/js/tooltip.js'
+        './assets/js/_app.js',
+        './assets/js/_filter.js',
+        './assets/js/_search.js',
+        './assets/js/_tooltip.js',
+        './assets/js/_update.js'
     ])
     .addStyleEntry('css/app', [
         './node_modules/tippy.js/src/scss/tippy.scss',
@@ -31,7 +32,9 @@ Encore
         './assets/scss/icon.scss',
         './assets/scss/filter.scss',
         './assets/scss/logo.scss',
-        './assets/scss/list.scss'
+        './assets/scss/list.scss',
+        './assets/scss/loading.scss',
+        './assets/scss/flash_message.scss'
     ])
     // enable source maps during development
     .enableSourceMaps(!Encore.isProduction())

@@ -9,3 +9,7 @@ xima_depmon_detail:
 xima_depmon_state:
     path: "/state/{project}"
     defaults: { _controller: "xima_depmon.default:state", _format: html }
+
+xima_depmon_update:
+    path: "/update"
+    defaults: { _controller: "xima_depmon.default:update", _format: html }

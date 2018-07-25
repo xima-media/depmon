@@ -77,7 +77,7 @@
             </label>
         </div>
         <div class="checkbox">
-            <input type="checkbox" name="state" value="3" id="filter-state-4">
+            <input type="checkbox" name="state" value="4" id="filter-state-4">
             <label for="filter-state-4"
                    title="{{ 'xima.depmon.filter.state.4.tooltip'|trans({}, 'XimaDepmonBundle') }}"> {{ 'xima.depmon.filter.state.4'|trans({}, 'XimaDepmonBundle') }}
                 <span class="state state-4"></span>
@@ -86,7 +86,7 @@
     </div>
     <div class="padding-small text-center">
         <small>
-            <a class="filter-reset no-style">
+            <a class="filter-reset no-style" title="{{ 'xima.depmon.filter.reset'|trans({}, 'XimaDepmonBundle') }}">
                 <i class="icon-subdirectory_arrow_right"></i> {{ 'xima.depmon.filter.reset'|trans({}, 'XimaDepmonBundle') }}
             </a>
         </small>
@@ -94,9 +94,10 @@
 </form>
 <small class="position-bottom padding-small text-muted width-100">
     <div class="padding-small text-center">
-        <a class="filter-reset no-style">
+        <a class="filter-update no-style" title="{{ 'xima.depmon.basic.update.tooltip'|trans({}, 'XimaDepmonBundle') }}">
             <i class="icon-subdirectory_arrow_right"></i> {{ 'xima.depmon.basic.update'|trans({}, 'XimaDepmonBundle') }}
         </a>
+        <input type="hidden" class="filter-update-target" value="{{ path('xima_depmon_update') }}">
     </div>
     {% if detail is not defined %}
         {% if projects is defined and projects[0].self is defined %}

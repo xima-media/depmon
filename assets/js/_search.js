@@ -1,4 +1,20 @@
+/**
+ *    Search
+ *
+ *    @tableofcontent
+ *      1. Functions
+ *       1.1 Init
+ *       1.2 Event Listener
+ *
+ */
+
+/**
+ *     @section 1. Functions
+ */
+
 $(function() {
+
+    // @section 1.1 Init
     var filter = Filter.init({
         filterForms: [
             '#depmon-filter'
@@ -21,6 +37,7 @@ $(function() {
         debug: true
     });
 
+    // @section 1.2 Event Listener
     $('.filter-reset').click(function () {
         filter.reset();
         filter.applyFilter(null);
@@ -96,3 +113,5 @@ $(function() {
         $('#filter-project-collapse').collapse('show');
     });
 });
+
+// end of _search.js

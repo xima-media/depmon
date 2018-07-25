@@ -107,7 +107,7 @@ class Aggregator
             // Change directory
             (($project['path'] != '') ? 'cd ' . $project['path'] . ' && ' : '') .
             // Install composer dependencies
-            'composer install --no-dev --no-autoloader --no-scripts --ignore-platform-reqs'
+            'composer install --no-dev --no-autoloader --no-scripts --ignore-platform-reqs --prefer-dist'
         );
 
         $process->setTimeout(3600);

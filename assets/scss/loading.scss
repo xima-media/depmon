@@ -1,0 +1,116 @@
+$duration: 1.6s;
+$delay: $duration/8;
+
+.wrap {
+  position: relative;
+  width: 200px;
+  height: 200px;
+  margin: auto;
+}
+.loading {
+  width: 200px;
+  height: 200px;
+  position: relative;
+  transform: scale(0.2);
+
+  &.animated {
+    .square {
+      opacity: 0;
+    }
+    .square-1 {
+      animation: animation $duration 0*$delay ease infinite;
+    }
+    .square-2 {
+      animation: animation $duration 1*$delay ease infinite;
+    }
+    .square-3 {
+      animation: animation $duration 2*$delay ease infinite;
+    }
+    .square-4 {
+      animation: animation $duration 3*$delay ease infinite;
+    }
+    .square-5 {
+      animation: animation $duration 4*$delay ease infinite;
+    }
+    .square-6 {
+      animation: animation $duration 5*$delay ease infinite;
+    }
+    .square-7 {
+      animation: animation $duration 6*$delay ease infinite;
+    }
+    .square-8 {
+      animation: animation $duration 7*$delay ease infinite;
+    }
+  }
+}
+.square {
+  position: absolute;
+}
+.size-m {
+  width: 50px;
+  height: 50px;
+}
+.size-s {
+  width: 25px;
+  height: 25px;
+}
+.color-blue {
+  background-color: #3D8EB9;
+}
+.color-green {
+  background-color: #1ABC9C;
+}
+.color-yellow {
+  background-color: #F7DA64;
+}
+.color-red {
+  background-color: #EB6B56;
+}
+.square-1 {
+  top: 50px;
+  left: 50px;
+}
+.square-2 {
+  top: 25px;
+  left: 75px;
+}
+.square-3 {
+  top: 100px;
+  left: 25px;
+}
+.square-4 {
+  top: 100px;
+  left: 125px;
+}
+.square-5 {
+  top: 125px;
+  left: 75px;
+}
+.square-6 {
+  top: 75px;
+  left: 100px;
+}
+.square-7 {
+  top: 125px;
+  left: 50px;
+}
+.square-8 {
+  top: 25px;
+  left: 125px;
+}
+@keyframes animation {
+  0% {
+    opacity: 0;
+    margin-left: -30px;
+    margin-top: 30px;
+  }
+  50% {
+    opacity: 1;
+    margin: 0;
+  }
+  100% {
+    opacity: 0;
+    margin-left: 30px;
+    margin-top: -30px;
+  }
+}

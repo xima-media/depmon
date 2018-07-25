@@ -1,0 +1,58 @@
+@import "variables";
+
+.flash-message {
+  position: fixed;
+  display: inline-block;
+  z-index: 1000;
+  margin: 10px;
+  padding: 10px;
+  background-color: $gray-light;
+  color: $gray-darker;
+  animation: show 5s forwards ease;
+
+  &__wrapper {
+    text-align: center;
+  }
+
+  &.success {
+    background-color: $green;
+    color: $white;
+  }
+  &.info {
+    background-color: $blue;
+    color: $white;
+  }
+  &.warning {
+    background-color: $yellow;
+    color: $white;
+  }
+  &.alert {
+    background-color: $red;
+    color: $white;
+  }
+  &.bottom {
+    bottom: 0;
+  }
+  &.top {
+    top: 0;
+  }
+  &.left {
+    left: 0;
+  }
+  &.right {
+    right: 0;
+  }
+  &.center {
+    margin: auto;
+  }
+  &.short {
+    animation-duration: 3s;
+  }
+  &.long {
+    animation-duration: 10s;
+  }
+}
+@keyframes show {
+  0%,100% {opacity: 0;}
+  10%,90% {opacity: 1;}
+}

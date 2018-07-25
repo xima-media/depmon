@@ -20,6 +20,9 @@ li {
     padding: 10px 5px;
     margin: 0;
     z-index: 1;
+    background-color: $white;
+    border: 1px solid $gray;
+    border-left: 0;
 
     button {
       margin-top: -10px;

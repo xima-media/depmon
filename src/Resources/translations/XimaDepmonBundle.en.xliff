@@ -20,7 +20,11 @@
             </trans-unit>
             <trans-unit id="xima.depmon.basic.update">
                 <source>xima.depmon.basic.update</source>
-                <target>Start update</target>
+                <target>Update data</target>
+            </trans-unit>
+            <trans-unit id="xima.depmon.basic.update.tooltip">
+                <source>xima.depmon.basic.update.tooltip</source>
+                <target>Manually start the data fetching command.</target>
             </trans-unit>
             <trans-unit id="xima.depmon.basic.projects">
                 <source>xima.depmon.basic.entities</source>
@@ -122,6 +126,10 @@
                 <source>xima.depmon.filter.reset</source>
                 <target>Reset filter</target>
             </trans-unit>
+            <trans-unit id="xima.depmon.filter.reset.tooltip">
+                <source>xima.depmon.filter.reset.tooltip</source>
+                <target>Reset the complete filter data</target>
+            </trans-unit>
             <trans-unit id="xima.depmon.list.header.dependency">
                 <source>xima.depmon.list.header.dependency</source>
                 <target>Dependency</target>
@@ -161,6 +169,30 @@
             <trans-unit id="xima.depmon.list.description.empty">
                 <source>xima.depmon.list.description.empty</source>
                 <target>No description</target>
+            </trans-unit>
+            <trans-unit id="xima.depmon.list.action.detail">
+                <source>xima.depmon.list.action.detail</source>
+                <target>Detail page</target>
+            </trans-unit>
+            <trans-unit id="xima.depmon.list.action.detail.tooltip">
+                <source>xima.depmon.list.action.detail.tooltip</source>
+                <target>Opens a separate project detail page</target>
+            </trans-unit>
+            <trans-unit id="xima.depmon.list.action.badge">
+                <source>xima.depmon.list.action.badge</source>
+                <target>State badge</target>
+            </trans-unit>
+            <trans-unit id="xima.depmon.list.action.badge.tooltip">
+                <source>xima.depmon.list.action.badge.tooltip</source>
+                <target>A SVG project state badge you can include where ever you want</target>
+            </trans-unit>
+            <trans-unit id="xima.depmon.list.action.rss">
+                <source>xima.depmon.list.action.rss</source>
+                <target>RSS feed</target>
+            </trans-unit>
+            <trans-unit id="xima.depmon.list.action.rss.tooltip">
+                <source>xima.depmon.list.action.rss.tooltip</source>
+                <target>Providing a simple RSS feed of the project data</target>
             </trans-unit>
             <trans-unit id="xima.depmon.list.state.1">
                 <source>xima.depmon.list.state.1</source>

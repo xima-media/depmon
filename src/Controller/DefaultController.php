@@ -3,7 +3,12 @@
 namespace Xima\DepmonBundle\Controller;
 
 
+use Symfony\Bundle\FrameworkBundle\Console\Application;
+use Symfony\Component\Console\Input\ArrayInput;
+use Symfony\Component\Console\Output\BufferedOutput;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
+use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Exception\InvalidParameterException;
 use Xima\DepmonBundle\Service\Cache;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -23,12 +28,18 @@ class DefaultController extends AbstractController
     private $cache;
 
     /**
+     * @var KernelInterface
+     */
+    private $kernel;
+
+    /**
      * DefaultController constructor.
      * @param Cache $cache
      */
-    public function __construct(Cache $cache)
+    public function __construct(Cache $cache, KernelInterface $kernel)
     {
         $this->cache = $cache;
+        $this->kernel = $kernel;
     }
 
     /**
@@ -103,10 +114,9 @@ class DefaultController extends AbstractController
      */
     public function state($project): Response
     {
-
         $data = $this->cache->get($project);
         if ($data == '') {
-            throw new InvalidParameterException("No data for project \"$project\" found.");
+            throw $this->createNotFoundException("No data for project \"$project\" found.");
         }
         $state = $data['meta']['projectState'];
 
@@ -121,5 +131,31 @@ class DefaultController extends AbstractController
         readfile(__DIR__ . "/../Resources/public/img/states/$state.svg");
 
         return $response;
+    }
+
+    /**
+     * Update action
+     * @return JsonResponse
+     */
+    public function update(KernelInterface $kernel): JsonResponse
+    {
+        $application = new Application($kernel);
+        $application->setAutoExit(false);
+
+        $input = new ArrayInput(array(
+            'command' => 'depmon:aggregate'
+        ));
+
+        $output = new BufferedOutput();
+        $application->run($input, $output);
+
+        $content = $output->fetch();
+        $httpResponseCode = 200;
+
+        if ($application->areExceptionsCaught()) {
+            $httpResponseCode = 500;
+        }
+
+        return new JsonResponse($content, $httpResponseCode);
     }
 }
