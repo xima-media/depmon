@@ -10,7 +10,9 @@ ul {
 
 li {
   margin: 5px 0;
-  padding: 0 10px;
+  padding: 5px 10px;
+  border-bottom: 1px solid $gray-lighter;
+
   &.list-header {
     position: sticky;
     display: block;
@@ -32,6 +34,16 @@ li {
 
   &.insecure {
     background-color: rgba($red,0.5);
+  }
+}
+
+.depmon-list {
+  border-right: 1px solid $gray-lighter;
+
+  .list-group-item:not(.list-header) {
+    &:hover {
+      background-color: $gray-light;
+    }
   }
 }
 

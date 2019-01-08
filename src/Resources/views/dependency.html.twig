@@ -26,20 +26,20 @@
                 </button>
             </div>
         </div>
-        <div class="col-2 text-center">
+        <div class="col-2 text-center one-line">
             {% if dependency.required is defined %}
                 {{ dependency.required }}
             {% endif %}
         </div>
-        <div class="col-2 text-center">
+        <div class="col-2 text-center one-line">
             {{ dependency.version }}
         </div>
-        <div class="col-2 text-center">
+        <div class="col-2 text-center one-line">
             {% if dependency.latest is defined %}
                 {{ dependency.latest }}
             {% endif %}
         </div>
-        <div class="col-1">
+        <div class="col-1 text-right">
             <div class="state state-{{ dependency.state }}" title="{{ (dependency.state == 1) ? 'xima.depmon.list.state.1'|trans({}, 'XimaDepmonBundle') : ((dependency.state == 2) ? 'xima.depmon.list.state.2'|trans({}, 'XimaDepmonBundle') : ((dependency.state == 3) ? 'xima.depmon.list.state.3'|trans({}, 'XimaDepmonBundle') : 'xima.depmon.list.state.4'|trans({}, 'XimaDepmonBundle'))) }}"></div>
         </div>
         {%  if dependency.vulnerability is defined %}
