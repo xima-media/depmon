@@ -3,17 +3,15 @@
 namespace Xima\DepmonBundle\Command;
 
 
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use vierbergenlars\SemVer\expression;
-use vierbergenlars\SemVer\version;
 use Xima\DepmonBundle\Service\Aggregator;
 use Xima\DepmonBundle\Service\Cache;
 use Psr\Cache\InvalidArgumentException;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Yaml\Yaml;
 
 /**
  * Class AggregateCommand
@@ -32,10 +30,16 @@ class AggregateCommand extends ContainerAwareCommand
      */
     private $cache;
 
-    public function __construct(Aggregator $aggregator, Cache $cache)
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
+    public function __construct(Aggregator $aggregator, Cache $cache, LoggerInterface $logger)
     {
         $this->aggregator = $aggregator;
         $this->cache = $cache;
+        $this->logger = $logger;
 
         parent::__construct();
     }
@@ -84,7 +88,7 @@ class AggregateCommand extends ContainerAwareCommand
         foreach ($projects as $project) {
             try {
 
-                $data = $this->aggregator->fetchProjectData($project);
+                $data = $this->aggregator->fetchProjectData($project, $this->logger);
                 $count = count($data['dependencies']);
                 $requiredCount = $data['meta']['requiredPackagesCount'];
                 $requiredStatesCount = $data['meta']['requiredStatesCount'];

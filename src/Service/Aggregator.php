@@ -37,68 +37,53 @@ class Aggregator
      * @throws \Exception
      * @return array
      */
-    public function fetchProjectData($project): array
+    public function fetchProjectData($project, LoggerInterface $logger): array
     {
-
         $projectName = $project['name'];
 
         // Check if git is installed
-        $process = new Process('command -v git');
-        $process->run();
-
-        if ($process->getOutput() == '') {
+        if ($this->runProcess('command -v \'git\' || which \'git\' || type -p \'git\'') == '') {
             throw new \Exception('Git is not installed!');
         }
 
         // Check if composer is installed
-        $process = new Process('command -v composer');
-        $process->run();
-
-        if ($process->getOutput() == '') {
+        if ($this->runProcess('command -v \'composer\' || which \'composer\' || type -p \'composer\'') == '') {
             throw new \Exception('Composer is not installed!');
         }
 
         // If project already exists, just pull updates. Otherwise clone the repository.
         // ToDo: "git reset" pulls every file of the git
         if (is_dir('var/data/' . $project['name'])) {
-            $process = new Process('cd var/data/' . $project['name'] . ' && git reset --hard origin/master');
+            $this->runProcess('cd var/data/' . $project['name'] . ' && git reset --hard origin/master');
         } else {
-            $process = new Process('git clone -n ' . $project['git'] . ' var/data/' . $project['name'] . ' --depth 1 -b master --single-branch');
-        }
-
-        $process->setTimeout(3600);
-        $process->run();
-
-        if (!$process->isSuccessful()) {
-            throw new ProcessFailedException($process);
+            $logger->info('Clone project');
+            $this->runProcess('git clone -n ' . $project['git'] . ' var/data/' . $project['name'] . ' --depth 1 -b master --single-branch');
         }
 
         // Check if composer.json exists in project
-        $process = new Process(
+        $process = $this->runProcess(
             'cd var/data/' . $project['name'] . '/ && ' .
             'git cat-file -e origin/master:' . $project['path'] . 'composer.json && echo true'
         );
-        $process->run();
 
-        if (trim($process->getOutput()) != 'true') {
+        if (trim($process) != 'true') {
             throw new \Exception('No composer.json found in the project ' . $projectName);
         }
 
         // Check if composer.lock exists in project
-        $process = new Process(
+        $process = $this->runProcess(
             'cd var/data/' . $project['name'] . '/ && ' .
             'git cat-file -e origin/master:' . $project['path'] . 'composer.lock && echo true'
         );
-        $process->run();
         $composerLock = false;
 
-        if (trim($process->getOutput()) == 'true') {
+        if (trim($process) == 'true') {
             $composerLock = true;
         }
 
         // Preparing composer project setup
         // ToDo: Is it possible to combine multiple processes in a better way?
-        $process = new Process(
+        $this->runProcess(
             'cd var/data/' . $project['name'] . '/ && ' .
             // Checkout composer.json file
             'git checkout HEAD ' . $project['path'] . 'composer.json && ' .
@@ -110,45 +95,23 @@ class Aggregator
             'composer install --no-dev --no-autoloader --no-scripts --ignore-platform-reqs --prefer-dist'
         );
 
-        $process->setTimeout(3600);
-        $process->run();
-
-        if (!$process->isSuccessful()) {
-            throw new ProcessFailedException($process);
-        }
-
-        $process = new Process(
+        $gitTag = $this->runProcess(
             'cd var/data/' . $project['name'] . ' && ' .
             'git describe --tags $(git rev-list --tags --max-count=1)'
         );
-        $process->run();
-        $gitTag = $process->getOutput();
 
-        $process = new Process(
+        $data = json_decode($this->runProcess(
             'cd var/data/' . $project['name'] . '/' . $project['path'] . ' && ' .
             'composer show --latest --minor-only --format json'
-        );
-        $process->run();
-
-        if (!$process->isSuccessful()) {
-            throw new ProcessFailedException($process);
-        }
-
-        $data = json_decode($process->getOutput());
+        ));
 
         if (empty($data)) {
             throw new \Exception('Empty result of "composer show" for project ' . $projectName);
         }
 
-        $process = new Process(
+        $vulnerabilities = json_decode($this->runProcess(
             'curl -H "Accept: application/json" https://security.sensiolabs.org/check_lock -F lock=@var/data/' . $project['name'] . '/' . $project['path'] . 'composer.lock'
-        );
-        $process->run();
-
-        if (!$process->isSuccessful()) {
-            throw new ProcessFailedException($process);
-        }
-        $vulnerabilities = json_decode($process->getOutput());
+        ));
 
         //
         // Evaluate data
@@ -252,5 +215,21 @@ class Aggregator
             'rm -rf var/data/' . $project['name']
         );
         $process->run();
+    }
+
+    /**
+     * @param $p
+     * @return string
+     */
+    private function runProcess($p) {
+        $process = Process::fromShellCommandline($p);
+
+        $process->setTimeout(3600);
+        $process->run();
+
+        if (!$process->isSuccessful()) {
+            throw new ProcessFailedException($process);
+        }
+        return $process->getOutput();
     }
 }

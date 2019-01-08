@@ -2,9 +2,8 @@
 
 namespace Xima\DepmonBundle\Util;
 
-use vierbergenlars\SemVer\SemVerException;
-use vierbergenlars\SemVer\version;
-use vierbergenlars\SemVer\expression;
+
+use Composer\Semver\Semver;
 
 class VersionHelper
 {
@@ -34,29 +33,16 @@ class VersionHelper
     {
         $state = self::STATE_UP_TO_DATE;
 
-        // prepare stable
-        $stableArray = explode('.', $stable);
-        $stableArray[0] = $stableArray[0][0] == 'v' ? substr($stableArray[0], 1) : $stableArray[0];
-        // prepare latest
-        $latestArray = explode('.', $latest);
-        $latestArray[0] = $latestArray[0][0] == 'v' ? substr($latestArray[0], 1) : $latestArray[0];
-
-        if ($stableArray[0] != $latestArray[0] || (isset($stableArray[1]) && isset($latestArray[1]) && $stableArray[1] != $latestArray[1])) {
+        if (explode('.', $stable)[0] != explode('.', $latest)[0] || (isset(explode('.', $stable)[1]) && isset(explode('.', $latest)[1]) && explode('.', $stable)[1] != explode('.', $latest)[1])) {
             $state =  self::STATE_OUT_OF_DATE;
-        } else if (isset($stableArray[2]) && isset($latestArray[2]) && $stableArray[2] != $latestArray[2]) {
+        } else if (isset(explode('.', $stable)[2]) && isset(explode('.', $latest)[2]) && explode('.', $stable)[2] != explode('.', $latest)[2]) {
             $state =  self::STATE_PINNED_OUT_OF_DATE;
         }
 
-        // ToDo: The satisfies function didn't worked as expected. For example the constraint ~4.1 is not satisfying the version 4.9.5.
-
         if ($state != self::STATE_UP_TO_DATE && $required != null) {
-            try {
-                $latestVersion = new version($latest);
-                if (!$latestVersion->satisfies(new expression($required))) {
-                    $state = self::STATE_UP_TO_DATE;
-                }
-            } catch (SemVerException $e) {
 
+            if (Semver::satisfies($stable,$required)) {
+                $state = self::STATE_UP_TO_DATE;
             }
         }
 
