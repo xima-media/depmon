@@ -7,11 +7,13 @@
         <div id="filter-project-collapse" class="collapse">
             {% if projects is defined and projects[0].self is defined %}
                 {% for project in projects %}
+                    {% if project.self is defined %}
                     <div class="checkbox">
                         <input type="checkbox" name="project" value="{{ project.self.name }}"
                                id="filter-project-{{ project.self.name }}">
                         <label for="filter-project-{{ project.self.name }}">{{ project.self.name }}</label>
                     </div>
+                    {% endif %}
                 {% endfor %}
             {% endif %}
         </div>

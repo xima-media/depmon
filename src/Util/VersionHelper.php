@@ -41,9 +41,14 @@ class VersionHelper
 
         if ($state != self::STATE_UP_TO_DATE && $required != null) {
 
-            if (Semver::satisfies($stable,$required)) {
-                $state = self::STATE_UP_TO_DATE;
+            try {
+                if (!Semver::satisfies($latest,$required)) {
+                    $state = self::STATE_UP_TO_DATE;
+                }
+            } catch (\UnexpectedValueException $e) {
+
             }
+
         }
 
         return $state;

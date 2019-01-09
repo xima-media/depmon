@@ -55,12 +55,14 @@
                     {% if projects is defined and projects|length > 0 %}
                         {% if projects[0].self is defined %}
                             {% for key, project in projects %}
-                                <ul class="list list-group">
-                                    {{ include('@XimaDepmon/project.html.twig') }}
-                                    {% for num, dependency in project.dependencies %}
-                                        {{ include('@XimaDepmon/dependency.html.twig') }}
-                                    {% endfor %}
-                                </ul>
+                                {% if project.self is defined %}
+                                    <ul class="list list-group">
+                                        {{ include('@XimaDepmon/project.html.twig') }}
+                                        {% for num, dependency in project.dependencies %}
+                                            {{ include('@XimaDepmon/dependency.html.twig') }}
+                                        {% endfor %}
+                                    </ul>
+                                {% endif %}
                             {% endfor %}
                         {% else %}
                             <div class="list-error padding-small">

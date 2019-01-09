@@ -1,3 +1,4 @@
+{% if project.self is defined %}
 <li class="list-group-item-info list-group-item list-header"
     data-project="{{ project.self.name }}"
     data-project-type="{{ project.self.projectType is defined ? project.self.projectType }}"
@@ -132,3 +133,4 @@
         </div>
     </div>
 </li>
+{% endif %}

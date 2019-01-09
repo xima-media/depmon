@@ -2,6 +2,7 @@
 
 namespace Xima\DepmonBundle\Service;
 
+use function Deployer\writeln;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Cache\Adapter\AdapterInterface;
 use Symfony\Component\Process\Exception\ProcessFailedException;
@@ -26,40 +27,44 @@ class Aggregator
         'drupal/drupal' => 'Drupal'
     ];
 
-
     /**
-     * Get dependency data for a specific project by cloning the project composer files in the cache dir, installing
-     * all dependencies (necessary for using composer show) and fetching the dependency information by "composer show"
-     * ToDo: Check if git/composer is installed
-     * ToDo: Optionally remove vendors after composer show was running
-     *
-     * @param array $project
      * @throws \Exception
-     * @return array
      */
-    public function fetchProjectData($project, LoggerInterface $logger): array
-    {
-        $projectName = $project['name'];
-
+    public function checkIfGitIsInstalled() {
         // Check if git is installed
         if ($this->runProcess('command -v \'git\' || which \'git\' || type -p \'git\'') == '') {
             throw new \Exception('Git is not installed!');
         }
+    }
 
+    /**
+     * @throws \Exception
+     */
+    public function checkIfComposerIsInstalled() {
         // Check if composer is installed
         if ($this->runProcess('command -v \'composer\' || which \'composer\' || type -p \'composer\'') == '') {
             throw new \Exception('Composer is not installed!');
         }
+    }
 
+    /**
+     * @param array $project
+     */
+    public function updateProjectData($project) {
         // If project already exists, just pull updates. Otherwise clone the repository.
         // ToDo: "git reset" pulls every file of the git
         if (is_dir('var/data/' . $project['name'])) {
-            $this->runProcess('cd var/data/' . $project['name'] . ' && git reset --hard origin/master');
+            $this->runProcess('cd var/data/' . $project['name'] . ' && git pull --rebase');
         } else {
-            $logger->info('Clone project');
             $this->runProcess('git clone -n ' . $project['git'] . ' var/data/' . $project['name'] . ' --depth 1 -b master --single-branch');
         }
+    }
 
+    /**
+     * @param $project
+     * @throws \Exception
+     */
+    public function checkIfComposerJsonExists($project) {
         // Check if composer.json exists in project
         $process = $this->runProcess(
             'cd var/data/' . $project['name'] . '/ && ' .
@@ -67,20 +72,50 @@ class Aggregator
         );
 
         if (trim($process) != 'true') {
-            throw new \Exception('No composer.json found in the project ' . $projectName);
+            throw new \Exception('No composer.json found in the project ' . $project['name']);
         }
+    }
 
+    /**
+     * @param $project
+     * @return bool
+     */
+    public function checkIfComposerLockExists($project) {
         // Check if composer.lock exists in project
         $process = $this->runProcess(
             'cd var/data/' . $project['name'] . '/ && ' .
             'git cat-file -e origin/master:' . $project['path'] . 'composer.lock && echo true'
         );
-        $composerLock = false;
 
         if (trim($process) == 'true') {
-            $composerLock = true;
+            return true;
         }
 
+        return false;
+    }
+
+    /**
+     * @param $project
+     * @return bool
+     */
+    public function validateComposerFiles($project) {
+        // Check if composer.lock exists in project
+        $process = $this->runProcess(
+            'cd var/data/' . $project['name'] . '/' . $project['path'] . ' && ' .
+            'composer validate --strict'
+        );
+
+        if($process == 'error') {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * @param array $project
+     * @param bool $composerLock
+     */
+    public function installComposerDependencies($project, $composerLock) {
         // Preparing composer project setup
         // ToDo: Is it possible to combine multiple processes in a better way?
         $this->runProcess(
@@ -94,34 +129,82 @@ class Aggregator
             // Install composer dependencies
             'composer install --no-dev --no-autoloader --no-scripts --ignore-platform-reqs --prefer-dist'
         );
+    }
 
-        $gitTag = $this->runProcess(
+    /**
+     * @param array $project
+     * @return string
+     */
+    public function fetchGitTag($project) {
+        return trim($this->runProcess(
             'cd var/data/' . $project['name'] . ' && ' .
             'git describe --tags $(git rev-list --tags --max-count=1)'
-        );
+        ));
+    }
 
+    /**
+     * @param $project
+     * @return
+     */
+    public function getLastModificationDate($project) {
+        $timestamp = trim($this->runProcess(
+            'cd var/data/' . $project['name'] . ' && ' .
+            'git show -s --format=%ct --date=local'
+        ));
+        $isOutdated = false;
+        $date = new \DateTime();
+        $date->setTimestamp($timestamp);
+        $date->setTimezone(new \DateTimeZone('Europe/Berlin'));
+
+        if($timestamp < strtotime('-60 days')) {
+            $isOutdated = true;
+        }
+        return [$date->format("d.m.Y, H:m"), $isOutdated];
+    }
+
+    /**
+     * @param array $project
+     * @return mixed
+     * @throws \Exception
+     */
+    public function fetchComposerData($project) {
         $data = json_decode($this->runProcess(
             'cd var/data/' . $project['name'] . '/' . $project['path'] . ' && ' .
             'composer show --latest --minor-only --format json'
         ));
 
         if (empty($data)) {
-            throw new \Exception('Empty result of "composer show" for project ' . $projectName);
+            throw new \Exception('Empty result of "composer show" for project ' . $project['name']);
         }
 
-        $vulnerabilities = json_decode($this->runProcess(
+        return $data;
+    }
+
+    /**
+     * @param array $project
+     * @return mixed
+     */
+    public function checkVulnerabilities($project) {
+        return json_decode($this->runProcess(
             'curl -H "Accept: application/json" https://security.sensiolabs.org/check_lock -F lock=@var/data/' . $project['name'] . '/' . $project['path'] . 'composer.lock'
-        ));
+        ), true);
+    }
 
-        //
-        // Evaluate data
-        //
-
+    /**
+     * @param $project
+     * @param $data
+     * @param $vulnerabilities
+     * @param $gitTag
+     * @param $modificationDate
+     * @return array
+     */
+    public function buildUpMetadata($project, $data, $vulnerabilities, $gitTag, $modificationDate) {
         $result = [];
 
         // Saving composer information about project to result
         $result['composer'] = json_decode(file_get_contents('var/data/' . $project['name'] . '/' . $project['path'] . 'composer.json'));
         $result['self'] = $project;
+        $result['date'] = $modificationDate;
 
         $requiredPackagesCount = 0;
         $statesCount = [
@@ -130,12 +213,7 @@ class Aggregator
             VersionHelper::STATE_OUT_OF_DATE => 0,
             VersionHelper::STATE_INSECURE => 0
         ];
-        $requiredStatesCount = [
-            VersionHelper::STATE_UP_TO_DATE => 0,
-            VersionHelper::STATE_PINNED_OUT_OF_DATE => 0,
-            VersionHelper::STATE_OUT_OF_DATE => 0,
-            VersionHelper::STATE_INSECURE => 0
-        ];
+        $requiredStatesCount = $statesCount;
         $projectState = VersionHelper::STATE_UP_TO_DATE;
 
         foreach ($data->installed as $dependency) {
@@ -166,21 +244,24 @@ class Aggregator
             }
 
             // Is dependency a security issue?
-            foreach ($vulnerabilities as $name => $vulnerability) {
-                if ($name == $dependency->name) {
-                    $dependency->state = VersionHelper::STATE_INSECURE;
-                    $array = [];
-                    foreach ($vulnerability->advisories as $advisory) {
-                        array_push($array, $advisory);
-                    }
-                    $dependency->vulnerability = $array;
-                    if (isset($dependency->required)) {
-                        $requiredStatesCount[VersionHelper::STATE_INSECURE]++;
-                    } else {
-                        $statesCount[VersionHelper::STATE_INSECURE]++;
+            if (!empty($vulnerabilities)) {
+                foreach ($vulnerabilities as $name => $vulnerability) {
+                    if ($name == $dependency->name) {
+                        $dependency->state = VersionHelper::STATE_INSECURE;
+                        $array = [];
+                        foreach ($vulnerability->advisories as $advisory) {
+                            array_push($array, $advisory);
+                        }
+                        $dependency->vulnerability = $array;
+                        if (isset($dependency->required)) {
+                            $requiredStatesCount[VersionHelper::STATE_INSECURE]++;
+                        } else {
+                            $statesCount[VersionHelper::STATE_INSECURE]++;
+                        }
                     }
                 }
             }
+
 
             $result['dependencies'][] = $dependency;
         }
@@ -207,28 +288,31 @@ class Aggregator
     }
 
     /**
-     * @param $project
+     * @param array $project
      */
     public function clearProjectData($project)
     {
-        $process = new Process(
+        $process = $this->runProcess(
             'rm -rf var/data/' . $project['name']
         );
-        $process->run();
     }
 
     /**
      * @param $p
      * @return string
      */
-    private function runProcess($p) {
-        $process = Process::fromShellCommandline($p);
+    private function runProcess($command, $strict = false) {
+        $process = Process::fromShellCommandline($command);
 
         $process->setTimeout(3600);
         $process->run();
 
         if (!$process->isSuccessful()) {
-            throw new ProcessFailedException($process);
+            if ($strict) {
+                throw new ProcessFailedException($process);
+            } else {
+                return 'error';
+            }
         }
         return $process->getOutput();
     }
