@@ -35,7 +35,15 @@ class AggregatorTest extends WebTestCase
         $composerJson = json_decode($composerFile, true);
 
         // aggregating project data
-        $data = $this->aggregator->fetchProjectData($this->projectSampleData);
+
+        $project = $this->projectSampleData;
+
+        $this->aggregator->updateProjectData($project);
+        $this->aggregator->checkIfComposerJsonExists($project);
+        $composerLock = $this->aggregator->checkIfComposerLockExists($project);
+        $this->aggregator->validateComposerFiles($project);
+        $this->aggregator->installComposerDependencies($project, $composerLock);
+        $data = $this->aggregator->fetchComposerData($project);
 
         // check equal names
         $this->assertEquals($composerJson['name'], $data['composer']->name);

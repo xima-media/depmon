@@ -52,7 +52,6 @@ class Aggregator
      */
     public function updateProjectData($project) {
         // If project already exists, just pull updates. Otherwise clone the repository.
-        // ToDo: "git reset" pulls every file of the git
         if (is_dir('var/data/' . $project['name'])) {
             $this->runProcess('cd var/data/' . $project['name'] . ' && git pull --rebase');
         } else {
