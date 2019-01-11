@@ -17,24 +17,24 @@
                 {% endfor %}
             {% endif %}
         </div>
-        <a href="#" class="filter-entry" data-toggle="collapse" data-target="#filter-type-collapse">
+        {#<a href="#" class="filter-entry" data-toggle="collapse" data-target="#filter-type-collapse">
             <strong>{{ 'xima.depmon.filter.types'|trans({}, 'XimaDepmonBundle') }} (3)</strong>
             <small>beta</small>
         </a>
-        <div id="filter-type-collapse" class="collapse">
-            <div class="checkbox">
-                <input type="checkbox" name="project-type" value="TYPO3" id="filter-type-01">
-                <label for="filter-type-01"> <i class="icon-typo3" title="TYPO3"></i></label>
-            </div>
-            <div class="checkbox">
-                <input type="checkbox" name="project-type" value="Symfony" id="filter-type-02">
-                <label for="filter-type-02"> <i class="icon-symfony" title="Symfony"></i></label>
-            </div>
-            <div class="checkbox">
-                <input type="checkbox" name="project-type" value="Drupal" id="filter-type-03">
-                <label for="filter-type-03"> <i class="icon-drupal" title="Drupal"></i></label>
-            </div>
-        </div>
+        <div id="filter-type-collapse" class="collapse">#}
+            {#<div class="checkbox">#}
+                {#<input type="checkbox" name="project-type" value="TYPO3" id="filter-type-01">#}
+                {#<label for="filter-type-01"> <i class="icon-typo3" title="TYPO3"></i></label>#}
+            {#</div>#}
+            {#<div class="checkbox">#}
+                {#<input type="checkbox" name="project-type" value="Symfony" id="filter-type-02">#}
+                {#<label for="filter-type-02"> <i class="icon-symfony" title="Symfony"></i></label>#}
+            {#</div>#}
+            {#<div class="checkbox">#}
+                {#<input type="checkbox" name="project-type" value="Drupal" id="filter-type-03">#}
+                {#<label for="filter-type-03"> <i class="icon-drupal" title="Drupal"></i></label>#}
+            {#</div>#}
+        {#</div>#}
         <div class="checkbox padding-small">
             <input type="checkbox" name="overview" value="1" id="filter-overview">
             <label for="filter-overview" class="dark"

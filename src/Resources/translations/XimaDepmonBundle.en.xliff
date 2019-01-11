@@ -130,6 +130,22 @@
                 <source>xima.depmon.filter.reset.tooltip</source>
                 <target>Reset the complete filter data</target>
             </trans-unit>
+            <trans-unit id="xima.depmon.list.overview">
+                <source>xima.depmon.list.overview</source>
+                <target>Overview</target>
+            </trans-unit>
+            <trans-unit id="xima.depmon.list.information">
+                <source>xima.depmon.list.information</source>
+                <target>Information</target>
+            </trans-unit>
+            <trans-unit id="xima.depmon.list.date">
+                <source>xima.depmon.list.date</source>
+                <target>Last updated</target>
+            </trans-unit>
+            <trans-unit id="xima.depmon.list.date.old">
+                <source>xima.depmon.list.date.old</source>
+                <target>The project files are older then 60 days</target>
+            </trans-unit>
             <trans-unit id="xima.depmon.list.header.dependency">
                 <source>xima.depmon.list.header.dependency</source>
                 <target>Dependency</target>
