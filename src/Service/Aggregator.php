@@ -2,9 +2,6 @@
 
 namespace Xima\DepmonBundle\Service;
 
-use function Deployer\writeln;
-use Psr\Log\LoggerInterface;
-use Symfony\Component\Cache\Adapter\AdapterInterface;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
 use Xima\DepmonBundle\Util\VersionHelper;
@@ -180,12 +177,14 @@ class Aggregator
     }
 
     /**
+     * @ToDo recently the api has a limited access, seems like only one request per minute is alowed
+     *
      * @param array $project
      * @return mixed
      */
     public function checkVulnerabilities($project) {
         return json_decode($this->runProcess(
-            'curl -H "Accept: application/json" https://security.sensiolabs.org/check_lock -F lock=@var/data/' . $project['name'] . '/' . $project['path'] . 'composer.lock'
+            'curl -H "Accept: application/json" https://security.symfony.com/check_lock -F lock=@var/data/' . $project['name'] . '/' . $project['path'] . 'composer.lock'
         ), true);
     }
 
@@ -248,7 +247,7 @@ class Aggregator
                     if ($name == $dependency->name) {
                         $dependency->state = VersionHelper::STATE_INSECURE;
                         $array = [];
-                        foreach ($vulnerability->advisories as $advisory) {
+                        foreach ($vulnerability['advisories'] as $advisory) {
                             array_push($array, $advisory);
                         }
                         $dependency->vulnerability = $array;
