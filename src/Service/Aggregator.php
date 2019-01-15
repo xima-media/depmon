@@ -260,6 +260,12 @@ class Aggregator
                 }
             }
 
+            // Get additional information
+            $additionalData = $this->getDependencyDataFromPackagist($dependency->name);
+            if ($additionalData) {
+                $dependency->url = $additionalData->url;
+                $dependency->description = $additionalData->description;
+            }
 
             $result['dependencies'][] = $dependency;
         }
@@ -283,6 +289,27 @@ class Aggregator
         $result['meta'] = $metadata;
 
         return $result;
+    }
+
+    /**
+     * @param $dependency
+     * @return bool|mixed
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    private function getDependencyDataFromPackagist($dependency) {
+
+        $client = new \GuzzleHttp\Client();
+        $request = $client->request('GET', 'https://packagist.org/search.json?q=' . $dependency);
+
+        $data = json_decode($request->getBody());
+
+        if ($data->total != 0) {
+            return $data->results[0];
+        } else {
+            return false;
+        }
+
+
     }
 
     /**

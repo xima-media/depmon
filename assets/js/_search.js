@@ -27,7 +27,7 @@ $(function() {
             if (!$('#depmon-filter input[name="overview"]:checked').length) {
                 $('#depmon-list ul:not(.header)').each(function () {
                     var list = $(this);
-                    if (list.find('li:not(.hidden):not(.list-header)').length === 0) {
+                    if (list.find('li:not(.hidden):not(.list-header)') == null || list.find('li:not(.hidden):not(.list-header)').length === 0) {
                         var listHeader = $(list.find('li.list-header'))[0];
                         $(listHeader).addClass('hidden');
                     }

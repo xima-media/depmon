@@ -2,9 +2,6 @@
 
 namespace Xima\DepmonBundle\Command;
 
-
-use Composer\Semver\Semver;
-use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Xima\DepmonBundle\Service\Aggregator;
@@ -137,8 +134,9 @@ class AggregateCommand extends ContainerAwareCommand
                     $output->writeln(" <fg=red>✘</>");
                 }
 
+                $output->write($projectName . " Build up metadata ... ");
                 $data = $this->aggregator->buildUpMetadata($project, $data, $vulnerabilities, $gitTag, $date);
-
+                $output->writeln(" <fg=green>✔</>");
 
                 if (!empty($data)) {
                     $count = count($data['dependencies']);

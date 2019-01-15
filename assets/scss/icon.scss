@@ -26,6 +26,27 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.icon-loop:before {
+  content: "\e911";
+}
+.icon-reload:before {
+  content: "\e912";
+}
+.icon-warning1:before {
+  content: "\e915";
+}
+.icon-clock1:before {
+  content: "\e913";
+}
+.icon-clock:before {
+  content: "\e914";
+}
+.icon-time:before {
+  content: "\e914";
+}
+.icon-schedule:before {
+  content: "\e914";
+}
 .icon-filter:before {
   content: "\e901";
 }

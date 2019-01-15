@@ -19,7 +19,11 @@
                         {{ dependency.name }}
                     </span>
                 {% else %}
-                    {{ dependency.name }}
+                    {% if dependency.url is defined %}
+                        <a href="{{ dependency.url }}" class="no-style" target="_blank" title="{{ (dependency.description is defined) ? dependency.description}}">{{ dependency.name }}</a>
+                    {% else %}
+                        {{ dependency.name }}
+                    {% endif %}
                 {% endif %}
                 <button class="filter-dependency" data-dependency="{{ dependency.name }}" title="{{ 'xima.depmon.list.quickfilter.dependency.tooltip'|trans({}, 'XimaDepmonBundle') }}">
                     <i class="icon-search"></i>
