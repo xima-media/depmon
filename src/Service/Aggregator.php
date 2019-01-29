@@ -4,6 +4,7 @@ namespace Xima\DepmonBundle\Service;
 
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
+use Xima\DepmonBundle\Entity\Project;
 use Xima\DepmonBundle\Util\VersionHelper;
 
 /**
@@ -12,75 +13,69 @@ use Xima\DepmonBundle\Util\VersionHelper;
  */
 class Aggregator
 {
-
     /**
-     * @var array
-     * ToDo: Move them to the config
-     * ToDo: Not really good coverage at all ...
-     */
-    private $projectTypes = [
-        'typo3/cms' => 'TYPO3',
-        'symfony/symfony' => 'Symfony',
-        'drupal/drupal' => 'Drupal'
-    ];
-
-    /**
+     * @return bool
      * @throws \Exception
      */
-    public function checkIfGitIsInstalled() {
+    public static function checkIfGitIsInstalled() {
         // Check if git is installed
-        if ($this->runProcess('command -v \'git\' || which \'git\' || type -p \'git\'') == '') {
+        if (Aggregator::runProcess('command -v \'git\' || which \'git\' || type -p \'git\'') == '') {
             throw new \Exception('Git is not installed!');
         }
+        return true;
     }
 
     /**
+     * @return bool
      * @throws \Exception
      */
-    public function checkIfComposerIsInstalled() {
+    public static function checkIfComposerIsInstalled() {
         // Check if composer is installed
-        if ($this->runProcess('command -v \'composer\' || which \'composer\' || type -p \'composer\'') == '') {
+        if (Aggregator::runProcess('command -v \'composer\' || which \'composer\' || type -p \'composer\'') == '') {
             throw new \Exception('Composer is not installed!');
         }
+        return true;
     }
 
     /**
-     * @param array $project
+     * @param Project $project
      */
-    public function updateProjectData($project) {
+    public static function updateProjectData($project) {
         // If project already exists, just pull updates. Otherwise clone the repository.
-        if (is_dir('var/data/' . $project['name'])) {
-            $this->runProcess('cd var/data/' . $project['name'] . ' && git pull --rebase');
+        if (is_dir('var/data/' . $project->getName())) {
+            Aggregator::runProcess('cd var/data/' . $project->getName() . ' && git pull --rebase');
         } else {
-            $this->runProcess('git clone -n ' . $project['git'] . ' var/data/' . $project['name'] . ' --depth 1 -b master --single-branch');
+            Aggregator::runProcess('git clone -n ' . $project->getGit() . ' var/data/' . $project->getName() . ' --depth 1 -b master --single-branch');
         }
     }
 
     /**
-     * @param $project
+     * @param Project $project
+     * @return bool
      * @throws \Exception
      */
-    public function checkIfComposerJsonExists($project) {
+    public static function checkIfComposerJsonExists($project) {
         // Check if composer.json exists in project
-        $process = $this->runProcess(
-            'cd var/data/' . $project['name'] . '/ && ' .
-            'git cat-file -e origin/master:' . $project['path'] . 'composer.json && echo true'
+        $process = Aggregator::runProcess(
+            'cd var/data/' . $project->getName() . '/ && ' .
+            'git cat-file -e origin/master:' . $project->getPath() . 'composer.json && echo true'
         );
 
         if (trim($process) != 'true') {
-            throw new \Exception('No composer.json found in the project ' . $project['name']);
+            throw new \Exception('No composer.json found in the project ' . $project->getName());
         }
+        return true;
     }
 
     /**
-     * @param $project
+     * @param Project $project
      * @return bool
      */
-    public function checkIfComposerLockExists($project) {
+    public static function checkIfComposerLockExists($project) {
         // Check if composer.lock exists in project
-        $process = $this->runProcess(
-            'cd var/data/' . $project['name'] . '/ && ' .
-            'git cat-file -e origin/master:' . $project['path'] . 'composer.lock && echo true'
+        $process = Aggregator::runProcess(
+            'cd var/data/' . $project->getName() . '/ && ' .
+            'git cat-file -e origin/master:' . $project->getPath() . 'composer.lock && echo true'
         );
 
         if (trim($process) == 'true') {
@@ -91,13 +86,13 @@ class Aggregator
     }
 
     /**
-     * @param $project
+     * @param Project $project
      * @return bool
      */
-    public function validateComposerFiles($project) {
+    public static function validateComposerFiles($project) {
         // Check if composer.lock exists in project
-        $process = $this->runProcess(
-            'cd var/data/' . $project['name'] . '/' . $project['path'] . ' && ' .
+        $process = Aggregator::runProcess(
+            'cd var/data/' . $project->getName() . '/' . $project->getPath() . ' && ' .
             'composer validate --strict'
         );
 
@@ -108,69 +103,65 @@ class Aggregator
     }
 
     /**
-     * @param array $project
+     * @param Project $project
      * @param bool $composerLock
      */
-    public function installComposerDependencies($project, $composerLock) {
+    public static function installComposerDependencies($project, $composerLock) {
         // Preparing composer project setup
         // ToDo: Is it possible to combine multiple processes in a better way?
-        $this->runProcess(
-            'cd var/data/' . $project['name'] . '/ && ' .
+        Aggregator::runProcess(
+            'cd var/data/' . $project->getName() . '/ && ' .
             // Checkout composer.json file
-            'git checkout HEAD ' . $project['path'] . 'composer.json && ' .
+            'git checkout HEAD ' . $project->getPath() . 'composer.json && ' .
             // Checkout composer.lock file
-            (($composerLock) ? 'git checkout HEAD ' . $project['path'] . 'composer.lock && ' : '') .
+            (($composerLock) ? 'git checkout HEAD ' . $project->getPath() . 'composer.lock && ' : '') .
             // Change directory
-            (($project['path'] != '') ? 'cd ' . $project['path'] . ' && ' : '') .
+            (($project->getPath() != '') ? 'cd ' . $project->getPath() . ' && ' : '') .
             // Install composer dependencies
             'composer install --no-dev --no-autoloader --no-scripts --ignore-platform-reqs --prefer-dist'
         );
     }
 
     /**
-     * @param array $project
+     * @param Project $project
      * @return string
      */
-    public function fetchGitTag($project) {
-        return trim($this->runProcess(
-            'cd var/data/' . $project['name'] . ' && ' .
+    public static function fetchGitTag($project) {
+        return trim(Aggregator::runProcess(
+            'cd var/data/' . $project->getName() . ' && ' .
             'git describe --tags $(git rev-list --tags --max-count=1)'
         ));
     }
 
     /**
-     * @param $project
-     * @return
+     * @param Project $project
+     * @return \Datetime
      */
-    public function getLastModificationDate($project) {
-        $timestamp = trim($this->runProcess(
-            'cd var/data/' . $project['name'] . ' && ' .
+    public static function getLastModificationDate($project) {
+        $timestamp = trim(Aggregator::runProcess(
+            'cd var/data/' . $project->getName() . ' && ' .
             'git show -s --format=%ct --date=local'
         ));
-        $isOutdated = false;
         $date = new \DateTime();
         $date->setTimestamp($timestamp);
         $date->setTimezone(new \DateTimeZone('Europe/Berlin'));
 
-        if($timestamp < strtotime('-60 days')) {
-            $isOutdated = true;
-        }
-        return [$date->format("d.m.Y, H:m"), $isOutdated];
+        return $date;
     }
 
     /**
-     * @param array $project
+     * @param Project $project
      * @return mixed
      * @throws \Exception
      */
-    public function fetchComposerData($project) {
-        $data = json_decode($this->runProcess(
-            'cd var/data/' . $project['name'] . '/' . $project['path'] . ' && ' .
+    public static function fetchComposerData($project) {
+        $data = json_decode(Aggregator::runProcess(
+            'cd var/data/' . $project->getName() . '/' . $project->getPath() . ' && ' .
             'composer show --latest --minor-only --format json'
         ));
 
         if (empty($data)) {
-            throw new \Exception('Empty result of "composer show" for project ' . $project['name']);
+            throw new \Exception('Empty result of "composer show" for project ' . $project->getName());
         }
 
         return $data;
@@ -179,124 +170,23 @@ class Aggregator
     /**
      * @ToDo recently the api has a limited access, seems like only one request per minute is alowed
      *
-     * @param array $project
+     * @param Project $project
      * @return mixed
      */
-    public function checkVulnerabilities($project) {
-        return json_decode($this->runProcess(
-            'curl -H "Accept: application/json" https://security.symfony.com/check_lock -F lock=@var/data/' . $project['name'] . '/' . $project['path'] . 'composer.lock'
+    public static function checkVulnerabilities($project) {
+        return json_decode(Aggregator::runProcess(
+            'curl -H "Accept: application/json" https://security.symfony.com/check_lock -F lock=@var/data/' . $project->getName() . '/' . $project->getPath() . 'composer.lock'
         ), true);
     }
 
     /**
-     * @param $project
-     * @param $data
-     * @param $vulnerabilities
-     * @param $gitTag
-     * @param $modificationDate
-     * @return array
-     */
-    public function buildUpMetadata($project, $data, $vulnerabilities, $gitTag, $modificationDate) {
-        $result = [];
-
-        // Saving composer information about project to result
-        $result['composer'] = json_decode(file_get_contents('var/data/' . $project['name'] . '/' . $project['path'] . 'composer.json'));
-        $result['self'] = $project;
-        $result['date'] = $modificationDate;
-
-        $requiredPackagesCount = 0;
-        $statesCount = [
-            VersionHelper::STATE_UP_TO_DATE => 0,
-            VersionHelper::STATE_PINNED_OUT_OF_DATE => 0,
-            VersionHelper::STATE_OUT_OF_DATE => 0,
-            VersionHelper::STATE_INSECURE => 0
-        ];
-        $requiredStatesCount = $statesCount;
-        $projectState = VersionHelper::STATE_UP_TO_DATE;
-
-        foreach ($data->installed as $dependency) {
-            // Workaround for adding requirement information to dependencies
-            foreach ($result['composer']->require as $name => $require) {
-                if ($dependency->name == $name) {
-                    $dependency->required = $require;
-                    $requiredPackagesCount++;
-                }
-
-                // Which project type?
-                if (array_key_exists($name, $this->projectTypes)) {
-                    $result['self']['projectType'] = $this->projectTypes[$name];
-                }
-            }
-
-            // Is dependency outdated?
-            if (isset($dependency->latest)) {
-                $require = isset($dependency->required) ? $dependency->required : null;
-                $state = VersionHelper::compareVersions($dependency->version, $dependency->latest, $require);
-                $statesCount[$state]++;
-                if ($require) {
-                    $requiredStatesCount[$state]++;
-                }
-                $dependency->state = $state;
-            } else {
-                $dependency->state = VersionHelper::STATE_UP_TO_DATE;
-            }
-
-            // Is dependency a security issue?
-            if (!empty($vulnerabilities)) {
-                foreach ($vulnerabilities as $name => $vulnerability) {
-                    if ($name == $dependency->name) {
-                        $dependency->state = VersionHelper::STATE_INSECURE;
-                        $array = [];
-                        foreach ($vulnerability['advisories'] as $advisory) {
-                            array_push($array, $advisory);
-                        }
-                        $dependency->vulnerability = $array;
-                        if (isset($dependency->required)) {
-                            $requiredStatesCount[VersionHelper::STATE_INSECURE]++;
-                        } else {
-                            $statesCount[VersionHelper::STATE_INSECURE]++;
-                        }
-                    }
-                }
-            }
-
-            // Get additional information
-            $additionalData = $this->getDependencyDataFromPackagist($dependency->name);
-            if ($additionalData) {
-                $dependency->url = $additionalData->url;
-                $dependency->description = $additionalData->description;
-            }
-
-            $result['dependencies'][] = $dependency;
-        }
-
-        if ($requiredStatesCount[4] > 0) {
-            $projectState = VersionHelper::STATE_INSECURE;
-        } elseif ($requiredStatesCount[3] > 2) {
-            $projectState = VersionHelper::STATE_OUT_OF_DATE;
-        } elseif ($requiredStatesCount[3] <= 2 && $requiredStatesCount[2] >= 1) {
-            $projectState = VersionHelper::STATE_PINNED_OUT_OF_DATE;
-        }
-
-        $metadata = [
-            'requiredPackagesCount' => $requiredPackagesCount,
-            'statesCount' => $statesCount,
-            'requiredStatesCount' => $requiredStatesCount,
-            'projectState' => $projectState,
-            'gitTag' => $gitTag
-        ];
-
-        $result['meta'] = $metadata;
-
-        return $result;
-    }
-
-    /**
+     * @ToDo check if result name matches dependency name
+     *
      * @param $dependency
      * @return bool|mixed
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    private function getDependencyDataFromPackagist($dependency) {
+    public static function getDependencyDataFromPackagist($dependency) {
 
         $client = new \GuzzleHttp\Client();
         $request = $client->request('GET', 'https://packagist.org/search.json?q=' . $dependency);
@@ -308,17 +198,23 @@ class Aggregator
         } else {
             return false;
         }
-
-
     }
 
     /**
-     * @param array $project
+     * @param Project $project
+     * @return mixed
      */
-    public function clearProjectData($project)
+    public static function getLocalComposerJson($project) {
+        return json_encode(file_get_contents('var/data/' . $project->getName() . '/' . $project->getPath() . 'composer.json'));
+    }
+ 
+    /**
+     * @param Project $project
+     */
+    public static function clearProjectData($project)
     {
-        $process = $this->runProcess(
-            'rm -rf var/data/' . $project['name']
+        Aggregator::runProcess(
+            'rm -rf var/data/' . $project->getName()
         );
     }
 
@@ -326,7 +222,7 @@ class Aggregator
      * @param $p
      * @return string
      */
-    private function runProcess($command, $strict = false) {
+    public static function runProcess($command, $strict = false) {
         $process = Process::fromShellCommandline($command);
 
         $process->setTimeout(3600);

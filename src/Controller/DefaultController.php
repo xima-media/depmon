@@ -10,6 +10,8 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Exception\InvalidParameterException;
+use Xima\DepmonBundle\Entity\Project;
+use Xima\DepmonBundle\Repository\ProjectRepository;
 use Xima\DepmonBundle\Service\Cache;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -33,6 +35,11 @@ class DefaultController extends AbstractController
     private $kernel;
 
     /**
+     * @var ProjectRepository
+     */
+    private $projectRepository;
+
+    /**
      * DefaultController constructor.
      * @param Cache $cache
      */
@@ -40,6 +47,8 @@ class DefaultController extends AbstractController
     {
         $this->cache = $cache;
         $this->kernel = $kernel;
+
+//        $this->projectRepository = $this->getDoctrine()->getRepository(Project::class);
     }
 
     /**
@@ -51,20 +60,26 @@ class DefaultController extends AbstractController
         $projects = [];
         $error = null;
 
-        $projectsConfig = $this->getParameter('xima_depmon.projects');
+        $projects = $this->getDoctrine()->getRepository(Project::class)->findAll();
 
-        if (is_array($projectsConfig)) {
-            foreach ($projectsConfig as $project) {
-                $projects[] = $this->cache->get($project['name']);
-            }
-        } else {
-            $error = 1;
-        }
+//        foreach ($projects as $project) {
+//            var_dump(count($project->getDependencies()));
+//        }
+
+//        $projectsConfig = $this->getParameter('xima_depmon.projects');
+//
+//        if (is_array($projectsConfig)) {
+//            foreach ($projectsConfig as $project) {
+//                $projects[] = $this->cache->get($project['name']);
+//            }
+//        } else {
+//            $error = 1;
+//        }
         $metadata = $this->cache->get('metadata');
 
-        if (empty($projects)) {
-            $error = 2;
-        }
+//        if (empty($projects)) {
+//            $error = 2;
+//        }
 
         return $this->render('@XimaDepmon/index.html.twig', [
             'projects' => $projects,

@@ -53,26 +53,14 @@
                         </li>
                     </ul>
                     {% if projects is defined and projects|length > 0 %}
-                        {% if projects[0].self is defined %}
-                            {% for key, project in projects %}
-                                {% if project.self is defined %}
-                                    <ul class="list list-group">
-                                        {{ include('@XimaDepmon/project.html.twig') }}
-                                        {% for num, dependency in project.dependencies %}
-                                            {{ include('@XimaDepmon/dependency.html.twig') }}
-                                        {% endfor %}
-                                    </ul>
-                                {% endif %}
-                            {% endfor %}
-                        {% else %}
-                            <div class="list-error padding-small">
-                                <div class="list-error-emoji">
-                                    {{ 'xima.depmon.basic.error'|trans({}, 'XimaDepmonBundle') }}
-                                </div>
-                                {{ 'xima.depmon.basic.error.data'|trans({}, 'XimaDepmonBundle') }}<br/>
-                                {{ 'xima.depmon.basic.error.link'|trans({'%link%': '<a href="https://github.com/xima-media/depmon/wiki/Help#2--no-data" target="_blank">Help#2</a>'}, 'XimaDepmonBundle')|raw }}
-                            </div>
-                        {% endif %}
+                        {% for key, project in projects %}
+                            <ul class="list list-group">
+                                {{ include('@XimaDepmon/project.html.twig') }}
+                                {% for num, dependency in project.dependencies %}
+                                    {{ include('@XimaDepmon/dependency.html.twig') }}
+                                {% endfor %}
+                            </ul>
+                        {% endfor %}
                     {% else %}
                         <div class="list-error padding-small">
                             <div class="list-error-emoji">

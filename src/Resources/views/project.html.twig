@@ -1,169 +1,166 @@
-{% if project.self is defined %}
-    <li class="list-group-item-info list-group-item list-header"
-        data-project="{{ project.self.name }}"
-        data-project-type="{{ project.self.projectType is defined ? project.self.projectType }}"
-        data-overview="1"
-    >
+<li class="list-group-item-info list-group-item list-header"
+    data-project="{{ project.name }}"
+    data-overview="1"
+>
 
-        <div class="row">
-            <div class="col-7">
-                <a data-toggle="collapse" data-target="#{{ key }}">
-                    <strong>{{ project.self.name }}</strong>
-                    <small>{{ project.composer.name }}</small>
-                </a>
-                <button class="filter-project" data-project="{{ project.self.name }}"
-                        title="{{ 'xima.depmon.list.quickfilter.project.tooltip'|trans({}, 'XimaDepmonBundle') }}">
-                    <i class="icon-filter"></i>
-                </button>
-            </div>
-            <div class="col-2 text-center text-muted">
-                {% if project.meta.gitTag is defined %}
-                    {{ project.meta.gitTag }}
+    <div class="row">
+        <div class="col-7">
+            <a data-toggle="collapse" data-target="#{{ key }}">
+                <strong>{{ project.name }}</strong>
+                {#<small>{{ project.composer.name }}</small>#}
+            </a>
+            <button class="filter-project" data-project="{{ project.name }}"
+                    title="{{ 'xima.depmon.list.quickfilter.project.tooltip'|trans({}, 'XimaDepmonBundle') }}">
+                <i class="icon-filter"></i>
+            </button>
+        </div>
+        <div class="col-2 text-center text-muted">
+            {% if project.version is defined %}
+                {{ project.version }}
+            {% endif %}
+        </div>
+        {#<div class="col-1 text-center">#}
+        {#{% if project.self.projectType is defined %}#}
+        {#<a class="no-style filter-type" data-type="{{ project.self.projectType }}">#}
+        {#<i class="icon-{{ project.self.projectType|lower }}"></i>#}
+        {#</a>#}
+        {#{% endif %}#}
+        {#</div>#}
+        <div class="col-3 text-right">
+            <a href="{{ path('xima_depmon_state', {'project': project.name}) }}">
+                <img src="{{ asset("bundles/ximadepmon/img/states/#{project.state}.svg") }}">
+            </a>
+        </div>
+        <div id="{{ key }}" class="collapse col-12">
+            <div class="row padding-small">
+                <div class="col-12">
+                    <h3>{{ 'xima.depmon.list.overview'|trans({}, 'XimaDepmonBundle') }}</h3>
+                </div>
+                <div class="col-4">
+                    <strong>{{ project.dependencies|length }}</strong> {{ 'xima.depmon.list.dependencies.total'|trans({}, 'XimaDepmonBundle') }}
+                </div>
+                <div class="col-2">
+                    <a class="filter-state-project no-style" data-project="{{ project.name }}" data-state="1"
+                       title="{{ 'xima.depmon.list.state.tooltip'|trans({}, 'XimaDepmonBundle') }}">
+                        {#<div class="state state-1"></div> {{ project.meta.statesCount.1 }} {{ 'xima.depmon.list.state.1'|trans({}, 'XimaDepmonBundle') }}#}
+                    </a>
+                </div>
+                <div class="col-2">
+                    <a class="filter-state-project no-style" data-project="{{ project.name }}" data-state="2"
+                       title="{{ 'xima.depmon.list.state.tooltip'|trans({}, 'XimaDepmonBundle') }}">
+                        {#<div class="state state-2"></div> {{ project.meta.statesCount.2 }} {{ 'xima.depmon.list.state.2'|trans({}, 'XimaDepmonBundle') }}#}
+                    </a>
+                </div>
+                <div class="col-2">
+                    <a class="filter-state-project no-style" data-project="{{ project.name }}" data-state="3"
+                       title="{{ 'xima.depmon.list.state.tooltip'|trans({}, 'XimaDepmonBundle') }}">
+                        {#<div class="state state-3"></div> {{ project.meta.statesCount.3 }} {{ 'xima.depmon.list.state.3'|trans({}, 'XimaDepmonBundle') }}#}
+                    </a>
+                </div>
+                <div class="col-2">
+                    <a class="filter-state-project no-style" data-project="{{ project.name }}" data-state="4"
+                       title="{{ 'xima.depmon.list.state.tooltip'|trans({}, 'XimaDepmonBundle') }}">
+                        {#<div class="state state-4"></div> {{ project.meta.statesCount.4 }} {{ 'xima.depmon.list.state.4'|trans({}, 'XimaDepmonBundle') }}#}
+                    </a>
+                </div>
+
+                <div class="col-4">
+                    <a class="filter-required-project no-style" data-project="{{ project.name }}"
+                       data-required="1"
+                       title="{{ 'xima.depmon.list.dependencies.required.tooltip'|trans({}, 'XimaDepmonBundle') }}">
+                        {#<strong>{{ project.meta.requiredPackagesCount }}</strong> {{ 'xima.depmon.list.dependencies.required'|trans({}, 'XimaDepmonBundle') }}#}
+                    </a>
+                </div>
+                <div class="col-2">
+                    <a class="filter-state-project no-style" data-project="{{ project.name }}" data-state="1"
+                       data-required="1"
+                       title="{{ 'xima.depmon.list.state.tooltip'|trans({}, 'XimaDepmonBundle') }}">
+                        {#<div class="state state-1"></div> {{ project.meta.requiredStatesCount.1 }} {{ 'xima.depmon.list.state.1'|trans({}, 'XimaDepmonBundle') }}#}
+                    </a>
+                </div>
+                <div class="col-2">
+                    <a class="filter-state-project no-style" data-project="{{ project.name }}" data-state="2"
+                       data-required="1"
+                       title="{{ 'xima.depmon.list.state.tooltip'|trans({}, 'XimaDepmonBundle') }}">
+                        {#<div class="state state-2"></div> {{ project.meta.requiredStatesCount.2 }} {{ 'xima.depmon.list.state.2'|trans({}, 'XimaDepmonBundle') }}#}
+                    </a>
+                </div>
+                <div class="col-2">
+                    <a class="filter-state-project no-style" data-project="{{ project.name }}" data-state="3"
+                       data-required="1"
+                       title="{{ 'xima.depmon.list.state.tooltip'|trans({}, 'XimaDepmonBundle') }}">
+                        {#<div class="state state-3"></div> {{ project.meta.requiredStatesCount.3 }} {{ 'xima.depmon.list.state.3'|trans({}, 'XimaDepmonBundle') }}#}
+                    </a>
+                </div>
+                <div class="col-2">
+                    <a class="filter-state-project no-style" data-project="{{ project.name }}" data-state="4"
+                       data-required="1"
+                       title="{{ 'xima.depmon.list.state.tooltip'|trans({}, 'XimaDepmonBundle') }}">
+                        {#<div class="state state-4"></div> {{ project.meta.requiredStatesCount.4 }} {{ 'xima.depmon.list.state.4'|trans({}, 'XimaDepmonBundle') }}#}
+                    </a>
+                </div>
+                {% if project.date is defined %}
+                    <div class="col-12 padding-small-y">
+                        {{ 'xima.depmon.list.date'|trans({}, 'XimaDepmonBundle') }}: {{ project.date }}
+                        {#{% if project.date %}#}
+                        {#<i class="icon-warning" title="{{ 'xima.depmon.list.date.old'|trans({}, 'XimaDepmonBundle') }}"></i>#}
+                        {#{% endif %}#}
+                    </div>
                 {% endif %}
-            </div>
-            {#<div class="col-1 text-center">#}
-            {#{% if project.self.projectType is defined %}#}
-            {#<a class="no-style filter-type" data-type="{{ project.self.projectType }}">#}
-            {#<i class="icon-{{ project.self.projectType|lower }}"></i>#}
-            {#</a>#}
-            {#{% endif %}#}
-            {#</div>#}
-            <div class="col-3 text-right">
-                <a href="{{ path('xima_depmon_state', {'project': project.self.name}) }}">
-                    <img src="{{ asset("bundles/ximadepmon/img/states/#{project.meta.projectState}.svg") }}">
-                </a>
-            </div>
-            <div id="{{ key }}" class="collapse col-12">
-                <div class="row padding-small">
-                    <div class="col-12">
-                        <h3>{{ 'xima.depmon.list.overview'|trans({}, 'XimaDepmonBundle') }}</h3>
-                    </div>
-                    <div class="col-4">
-                        <strong>{{ project.dependencies|length }}</strong> {{ 'xima.depmon.list.dependencies.total'|trans({}, 'XimaDepmonBundle') }}
-                    </div>
-                    <div class="col-2">
-                        <a class="filter-state-project no-style" data-project="{{ project.self.name }}" data-state="1"
-                           title="{{ 'xima.depmon.list.state.tooltip'|trans({}, 'XimaDepmonBundle') }}">
-                            <div class="state state-1"></div> {{ project.meta.statesCount.1 }} {{ 'xima.depmon.list.state.1'|trans({}, 'XimaDepmonBundle') }}
-                        </a>
-                    </div>
-                    <div class="col-2">
-                        <a class="filter-state-project no-style" data-project="{{ project.self.name }}" data-state="2"
-                           title="{{ 'xima.depmon.list.state.tooltip'|trans({}, 'XimaDepmonBundle') }}">
-                            <div class="state state-2"></div> {{ project.meta.statesCount.2 }} {{ 'xima.depmon.list.state.2'|trans({}, 'XimaDepmonBundle') }}
-                        </a>
-                    </div>
-                    <div class="col-2">
-                        <a class="filter-state-project no-style" data-project="{{ project.self.name }}" data-state="3"
-                           title="{{ 'xima.depmon.list.state.tooltip'|trans({}, 'XimaDepmonBundle') }}">
-                            <div class="state state-3"></div> {{ project.meta.statesCount.3 }} {{ 'xima.depmon.list.state.3'|trans({}, 'XimaDepmonBundle') }}
-                        </a>
-                    </div>
-                    <div class="col-2">
-                        <a class="filter-state-project no-style" data-project="{{ project.self.name }}" data-state="4"
-                           title="{{ 'xima.depmon.list.state.tooltip'|trans({}, 'XimaDepmonBundle') }}">
-                            <div class="state state-4"></div> {{ project.meta.statesCount.4 }} {{ 'xima.depmon.list.state.4'|trans({}, 'XimaDepmonBundle') }}
-                        </a>
-                    </div>
-
-                    <div class="col-4">
-                        <a class="filter-required-project no-style" data-project="{{ project.self.name }}"
-                           data-required="1"
-                           title="{{ 'xima.depmon.list.dependencies.required.tooltip'|trans({}, 'XimaDepmonBundle') }}">
-                            <strong>{{ project.meta.requiredPackagesCount }}</strong> {{ 'xima.depmon.list.dependencies.required'|trans({}, 'XimaDepmonBundle') }}
-                        </a>
-                    </div>
-                    <div class="col-2">
-                        <a class="filter-state-project no-style" data-project="{{ project.self.name }}" data-state="1"
-                           data-required="1"
-                           title="{{ 'xima.depmon.list.state.tooltip'|trans({}, 'XimaDepmonBundle') }}">
-                            <div class="state state-1"></div> {{ project.meta.requiredStatesCount.1 }} {{ 'xima.depmon.list.state.1'|trans({}, 'XimaDepmonBundle') }}
-                        </a>
-                    </div>
-                    <div class="col-2">
-                        <a class="filter-state-project no-style" data-project="{{ project.self.name }}" data-state="2"
-                           data-required="1"
-                           title="{{ 'xima.depmon.list.state.tooltip'|trans({}, 'XimaDepmonBundle') }}">
-                            <div class="state state-2"></div> {{ project.meta.requiredStatesCount.2 }} {{ 'xima.depmon.list.state.2'|trans({}, 'XimaDepmonBundle') }}
-                        </a>
-                    </div>
-                    <div class="col-2">
-                        <a class="filter-state-project no-style" data-project="{{ project.self.name }}" data-state="3"
-                           data-required="1"
-                           title="{{ 'xima.depmon.list.state.tooltip'|trans({}, 'XimaDepmonBundle') }}">
-                            <div class="state state-3"></div> {{ project.meta.requiredStatesCount.3 }} {{ 'xima.depmon.list.state.3'|trans({}, 'XimaDepmonBundle') }}
-                        </a>
-                    </div>
-                    <div class="col-2">
-                        <a class="filter-state-project no-style" data-project="{{ project.self.name }}" data-state="4"
-                           data-required="1"
-                           title="{{ 'xima.depmon.list.state.tooltip'|trans({}, 'XimaDepmonBundle') }}">
-                            <div class="state state-4"></div> {{ project.meta.requiredStatesCount.4 }} {{ 'xima.depmon.list.state.4'|trans({}, 'XimaDepmonBundle') }}
-                        </a>
-                    </div>
-                    {% if project.date is defined %}
-                        <div class="col-12 padding-small-y">
-                            {{ 'xima.depmon.list.date'|trans({}, 'XimaDepmonBundle') }}: {{ project.date.0 }}
-                            {% if project.date.1 %}
-                                <i class="icon-warning" title="{{ 'xima.depmon.list.date.old'|trans({}, 'XimaDepmonBundle') }}"></i>
-                            {% endif %}
-                        </div>
-                    {% endif %}
 
 
-                    <div class="col-12">
-                        <h3>{{ 'xima.depmon.list.information'|trans({}, 'XimaDepmonBundle') }}</h3>
+                <div class="col-12">
+                    <h3>{{ 'xima.depmon.list.information'|trans({}, 'XimaDepmonBundle') }}</h3>
+                </div>
+                <div class="col-8">
+                    <div class="padding-bottom">
+                        <i class="icon-text"></i>
+                        {% if project.description is defined and project.description != '' %}
+                            {{ project.description }}
+                        {% else %}
+                            <em>{{ 'xima.depmon.list.description.empty'|trans({}, 'XimaDepmonBundle') }}</em>
+                        {% endif %}
                     </div>
-                    <div class="col-8">
-                        <div class="padding-bottom">
-                            <i class="icon-text"></i>
-                            {% if project.composer.description is defined and project.composer.description != '' %}
-                                {{ project.composer.description }}
-                            {% else %}
-                                <em>{{ 'xima.depmon.list.description.empty'|trans({}, 'XimaDepmonBundle') }}</em>
-                            {% endif %}
-                        </div>
-                        <div class="padding-bottom">
-                            {% if project.composer.authors is defined %}
-                                {% for author in project.composer.authors %}
-                                    {% if author.name is defined %}
-                                        <i class="icon-user"></i>
-                                        {% if author.email is defined %}
-                                            <a href="mailto:{{ author.email }}">{{ author.name }}</a>
-                                        {% else %}
-                                            {{ author.name }}
-                                        {% endif %}
-                                    {% endif %}
-                                    {% if author.role is defined %}
-                                        <small>{{ author.role }}</small>
-                                    {% endif %}
-                                    <br/>
-                                {% endfor %}
-                            {% endif %}
-                        </div>
+                    <div class="padding-bottom">
+                        {#{% if project.authors is defined %}#}
+                        {#{% for author in project.composer.authors %}#}
+                        {#{% if author.name is defined %}#}
+                        {#<i class="icon-user"></i>#}
+                        {#{% if author.email is defined %}#}
+                        {#<a href="mailto:{{ author.email }}">{{ author.name }}</a>#}
+                        {#{% else %}#}
+                        {#{{ author.name }}#}
+                        {#{% endif %}#}
+                        {#{% endif %}#}
+                        {#{% if author.role is defined %}#}
+                        {#<small>{{ author.role }}</small>#}
+                        {#{% endif %}#}
+                        {#<br/>#}
+                        {#{% endfor %}#}
+                        {#{% endif %}#}
                     </div>
-                    <div class="col-4">
-                        <div class="padding-bottom">
-                            <a href="{{ path('xima_depmon_detail', {'project': project.self.name}) }}"
-                               title="{{ 'xima.depmon.list.action.detail.tooltip'|trans({}, 'XimaDepmonBundle') }}"><i
-                                        class="icon-link"></i> {{ 'xima.depmon.list.action.detail'|trans({}, 'XimaDepmonBundle') }}
-                            </a>
-                        </div>
-                        <div class="padding-bottom">
-                            <a href="{{ path('xima_depmon_state', {'project': project.self.name}) }}"
-                               title="{{ 'xima.depmon.list.action.badge.tooltip'|trans({}, 'XimaDepmonBundle') }}"><i
-                                        class="icon-badge"></i> {{ 'xima.depmon.list.action.badge'|trans({}, 'XimaDepmonBundle') }}
-                            </a>
-                        </div>
-                        <div class="padding-bottom">
-                            <a href="{{ path('xima_depmon_index') }}"
-                               title="{{ 'xima.depmon.list.action.rss.tooltip'|trans({}, 'XimaDepmonBundle') }}"> <i
-                                        class="icon-rss"></i> {{ 'xima.depmon.list.action.rss'|trans({}, 'XimaDepmonBundle') }}
-                            </a>
-                        </div>
+                </div>
+                <div class="col-4">
+                    <div class="padding-bottom">
+                        <a href="{{ path('xima_depmon_detail', {'project': project.name}) }}"
+                           title="{{ 'xima.depmon.list.action.detail.tooltip'|trans({}, 'XimaDepmonBundle') }}"><i
+                                    class="icon-link"></i> {{ 'xima.depmon.list.action.detail'|trans({}, 'XimaDepmonBundle') }}
+                        </a>
+                    </div>
+                    <div class="padding-bottom">
+                        <a href="{{ path('xima_depmon_state', {'project': project.name}) }}"
+                           title="{{ 'xima.depmon.list.action.badge.tooltip'|trans({}, 'XimaDepmonBundle') }}"><i
+                                    class="icon-badge"></i> {{ 'xima.depmon.list.action.badge'|trans({}, 'XimaDepmonBundle') }}
+                        </a>
+                    </div>
+                    <div class="padding-bottom">
+                        <a href="{{ path('xima_depmon_index') }}"
+                           title="{{ 'xima.depmon.list.action.rss.tooltip'|trans({}, 'XimaDepmonBundle') }}"> <i
+                                    class="icon-rss"></i> {{ 'xima.depmon.list.action.rss'|trans({}, 'XimaDepmonBundle') }}
+                        </a>
                     </div>
                 </div>
             </div>
         </div>
-    </li>
-{% endif %}
+    </div>
+</li>

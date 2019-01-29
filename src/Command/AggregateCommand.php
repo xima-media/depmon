@@ -2,14 +2,18 @@
 
 namespace Xima\DepmonBundle\Command;
 
+use Doctrine\ORM\EntityManager;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use Xima\DepmonBundle\Entity\Dependency;
+use Xima\DepmonBundle\Entity\Project;
 use Xima\DepmonBundle\Service\Aggregator;
 use Xima\DepmonBundle\Service\Cache;
 use Psr\Cache\InvalidArgumentException;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Xima\DepmonBundle\Util\Helper;
 
 /**
  * Class AggregateCommand
@@ -18,21 +22,8 @@ use Symfony\Component\Console\Output\OutputInterface;
 class AggregateCommand extends ContainerAwareCommand
 {
 
-    /**
-     * @var Aggregator
-     */
-    private $aggregator;
-
-    /**
-     * @var Cache
-     */
-    private $cache;
-
-    public function __construct(Aggregator $aggregator, Cache $cache)
+    public function __construct()
     {
-        $this->aggregator = $aggregator;
-        $this->cache = $cache;
-
         parent::__construct();
     }
 
@@ -53,6 +44,8 @@ class AggregateCommand extends ContainerAwareCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        /* @var $entityManager EntityManager */
+        $entityManager = $this->getContainer()->get('doctrine')->getEntityManager();
 
         $io = new SymfonyStyle($input, $output);
 
@@ -71,111 +64,139 @@ class AggregateCommand extends ContainerAwareCommand
         $progressBar = new ProgressBar($output, count($projects));
         $progressBar->setFormat('verbose');
 
-        $projectCount = count($projects);
-        $io->text("Fetching data for $projectCount projects ...");
+        $projectDataCount = count($projects);
+        $io->text("Fetching data for $projectDataCount projects ...");
 
 
-        $this->aggregator->checkIfGitIsInstalled();
-        $this->aggregator->checkIfComposerIsInstalled();
+        Aggregator::checkIfGitIsInstalled();
+        Aggregator::checkIfComposerIsInstalled();
 
 
         $dependencyCount = 0;
 
-        foreach ($projects as $project) {
+        foreach ($projects as $projectData) {
             try {
 
-                $projectName = "<fg=blue;options=bold>[" . $project['name'] . "]</>";
+                $projectDataRepository = $this->getContainer()->get('doctrine')->getRepository(Project::class);
+                /* @var $projectDataRepository \Xima\DepmonBundle\Repository\ProjectRepository */
 
-                $output->write($projectName . " Update project data ... ");
-                $this->aggregator->updateProjectData($project);
+                $projectDataName = "<fg=blue;options=bold>[" . $projectData['name'] . "]</>";
+                $output->write($projectDataName . " Initializing project ... ");
+
+                // Check if project already exists
+                $project = $projectDataRepository->findBy(['name' => $projectData['name']]);
+                if (count($project) != 0) {
+                    $project = $project[0];
+                } else {
+                    $project = new Project();
+                }
+                $project->setName($projectData['name']);
+                $project->setGit($projectData['git']);
+                $project->setPath($projectData['path']);
                 $output->writeln(" <fg=green>✔</>");
 
-                $output->write($projectName . " Check composer files ... ");
-                $this->aggregator->checkIfComposerJsonExists($project);
 
-                $composerLock = $this->aggregator->checkIfComposerLockExists($project);
-                if (!$this->aggregator->validateComposerFiles($project)) {
+                $output->write($projectDataName . " Update project data ... ");
+                Aggregator::updateProjectData($project);
+                $output->writeln(" <fg=green>✔</>");
+
+                $output->write($projectDataName . " Check composer files ... ");
+                Aggregator::checkIfComposerJsonExists($project);
+
+                $composerLock = Aggregator::checkIfComposerLockExists($project);
+                if (!Aggregator::validateComposerFiles($project)) {
                     $output->writeln(" <fg=yellow>Composer files are not valid</>");
                 } else {
                     $output->writeln(" <fg=green>✔</>");
                 };
 
-                $output->write($projectName . " Install composer dependencies ... ");
-                $this->aggregator->installComposerDependencies($project, $composerLock);
+                $output->write($projectDataName . " Install composer dependencies ... ");
+                Aggregator::installComposerDependencies($project, $composerLock);
                 $output->writeln(" <fg=green>✔</>");
 
-                $output->write($projectName . " Last modification date ... ");
-                $date = $this->aggregator->getLastModificationDate($project);
-                if ($date[1] == true) {
-                    $color = 'yellow';
-                } else {
-                    $color = 'green';
-                }
-                $output->writeln("<fg=$color>" . $date[0] . "</>");
+                $output->write($projectDataName . " Last modification date ... ");
+                $date = Aggregator::getLastModificationDate($project);
+                $project->setUpdated($date);
+                $output->writeln("<fg=green>" . $date->format("d.m.Y, H:m") . "</>");
 
 
-                $output->write($projectName . " Fetch git tag ... ");
-                $gitTag = $this->aggregator->fetchGitTag($project);
+                $output->write($projectDataName . " Fetch git tag ... ");
+                $gitTag = Aggregator::fetchGitTag($project);
                 if ($gitTag != '') {
                     $output->writeln(" <fg=green>$gitTag</>");
                 } else {
                     $output->writeln(" <fg=yellow>?</>");
                 }
+                $project->setVersion($gitTag);
 
-                $output->write($projectName . " Fetch composer data ... ");
-                $data = $this->aggregator->fetchComposerData($project);
+                $output->write($projectDataName . " Fetch composer data ... ");
+                $data = Aggregator::fetchComposerData($project);
                 $output->writeln(" <fg=green>✔</>");
 
-                $output->write($projectName . " Check vulnerabilities ... ");
-                $vulnerabilities = $this->aggregator->checkVulnerabilities($project);
+                $output->write($projectDataName . " Check vulnerabilities ... ");
+                $vulnerabilities = Aggregator::checkVulnerabilities($project);
                 if (empty($vulnerabilities)) {
                     $output->writeln(" <fg=green>✔</>");
                 } else {
                     $output->writeln(" <fg=red>✘</>");
                 }
 
-                $output->write($projectName . " Build up metadata ... ");
-                $data = $this->aggregator->buildUpMetadata($project, $data, $vulnerabilities, $gitTag, $date);
+                // Saving composer information about project to result
+                $project->setComposer(Aggregator::getLocalComposerJson($project));
+
+                $output->write($projectDataName . " Process dependencies ");
+                foreach ($data->installed as $dependencyData) {
+                    $dependency = Helper::processDependency($dependencyData, $project);
+                    $project->addDependency($dependency);
+                    $output->write(".");
+                }
                 $output->writeln(" <fg=green>✔</>");
 
-                if (!empty($data)) {
-                    $count = count($data['dependencies']);
-                    $requiredCount = $data['meta']['requiredPackagesCount'];
-                    $requiredStatesCount = $data['meta']['requiredStatesCount'];
-                    $dependencyCount += $count;
+                $output->write($projectDataName . " Build up metadata ... ");
+//                $project = Helper::buildUpMetadata($project, $data, $vulnerabilities);
+                $output->writeln(" <fg=green>✔</>");
 
-                    $this->cache->set($project['name'], $data);
+//                if (!empty($data)) {
+//                    $count = count($data['dependencies']);
+//                    $requiredCount = $data['meta']['requiredPackagesCount'];
+//                    $requiredStatesCount = $data['meta']['requiredStatesCount'];
+//                    $dependencyCount += $count;
+//
+//                    $this->cache->set($projectData['name'], $data);
+//
+//                    switch ($data['meta']['projectState']) {
+//                        case 1:
+//                            $projectDataState = "<fg=green>up to date</>";
+//                            break;
+//                        case 2:
+//                            $projectDataState = "<fg=yellow>up to date</>";
+//                            break;
+//                        case 3:
+//                        default:
+//                            $projectDataState = "<fg=red>out of date</>";
+//                            break;
+//                        case 4:
+//                            $projectDataState = "<fg=black>insecure</>";
+//                            break;
+//                    }
+//
+//                    $output->writeln($projectDataName . " $count dependencies, $requiredCount required (<fg=green>$requiredStatesCount[1]</>, <fg=yellow>$requiredStatesCount[2]</>, <fg=red>$requiredStatesCount[3]</>, <fg=black>$requiredStatesCount[4]</>) ... " . $projectDataState);
+//
+//                    $io->newLine();
+//                    $progressBar->advance();
+//                    $io->newLine();
+//                    $io->newLine();
+//
+//                }
 
-                    switch ($data['meta']['projectState']) {
-                        case 1:
-                            $projectState = "<fg=green>up to date</>";
-                            break;
-                        case 2:
-                            $projectState = "<fg=yellow>up to date</>";
-                            break;
-                        case 3:
-                        default:
-                            $projectState = "<fg=red>out of date</>";
-                            break;
-                        case 4:
-                            $projectState = "<fg=black>insecure</>";
-                            break;
-                    }
-
-                    $output->writeln($projectName . " $count dependencies, $requiredCount required (<fg=green>$requiredStatesCount[1]</>, <fg=yellow>$requiredStatesCount[2]</>, <fg=red>$requiredStatesCount[3]</>, <fg=black>$requiredStatesCount[4]</>) ... " . $projectState);
-
-                    $io->newLine();
-                    $progressBar->advance();
-                    $io->newLine();
-                    $io->newLine();
-
-                }
+                $entityManager->persist($project);
+                $entityManager->flush();
 
             } catch (InvalidArgumentException $e) {
 
             }
 
-//            $this->aggregator->clearProjectData($project);
+//            Aggregator::clearProjectData($projectData);
         }
 
 
@@ -184,6 +205,6 @@ class AggregateCommand extends ContainerAwareCommand
             'dependencyCount' => $dependencyCount
         ];
 
-        $this->cache->set('metadata', $metadata);
+//        $this->cache->set('metadata', $metadata);
     }
 }
