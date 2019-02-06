@@ -6,16 +6,25 @@ namespace Xima\DepmonBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\BufferedOutput;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\HttpKernel\KernelInterface;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Exception\InvalidParameterException;
+use Xima\DepmonBundle\Entity\Dependency;
 use Xima\DepmonBundle\Entity\Project;
+use Xima\DepmonBundle\Entity\Form\Filter;
+use Xima\DepmonBundle\Form\FilterType;
 use Xima\DepmonBundle\Repository\ProjectRepository;
 use Xima\DepmonBundle\Service\Cache;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Yaml\Yaml;
+use Xima\DepmonBundle\Util\Helper;
+use Xima\DepmonBundle\Util\VersionHelper;
 
 /**
  * Class DefaultController
@@ -35,11 +44,6 @@ class DefaultController extends AbstractController
     private $kernel;
 
     /**
-     * @var ProjectRepository
-     */
-    private $projectRepository;
-
-    /**
      * DefaultController constructor.
      * @param Cache $cache
      */
@@ -53,38 +57,74 @@ class DefaultController extends AbstractController
 
     /**
      * Index action.
+     * @param Filter|null $demand
      * @return Response
      */
-    public function index(): Response
+    public function index(Request $request): Response
     {
-        $projects = [];
         $error = null;
 
         $projects = $this->getDoctrine()->getRepository(Project::class)->findAll();
 
-//        foreach ($projects as $project) {
-//            var_dump(count($project->getDependencies()));
-//        }
+        $filter = new Filter();
+        $form = $this->createForm(FilterType::class, $filter, [
+            'action' => $this->generateUrl('xima_depmon_ajax'),
+            'method' => 'POST',
+        ]);
 
-//        $projectsConfig = $this->getParameter('xima_depmon.projects');
-//
-//        if (is_array($projectsConfig)) {
-//            foreach ($projectsConfig as $project) {
-//                $projects[] = $this->cache->get($project['name']);
-//            }
-//        } else {
-//            $error = 1;
-//        }
+        // Actually this is not working
+        // $form->handleRequest($request);
+        $form->submit($request->get($form->getName()));
+
+
+        if ($form->isValid()) {
+            // $form->getData() holds the submitted values
+            // but, the original `$task` variable has also been updated
+            $filter = $form->getData();
+
+            $dependencies = $this->getDoctrine()->getRepository(Dependency::class)->findAll($filter);
+
+            $projects = Helper::groupDependencies($dependencies);
+        }
+
         $metadata = $this->cache->get('metadata');
 
-//        if (empty($projects)) {
-//            $error = 2;
-//        }
 
         return $this->render('@XimaDepmon/index.html.twig', [
             'projects' => $projects,
+            'form' => $form->createView(),
+            'filter' => new Filter(),
             'metadata' => $metadata,
             'error' => $error
+        ]);
+    }
+
+    /**
+     * Ajax action
+     * @Method({"GET", "POST"})
+     * @param Request $request
+     * @return Response
+     */
+    public function ajax(Request $request): Response {
+        $filter = new Filter();
+        $form = $this->createForm(FilterType::class, $filter, [
+            'method' => 'POST',
+        ]);
+
+        $form->submit($request->get($form->getName()));
+
+
+        if ($form->isValid()) {
+
+            $filter = $form->getData();
+
+            $dependencies = $this->getDoctrine()->getRepository(Dependency::class)->findAll($filter);
+
+            $projects = Helper::groupDependencies($dependencies);
+
+        }
+        return $this->render('@XimaDepmon/list.html.twig', [
+            'projects' => $projects
         ]);
     }
 

@@ -9,6 +9,7 @@
 namespace Xima\DepmonBundle\Util;
 
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Xima\DepmonBundle\Entity\Dependency;
 use Xima\DepmonBundle\Entity\Project;
 use Xima\DepmonBundle\Service\Aggregator;
@@ -81,7 +82,7 @@ class Helper
     public static function processDependency($dependencyData, $project) {
         $dependency = new Dependency();
         $dependency->setName($dependencyData->name);
-        $dependency->setStable($dependencyData->version);
+        $dependency->setVersion($dependencyData->version);
 
         // Workaround for adding requirement information to dependencies
         foreach (json_decode(json_decode($project->getComposer()))->require as $name => $require) {
@@ -94,7 +95,7 @@ class Helper
         if (isset($dependencyData->latest)) {
             $dependency->setLatest($dependencyData->latest);
 
-            $dependency->setState(VersionHelper::compareVersions($dependency->getStable(), $dependency->getLatest(), $dependency->getRequired()));
+            $dependency->setState(VersionHelper::compareVersions($dependency->getVersion(), $dependency->getLatest(), $dependency->getRequired()));
         } else {
             $dependency->setState(VersionHelper::STATE_UP_TO_DATE);
         }
@@ -108,6 +109,28 @@ class Helper
         return $dependency;
     }
 
+    public static function groupDependencies($dependencies) {
+
+        $projects = [];
+        foreach ($dependencies as $dependency) {
+            /* @var Dependency $dependency */
+
+            if (!in_array($dependency->getProject(),$projects)) {
+                $project = $dependency->getProject();
+                /* @var Project $project */
+                $project->setDependencies(new ArrayCollection());
+                array_push($projects, $project);
+            }
+
+            $projects[array_search($dependency->getProject(), $projects)]->addDependency($dependency);
+        }
+
+        return $projects;
+    }
+
+    /**
+     *
+     */
     public static function expandVulnerabilityInformation() {
         // Is dependency a security issue?
         if (!empty($vulnerabilities)) {

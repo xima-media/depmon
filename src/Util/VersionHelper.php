@@ -33,16 +33,17 @@ class VersionHelper
     {
         $state = self::STATE_UP_TO_DATE;
 
-        if (explode('.', $stable)[0] != explode('.', $latest)[0] || (isset(explode('.', $stable)[1]) && isset(explode('.', $latest)[1]) && explode('.', $stable)[1] != explode('.', $latest)[1])) {
-            $state =  self::STATE_OUT_OF_DATE;
+        if (explode('.', $stable)[0] != explode('.', $latest)[0] ||
+            (isset(explode('.', $stable)[1]) && isset(explode('.', $latest)[1]) && explode('.', $stable)[1] != explode('.', $latest)[1])) {
+            $state = self::STATE_OUT_OF_DATE;
         } else if (isset(explode('.', $stable)[2]) && isset(explode('.', $latest)[2]) && explode('.', $stable)[2] != explode('.', $latest)[2]) {
-            $state =  self::STATE_PINNED_OUT_OF_DATE;
+            $state = self::STATE_PINNED_OUT_OF_DATE;
         }
 
         if ($state != self::STATE_UP_TO_DATE && $required != null) {
 
             try {
-                if (!Semver::satisfies($latest,$required)) {
+                if (!Semver::satisfies($latest, $required)) {
                     $state = self::STATE_UP_TO_DATE;
                 }
             } catch (\UnexpectedValueException $e) {

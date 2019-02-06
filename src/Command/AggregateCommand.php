@@ -65,7 +65,7 @@ class AggregateCommand extends ContainerAwareCommand
         $progressBar->setFormat('verbose');
 
         $projectDataCount = count($projects);
-        $io->text("Fetching data for $projectDataCount projects ...");
+        $io->text("Fetching data for $projectDataCount project(s) ...");
 
 
         Aggregator::checkIfGitIsInstalled();

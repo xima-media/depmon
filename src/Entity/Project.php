@@ -21,17 +21,17 @@ class Project
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $name;
+    private $name = '';
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(type="integer", length=255, nullable=true)
      */
     private $state;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private $version;
+    private $version = '';
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
@@ -41,27 +41,27 @@ class Project
     /**
      * @ORM\Column(type="text", nullable=true)
      */
-    private $description;
+    private $description = '';
 
     /**
      * @ORM\Column(type="text", nullable=true)
      */
-    private $authors;
+    private $authors = '';
 
     /**
      * @ORM\Column(type="text", nullable=true)
      */
-    private $composer;
+    private $composer = '';
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $git;
+    private $git = '';
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private $path;
+    private $path = '';
 
     /**
      * @ORM\OneToMany(targetEntity="Xima\DepmonBundle\Entity\Dependency", mappedBy="project", cascade={"all"})
@@ -98,12 +98,12 @@ class Project
         return $this;
     }
 
-    public function getState(): ?string
+    public function getState(): ?int
     {
         return $this->state;
     }
 
-    public function setState(?string $state): self
+    public function setState(?int $state): self
     {
         $this->state = $state;
 

@@ -37,6 +37,15 @@ li {
   }
 }
 
+#depmon-list {
+  opacity: 1;
+  transition: ease opacity;
+
+  &.overlay {
+    opacity: .5;
+  }
+}
+
 .depmon-list {
   border-right: 1px solid $gray-lighter;
 

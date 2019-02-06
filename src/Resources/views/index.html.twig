@@ -30,46 +30,29 @@
                 {% include '@XimaDepmon/filter.html.twig' %}
             </div>
             <div class="col-8">
-                <div id="depmon-list">
-                    <ul class="list list-group header">
-                        <li class="list-group-item">
-                            <div class="row">
-                                <div class="col-5 text-muted">
-                                    {{ 'xima.depmon.list.header.dependency'|trans({}, 'XimaDepmonBundle') }}
-                                </div>
-                                <div class="col-2 text-muted text-center">
-                                    {{ 'xima.depmon.list.header.required'|trans({}, 'XimaDepmonBundle') }}
-                                </div>
-                                <div class="col-2 text-muted text-center">
-                                    {{ 'xima.depmon.list.header.stable'|trans({}, 'XimaDepmonBundle') }}
-                                </div>
-                                <div class="col-2 text-muted text-center">
-                                    {{ 'xima.depmon.list.header.latest'|trans({}, 'XimaDepmonBundle') }}
-                                </div>
-                                <div class="col-1 text-muted text-center">
-                                    {{ 'xima.depmon.list.header.state'|trans({}, 'XimaDepmonBundle') }}
-                                </div>
+                <ul class="list list-group header">
+                    <li class="list-group-item">
+                        <div class="row">
+                            <div class="col-5 text-muted">
+                                {{ 'xima.depmon.list.header.dependency'|trans({}, 'XimaDepmonBundle') }}
                             </div>
-                        </li>
-                    </ul>
-                    {% if projects is defined and projects|length > 0 %}
-                        {% for key, project in projects %}
-                            <ul class="list list-group">
-                                {{ include('@XimaDepmon/project.html.twig') }}
-                                {% for num, dependency in project.dependencies %}
-                                    {{ include('@XimaDepmon/dependency.html.twig') }}
-                                {% endfor %}
-                            </ul>
-                        {% endfor %}
-                    {% else %}
-                        <div class="list-error padding-small">
-                            <div class="list-error-emoji">
-                                {{ 'xima.depmon.basic.error'|trans({}, 'XimaDepmonBundle') }}
+                            <div class="col-2 text-muted text-center">
+                                {{ 'xima.depmon.list.header.required'|trans({}, 'XimaDepmonBundle') }}
                             </div>
-                            {{ 'xima.depmon.basic.error.projects'|trans({}, 'XimaDepmonBundle') }}<br/>
-                            {{ 'xima.depmon.basic.error.link'|trans({'%link%': '<a href="https://github.com/xima-media/depmon/wiki/Help#1--no-projects" target="_blank">Help#1</a>'}, 'XimaDepmonBundle')|raw }}
+                            <div class="col-2 text-muted text-center">
+                                {{ 'xima.depmon.list.header.stable'|trans({}, 'XimaDepmonBundle') }}
+                            </div>
+                            <div class="col-2 text-muted text-center">
+                                {{ 'xima.depmon.list.header.latest'|trans({}, 'XimaDepmonBundle') }}
+                            </div>
+                            <div class="col-1 text-muted text-center">
+                                {{ 'xima.depmon.list.header.state'|trans({}, 'XimaDepmonBundle') }}
+                            </div>
                         </div>
-                    {% endif %}
+                    </li>
+                </ul>
+                <div id="depmon-list">
+                    {% include '@XimaDepmon/list.html.twig' %}
                 </div>
             </div>
         </div>

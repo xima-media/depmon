@@ -2,6 +2,11 @@ xima_depmon_index:
     path: "/"
     defaults: { _controller: "xima_depmon.default:index", _format: html }
 
+xima_depmon_ajax:
+    path: "/ajax"
+    defaults: { _controller: "xima_depmon.default:ajax", _format: html }
+    methods: [POST]
+
 xima_depmon_detail:
     path: "/detail/{project}"
     defaults: { _controller: "xima_depmon.default:detail", _format: html }

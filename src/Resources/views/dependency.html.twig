@@ -1,11 +1,4 @@
-<li class="list-group-item {{ dependency.required is not defined ? 'hidden' }}"
-    data-project="{{ project.name }}"
-    data-state="{{ dependency.state }}"
-    data-name="{{ dependency.name }}"
-    data-version="{{ dependency.stable }}"
-    data-required="{{ dependency.required is defined ? 1 : 0 }}"
-    data-overview="0">
-
+<li class="list-group-item">
     <div class="row">
         {%  if dependency.vulnerability is defined %}
             <a class="no-style" data-toggle="collapse" data-target="#{{ key }}-{{ num }}">
@@ -35,7 +28,7 @@
             {% endif %}
         </div>
         <div class="col-2 text-center one-line">
-            {{ dependency.stable }}
+            {{ dependency.version }}
         </div>
         <div class="col-2 text-center one-line">
             {% if dependency.latest is defined %}

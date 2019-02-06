@@ -10,8 +10,11 @@ $delay: $duration/8;
 .loading {
   width: 200px;
   height: 200px;
-  position: relative;
-  transform: scale(0.2);
+  position: absolute;
+  left: 50%;
+  margin-right: -100px;
+  top: 200px;
+  transform: scale(0.4);
 
   &.animated {
     .square {

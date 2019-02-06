@@ -5,11 +5,11 @@ namespace Xima\DepmonBundle\Repository;
 use Xima\DepmonBundle\Entity\Dependency;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
+use Xima\DepmonBundle\Entity\Form\Filter;
 
 /**
  * @method Dependency|null find($id, $lockMode = null, $lockVersion = null)
  * @method Dependency|null findOneBy(array $criteria, array $orderBy = null)
- * @method Dependency[]    findAll()
  * @method Dependency[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
 class DependencyRepository extends ServiceEntityRepository
@@ -19,32 +19,53 @@ class DependencyRepository extends ServiceEntityRepository
         parent::__construct($registry, Dependency::class);
     }
 
-    // /**
-    //  * @return Dependency[] Returns an array of Dependency objects
-    //  */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('d')
-            ->andWhere('d.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('d.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
+    /**
+     * @param Filter|null $demand
+     * @return array|mixed
+     */
+    public function findAll(Filter $demand = null) {
 
-    /*
-    public function findOneBySomeField($value): ?Dependency
-    {
-        return $this->createQueryBuilder('d')
-            ->andWhere('d.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
+        $qb = $this->createQueryBuilder('dependency');
+        $expr = $qb->expr();
+
+        if ($demand) {
+
+            if ($demand->getDependencySearch()) {
+                $qb
+                    ->andWhere(
+                        $expr->like('dependency.name', ':name')
+                    )
+                    ->setParameter('name', '%' . $demand->getDependencySearch() . '%')
+                ;
+            }
+
+            if ($demand->getProjects()) {
+                $qb
+                    ->andWhere(
+                        $expr->in('dependency.project', ':projects')
+                    )
+                    ->setParameter('projects', $demand->getProjects())
+                ;
+            }
+
+            if ($demand->getStates()) {
+                $qb
+                    ->andWhere(
+                        $expr->in('dependency.state', ':states')
+                    )
+                    ->setParameter('states', $demand->getStates())
+                ;
+            }
+
+            if (!$demand->isShowIndirectlyDependencies()) {
+                $qb
+                    ->andWhere(
+                        $expr->isNotNull('dependency.required')
+                    )
+                ;
+            }
+
+        }
+        return $qb->getQuery()->getResult();
     }
-    */
 }

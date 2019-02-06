@@ -3,7 +3,6 @@
 namespace Xima\DepmonBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\ORM\Mapping\JoinColumn;
 
 /**
  * @ORM\Entity(repositoryClass="Xima\DepmonBundle\Repository\DependencyRepository")
@@ -20,37 +19,37 @@ class Dependency
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $name;
+    private $name = '';
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private $required;
+    private $required = '';
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $stable;
+    private $version = '';
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private $latest;
+    private $latest = '';
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="integer", length=255)
      */
     private $state;
 
     /**
      * @ORM\Column(type="text", nullable=true)
      */
-    private $description;
+    private $description = '';
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private $link;
+    private $link = '';
 
     /**
      * @ORM\ManyToOne(targetEntity="Xima\DepmonBundle\Entity\Project", inversedBy="dependencies")
@@ -94,14 +93,14 @@ class Dependency
         return $this;
     }
 
-    public function getStable(): ?string
+    public function getVersion(): ?string
     {
-        return $this->stable;
+        return $this->version;
     }
 
-    public function setStable(string $stable): self
+    public function setVersion(string $version): self
     {
-        $this->stable = $stable;
+        $this->version = $version;
 
         return $this;
     }
@@ -118,12 +117,12 @@ class Dependency
         return $this;
     }
 
-    public function getState(): ?string
+    public function getState(): ?int
     {
         return $this->state;
     }
 
-    public function setState(string $state): self
+    public function setState(int $state): self
     {
         $this->state = $state;
 
