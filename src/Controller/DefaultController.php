@@ -95,7 +95,8 @@ class DefaultController extends AbstractController
             'form' => $form->createView(),
             'filter' => new Filter(),
             'metadata' => $metadata,
-            'error' => $error
+            'error' => $error,
+            'searchWord' => $filter->getDependencySearch() ?: ''
         ]);
     }
 
@@ -124,7 +125,8 @@ class DefaultController extends AbstractController
 
         }
         return $this->render('@XimaDepmon/list.html.twig', [
-            'projects' => $projects
+            'projects' => $projects,
+            'searchWord' => $filter->getDependencySearch() ?: ''
         ]);
     }
 

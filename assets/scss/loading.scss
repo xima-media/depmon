@@ -15,6 +15,7 @@ $delay: $duration/8;
   margin-right: -100px;
   top: 200px;
   transform: scale(0.4);
+  z-index: 999;
 
   &.animated {
     .square {

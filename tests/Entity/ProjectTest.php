@@ -148,7 +148,7 @@ class ProjectTest extends TestCase
     public function testGetComposer()
     {
         self::assertSame(
-            '',
+            null,
             $this->subject->getComposer()
         );
     }
@@ -231,6 +231,24 @@ class ProjectTest extends TestCase
         self::assertEquals(
             $dependencies,
             $this->subject->getDependencies()
+        );
+    }
+
+    public function testGetMetadata()
+    {
+        self::assertSame(
+            null,
+            $this->subject->getMetadata()
+        );
+    }
+
+    public function testSetMetadata()
+    {
+        $this->subject->setMetadata('Metadata');
+
+        self::assertEquals(
+            'Metadata',
+            $this->subject->getMetadata()
         );
     }
 

@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: kmi
- * Date: 2019-01-24
- * Time: 14:05
- */
 
 namespace Xima\DepmonBundle\Util;
 
@@ -30,13 +24,12 @@ class Helper
 
     /**
      * @param Project $project
-     * @param $data
      * @return Project
      */
-    public static function buildUpMetadata($project, $data) {
-        $result = [];
+    public static function buildUpMetadata($project) {
 
         $requiredPackagesCount = 0;
+        $totalPackagesCount = 0;
         $statesCount = [
             VersionHelper::STATE_UP_TO_DATE => 0,
             VersionHelper::STATE_PINNED_OUT_OF_DATE => 0,
@@ -47,11 +40,13 @@ class Helper
 
         $project->setState(VersionHelper::STATE_UP_TO_DATE);
 
-        // Iterate through installed dependencies
-        foreach ($data->installed as $dependencyData) {
-
-
-            $project->addDependency($dependency);
+        foreach ($project->getDependencies() as $dependency) {
+            if ($dependency->getRequired() != null) {
+                $requiredPackagesCount++;
+                $requiredStatesCount[$dependency->getState()]++;
+            }
+            $totalPackagesCount++;
+            $statesCount[$dependency->getState()]++;
         }
 
         if ($requiredStatesCount[4] > 0) {
@@ -63,12 +58,27 @@ class Helper
         }
 
         $metadata = [
+            'totalPackagesCount' => $totalPackagesCount,
             'requiredPackagesCount' => $requiredPackagesCount,
             'statesCount' => $statesCount,
             'requiredStatesCount' => $requiredStatesCount,
         ];
 
-        $result['meta'] = $metadata;
+        $project->setMetadata($metadata);
+
+        $composer = json_decode(json_decode($project->getComposer()));
+
+        if ($composer->description) {
+            $project->setDescription($composer->description);
+        }
+        if ($composer->authors) {
+            $authors = [];
+            foreach ($composer->authors as $author) {
+                array_push($authors, $author->name . ' <' . $author->email . '> (' . $author->role . ')');
+            }
+            $project->setAuthors(implode(',', $authors));
+
+        }
 
         return $project;
     }
@@ -76,11 +86,11 @@ class Helper
     /**
      * @param $dependencyData
      * @param Project $project
+     * @param Dependency $dependency
      * @return Dependency
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public static function processDependency($dependencyData, $project) {
-        $dependency = new Dependency();
+    public static function processDependency($dependencyData, $project, $dependency) {
         $dependency->setName($dependencyData->name);
         $dependency->setVersion($dependencyData->version);
 
@@ -109,6 +119,10 @@ class Helper
         return $dependency;
     }
 
+    /**
+     * @param $dependencies
+     * @return array
+     */
     public static function groupDependencies($dependencies) {
 
         $projects = [];

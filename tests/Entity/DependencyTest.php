@@ -55,8 +55,8 @@ class DependencyTest extends TestCase
     public function testGetRequired()
     {
         self::assertSame(
-            '',
-            $this->subject->getName()
+            null,
+            $this->subject->getRequired()
         );
     }
 

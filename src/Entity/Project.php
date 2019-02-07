@@ -64,6 +64,11 @@ class Project
     private $path = '';
 
     /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $metadata = '';
+
+    /**
      * @ORM\OneToMany(targetEntity="Xima\DepmonBundle\Entity\Dependency", mappedBy="project", cascade={"all"})
      */
     private $dependencies;
@@ -158,14 +163,17 @@ class Project
         return $this;
     }
 
-    public function getComposer(): ?string
+    /*
+     *
+     */
+    public function getComposer()
     {
-        return $this->composer;
+        return json_decode($this->composer);
     }
 
-    public function setComposer(?string $composer): self
+    public function setComposer($composer): self
     {
-        $this->composer = $composer;
+        $this->composer = json_encode($composer);
 
         return $this;
     }
@@ -226,5 +234,21 @@ class Project
     {
         $dependency->setProject($this);
         $this->dependencies->add($dependency);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMetadata()
+    {
+        return json_decode($this->metadata);
+    }
+
+    /**
+     * @param mixed $metadata
+     */
+    public function setMetadata($metadata): void
+    {
+        $this->metadata = json_encode($metadata);
     }
 }

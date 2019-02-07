@@ -18,6 +18,10 @@ $(function() {
         $('#depmon-filter').submit();
     });
 
+    $('#depmon-filter button[type="reset"]').click(function() {
+        $('#depmon-filter').submit();
+    });
+
     $('#depmon-filter').submit(function (e) {
         e.preventDefault();
 
@@ -98,16 +102,13 @@ $(function() {
     //     $('#filter-project-collapse').collapse('show');
     // });
     //
-    // // Quick filter for dependency
-    // $('.filter-dependency').click(function() {
-    //     var dependency = $(this).attr('data-dependency');
-    //     var object = {
-    //         'name': [
-    //             dependency
-    //         ]
-    //     };
-    //     filter.applyFilter(object);
-    // });
+    // Quick filter for dependency
+    $('.filter-dependency').unbind();
+    $('.filter-dependency').click(function() {
+        var dependency = $(this).attr('data-dependency');
+        $('#filter_dependencySearch').val(dependency);
+        $('#depmon-filter').submit();
+    });
     //
     // // Quick filter for type
     // $('.filter-type').click(function() {

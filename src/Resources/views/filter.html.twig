@@ -32,7 +32,9 @@
         </div>
         <div class="padding-small text-center">
             <small>
-                {{ form_row(form.submit, { 'label': 'Submit me' }) }}
+                <i class="icon-subdirectory_arrow_right"></i>
+                {{ form_widget(form.submit) }}
+                {{ form_label(form.submit) }}
             </small>
         </div>
         {{ form_rest(form) }}

@@ -24,7 +24,7 @@ class Dependency
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private $required = '';
+    private $required;
 
     /**
      * @ORM\Column(type="string", length=255)

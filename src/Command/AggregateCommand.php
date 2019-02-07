@@ -8,7 +8,6 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 use Xima\DepmonBundle\Entity\Dependency;
 use Xima\DepmonBundle\Entity\Project;
 use Xima\DepmonBundle\Service\Aggregator;
-use Xima\DepmonBundle\Service\Cache;
 use Psr\Cache\InvalidArgumentException;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputInterface;
@@ -77,14 +76,14 @@ class AggregateCommand extends ContainerAwareCommand
         foreach ($projects as $projectData) {
             try {
 
-                $projectDataRepository = $this->getContainer()->get('doctrine')->getRepository(Project::class);
-                /* @var $projectDataRepository \Xima\DepmonBundle\Repository\ProjectRepository */
+                $projectRepository = $this->getContainer()->get('doctrine')->getRepository(Project::class);
+                /* @var $projectRepository \Xima\DepmonBundle\Repository\ProjectRepository */
 
                 $projectDataName = "<fg=blue;options=bold>[" . $projectData['name'] . "]</>";
                 $output->write($projectDataName . " Initializing project ... ");
 
                 // Check if project already exists
-                $project = $projectDataRepository->findBy(['name' => $projectData['name']]);
+                $project = $projectRepository->findBy(['name' => $projectData['name']]);
                 if (count($project) != 0) {
                     $project = $project[0];
                 } else {
@@ -144,16 +143,32 @@ class AggregateCommand extends ContainerAwareCommand
                 // Saving composer information about project to result
                 $project->setComposer(Aggregator::getLocalComposerJson($project));
 
+                /**
+                 * Process dependencies
+                 */
                 $output->write($projectDataName . " Process dependencies ");
                 foreach ($data->installed as $dependencyData) {
-                    $dependency = Helper::processDependency($dependencyData, $project);
+                    $dependencyRepository = $this->getContainer()->get('doctrine')->getRepository(Dependency::class);
+                    /* @var $projectDataRepository \Xima\DepmonBundle\Repository\ProjectRepository */
+
+                    $dependency = $dependencyRepository->findBy([
+                        'name' => $dependencyData->name,
+                        'project' => $project->getId()
+                    ]);
+                    if (count($dependency) != 0) {
+                        $dependency = $dependency[0];
+                    } else {
+                        $dependency = new Dependency();
+                    }
+
+                    $dependency = Helper::processDependency($dependencyData, $project, $dependency);
                     $project->addDependency($dependency);
                     $output->write(".");
                 }
                 $output->writeln(" <fg=green>✔</>");
 
                 $output->write($projectDataName . " Build up metadata ... ");
-//                $project = Helper::buildUpMetadata($project, $data, $vulnerabilities);
+                $project = Helper::buildUpMetadata($project);
                 $output->writeln(" <fg=green>✔</>");
 
 //                if (!empty($data)) {

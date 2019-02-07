@@ -8,13 +8,15 @@
                 {%  if dependency.vulnerability is defined %}
                     <i class="icon-warning"></i>
                     <span class="text-warning">
-                        {{ dependency.name }}
+                        {{ dependency.name|highlight(searchWord)|raw }}
                     </span>
                 {% else %}
                     {% if dependency.link is defined %}
-                        <a href="{{ dependency.link }}" class="no-style" target="_blank" title="{{ (dependency.description is defined) ? dependency.description}}">{{ dependency.name }}</a>
+                        <a href="{{ dependency.link }}" class="no-style" target="_blank" title="{{ (dependency.description is defined) ? dependency.description}}">
+                            {{ dependency.name|highlight(searchWord)|raw }}
+                        </a>
                     {% else %}
-                        {{ dependency.name }}
+                        {{ dependency.name|highlight(searchWord)|raw }}
                     {% endif %}
                 {% endif %}
                 <button class="filter-dependency" data-dependency="{{ dependency.name }}" title="{{ 'xima.depmon.list.quickfilter.dependency.tooltip'|trans({}, 'XimaDepmonBundle') }}">

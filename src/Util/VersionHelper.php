@@ -49,7 +49,6 @@ class VersionHelper
             } catch (\UnexpectedValueException $e) {
 
             }
-
         }
 
         return $state;
